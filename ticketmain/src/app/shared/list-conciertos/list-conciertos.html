@@ -1,0 +1,7 @@
+<div class="list-conciertos">
+    @for(concierto of conciertos; track concierto.slug) {
+        <p>si que hay!</p>
+    } @empty {
+        <p>No hay conciertos disponibles.</p>
+    }
+</div>
