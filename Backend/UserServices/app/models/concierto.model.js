@@ -43,4 +43,15 @@ ConciertoSchema.methods.slugify = async function() {
     this.slug = slugify(this.nombre) + '-' + (Math.random() * Math.pow(36, 10) | 0).toString(36);
 };
 
+ConciertoSchema.methods.toConciertoResponse = async function () {
+    return {
+        slug: this.slug,
+        nombre: this.nombre,
+        fecha: this.fecha,
+        artista: this.artista,
+        lugar: this.lugar,
+        precio: this.precio
+    }
+}
+
 module.exports = mongoose.model('Concierto', ConciertoSchema);
