@@ -1,0 +1,16 @@
+
+    <div class="card-concierto">
+        <div class="card-header">
+            <!-- <img [src]="concierto.imagen" [alt]="concierto.nombre" class="concierto-imagen"> -->
+        </div>
+        
+        <div class="card-body">
+            <h3 class="concierto-titulo">{{ concierto.nombre }}</h3>
+            <p class="concierto-artista">{{ concierto.artista }}</p>
+            <p class="concierto-fecha">{{ concierto.fecha | date:'dd/MM/yyyy' }}</p>
+            <p class="concierto-lugar">{{ concierto.lugar }}</p>
+            <p class="concierto-precio">Precio: {{ concierto.precio | currency:'EUR' }}</p>
+            <!-- <a [routerLink]="['/conciertos', concierto.slug]" class="concierto-detalles-link">Ver detalles</a> -->
+        </div>
+    </div>
+

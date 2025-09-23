@@ -1,6 +1,11 @@
 <div class="list-conciertos">
+    @if(conciertos.length === 0) {
+        <p>No hay conciertos disponibles.</p>
+    }
+
     @for(concierto of conciertos; track concierto.slug) {
-        <p>si que hay!</p>
+        <!-- <p>si que hay!</p> -->
+         <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
     } @empty {
         <p>No hay conciertos disponibles.</p>
     }

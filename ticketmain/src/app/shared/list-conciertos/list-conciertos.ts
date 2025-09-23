@@ -1,10 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Concierto } from '../../core/models/conciertos.model';
 import { ApiService } from '../../core/services/index';
+import { CardConciertos } from '../card-conciertos/card-conciertos';
 
 @Component({
     selector: 'app-list-conciertos',
-    imports: [],
+    imports: [
+        CardConciertos,
+    ],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
     standalone: true
