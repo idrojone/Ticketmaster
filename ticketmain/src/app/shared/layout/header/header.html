@@ -1,55 +1,34 @@
-  <!-- <header class="site-header">
-    <div class="container"> -->
-      <!-- Logo -->
-       <!-- <div class="logo-container">
-        <img src="assets/img/entradas.png" alt="Ticketmaster Logo" class="logo-image" />
-        <a href="#" class="logo">Ticketmaster</a>
-      </div> -->
-
-      <!-- Menú central -->
-      <!-- <nav class="main-nav">
-        <ul>
-            <li><a href="#" style="text-decoration: underline;">Home</a></li>
-        </ul>
-      </nav> -->
-
-      <!-- Botón derecho -->
-      <!-- <a href="#" class="btn-pill">
-        Sign Up<span class="icon">*</span>
-        Sign In<span class="icon">*</span>
-      </a>
-    </div>
-  </header> -->
-  
-    <header>
-        <div class="container">
-
-            <div class="menu-icon">
-                <button class="menu-button" aria-label="Toggle Menu">
-                    <div class="bar--top"></div>
-                    <div class="bar--bottom"></div>
-                </button>
-            </div>
-
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#" style="text-decoration: underline;">SHOP</a></li>
-                </ul>
-                <ul>
-                    <li>
-                        <a href="#">
-                            <img src="assets/img/entradas.png" alt="Ticketmaster Logo" class="logo-image" />
-                        </a>
-                    </li>
-                </ul>
-                <ul>
-                    <li><a href="#" style="text-decoration: underline;">EVENTS</a></li>
-                </ul>
-            </nav>
-
-            <div class="auth-buttons">
-                <a href="#" class="btn-pill">Sign Up</a>
-                <a href="#" class="btn-pill">Sign In</a>
-            </div>
+<header class="bg-white shadow-md">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+        <!-- Menu Icon -->
+        <div class="menu-icon">
+            <button class="menu-button flex flex-col justify-center items-center w-8 h-8 border rounded-full hover:bg-gray-100" aria-label="Toggle Menu">
+                <div class="bar--top w-5 h-0.5 bg-black mb-1"></div>
+                <div class="bar--bottom w-5 h-0.5 bg-black mt-1"></div>
+            </button>
         </div>
-    </header>
+
+        <!-- Navigation -->
+        <nav class="main-nav flex items-center space-x-8">
+            <ul class="flex items-center space-x-4">
+                <li><a href="#" class="text-black font-medium hover:underline">SHOP</a></li>
+            </ul>
+            <ul class="flex items-center">
+                <li>
+                    <a href="#">
+                        <img src="assets/img/entradas.png" alt="Ticketmaster Logo" class="logo-image w-10 h-10" />
+                    </a>
+                </li>
+            </ul>
+            <ul class="flex items-center space-x-4">
+                <li><a href="#" class="text-black font-medium hover:underline">EVENTS</a></li>
+            </ul>
+        </nav>
+
+        <!-- Auth Buttons -->
+        <div class="auth-buttons flex space-x-4">
+            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100">Sign Up</a>
+            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100">Sign In</a>
+        </div>
+    </div>
+</header>
