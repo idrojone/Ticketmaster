@@ -15,20 +15,26 @@ export class ApiService {
         return throwError(errors.error);
     }
 
-    get(path: string, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> {
-        return this.http.get(`${environment.api_url}${path}`, options).pipe(catchError(this.formatErrors));
+    get(path: string, params: HttpParams = new HttpParams()): Observable<any>{
+        return this.http.get(`${environment.api_url}${path}`, { params })
+            .pipe(catchError(this.formatErrors));
+    }       
+
+    put(path: string, body: Object = {}): Observable<any> {
+        return this.http.put(
+            `${environment.api_url}${path}`,
+            JSON.stringify(body)
+        ).pipe(catchError(this.formatErrors));
     }
 
-    delete(path: string, slug: string, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> {
-        return this.http.delete(`${environment.api_url}${path}/${slug}`, options).pipe(catchError(this.formatErrors));
+    post(path: string, body: any = {}): Observable<any> {
+        console.log(body);
+        return this.http.post(`${environment.api_url}${path}`, body).pipe(catchError(this.formatErrors));
     }
 
-    post(path: string, body: Object = {}, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> {
-        return this.http.post(`${environment.api_url}${path}`, body, options).pipe(catchError(this.formatErrors));
+    delete(path: any): Observable<any> {
+        return this.http.delete(
+            `${environment.api_url}${path}`
+        ).pipe(catchError(this.formatErrors));  
     }
-
-    put(path: string, body: Object = {}, options: { params?: HttpParams; headers?: HttpHeaders; } = {}): Observable<any> {
-        return this.http.put(`${environment.api_url}${path}`, body, options).pipe(catchError(this.formatErrors));
-    }
-
 }
