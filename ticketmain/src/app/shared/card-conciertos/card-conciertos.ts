@@ -1,11 +1,13 @@
 import { Component, Input, OnInit,  } from '@angular/core';
 import { Concierto } from '../../core/models/conciertos.model';
 import { CommonModule } from '@angular/common';
+import { ZardButtonComponent } from '../components/button/button.component';
 
 @Component({
   selector: 'app-card-conciertos',
   imports: [
-    CommonModule
+    CommonModule,
+    ZardButtonComponent
   ],
   standalone: true,
   templateUrl: './card-conciertos.html',
