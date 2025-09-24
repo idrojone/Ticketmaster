@@ -19,7 +19,7 @@ export class GenerosService {
     //     );
     // }
 
-    get_all_generos(params: any): Observable<Genero[]> {
+    get_all_generos(): Observable<Genero[]> {
         return this.apiService.get('/api/generos').pipe(
             map((response: any) => response.data as Genero[])
         );

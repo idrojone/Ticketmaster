@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Concierto } from '../../core/models/conciertos.model';
-import { ApiService } from '../../core/services/index';
+// 
+import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 
 @Component({
@@ -15,14 +16,14 @@ import { CardConciertos } from '../card-conciertos/card-conciertos';
 
 export class ListConciertos implements OnInit {
     conciertos: Concierto[] = [];
-    ApiService = inject(ApiService);
+    conciertosService = inject(ConciertosService);
 
     ngOnInit() {
         this.getConciertos();  
     }
 
     getConciertos() {
-        this.ApiService.get('/api/conciertos', {}).subscribe(
+        this.conciertosService.get_all_conciertos().subscribe(
             (data) => {
                 console.log(data);
                 this.conciertos = data as Concierto[];
