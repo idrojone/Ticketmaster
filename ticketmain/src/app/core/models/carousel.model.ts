@@ -1,7 +1,5 @@
-export interface Genero {
+export interface GeneroCarrousel {
     slug: string;
     nombre: string;
     img: string;
-    descripcion: string;
-
 }

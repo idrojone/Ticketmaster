@@ -39,6 +39,7 @@ mongoose.connect(dbConfig.url, {
 //INCLUIR LAS RUTAS AQUI
 require('../routes/concierto.routes.js')(app);
 require('../routes/genero.routes.js')(app);
+require('../routes/carousel.routes.js')(app);
 
 ////////////////////////
 

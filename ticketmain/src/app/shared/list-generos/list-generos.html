@@ -1,1 +1,11 @@
-<p>list-generos works!</p>
+<div class="list-generos">
+    @if (generos && generos.length > 0) {
+        @for (genero of generos; track genero.slug) {
+            <app-card-generos [genero]="genero"></app-card-generos>
+        }
+    } @else {
+        <p>No hay géneros disponibles</p>
+    }
+</div>
+
+
