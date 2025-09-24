@@ -1,83 +1,102 @@
-:root {
-  --bg: #000;
-  --fg: #fff;
-  --nav-pill-bg: #1c1c1c;
+header {
+	background-color: #f9f9f9;
+	border-bottom: 1px solid #eaeaea;
+	padding: 10px 0;
+	animation: fadeIn 0.5s ease-in-out;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--fg);
-}
-
-.site-header {
-  background: var(--bg);
-  padding: 16px 24px;
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
 }
 
-.logo {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--fg);
-  text-decoration: none;
+.menu-icon {
+	display: flex;
+	align-items: center;
+}
+
+.menu-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+}
+
+.bar--top,
+.bar--bottom {
+	width: 25px; 
+	height: 3px; 
+	background-color: #000;
+	margin: 4px 0; 
+}
+
+.main-nav {
+	display: flex;
+	align-items: center;
+	gap: 120px; 
 }
 
 .main-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 24px;
-  padding: 8px 24px;
-  background: var(--nav-pill-bg);
-  border-radius: 9999px; /* píldora */
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
 }
 
-.main-nav a {
-  text-decoration: none;
-  color: var(--fg);
-  font-size: 15px;
-  font-weight: 500;
+.main-nav ul li {
+	margin: 0 20px; 
 }
 
-.main-nav a:hover {
-  color: #bbb;
+.main-nav ul li a {
+	text-decoration: none;
+	color: #000;
+	font-weight: 500;
+	font-size: 16px; 
 }
 
-.btn-pill {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  color: #000;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 9999px;
-  font-size: 15px;
+.logo-image {
+	height: 50px; 
+	width: auto;
 }
 
-.btn-pill:hover {
-  background: #f5f5f5;
+.auth-buttons {
+	display: flex;
+	align-items: center;
 }
 
-.icon {
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 1;
+.auth-buttons .btn-pill {
+	text-decoration: none;
+	color: #000;
+	border: 1px solid #000;
+	border-radius: 20px;
+	padding: 8px 20px; 
+	margin-left: 15px; 
+	font-size: 16px; 
+	font-weight: 500;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+.auth-buttons .btn-pill:hover {
+	background-color: #000;
+	color: #fff;
 }
