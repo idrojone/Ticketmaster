@@ -1,10 +1,19 @@
 const Concierto = require('../models/concierto.model.js');
+const SpotifyAPI = require('../utils/SpotifyAPI.js');
 const mongoose = require('mongoose');
 
 async function findAllConciertos(req, res) {
     try {
         const conciertos = await Concierto.find();
-        res.json(conciertos);
+        const spotifyAPI = new SpotifyAPI();
+        const conciertosWithImages = await Promise.all(conciertos.map(async (concierto) => {
+            const artistImage = await spotifyAPI.getArtistImg(concierto.artista);
+            return {
+            ...concierto._doc,
+            imagenArtista: artistImage ? artistImage.url : null
+            };
+        }));
+        res.json(conciertosWithImages);
     } catch (error) {
         res.status(500).json("Ha ocurrido un error", res.statusCode);
     }
