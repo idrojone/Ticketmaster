@@ -5,4 +5,5 @@ export interface Concierto {
     artista: string;
     lugar: string;
     precio: number;
+    imagenArtista?: string;
 }

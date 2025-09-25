@@ -1,6 +1,6 @@
 <div class="card-concierto bg-white shadow-lg rounded-lg overflow-hidden m-4">
     <div class="card-header">
-        <img src="https://image-cdn-fa.spotifycdn.com/image/ab6761610000f1780c68f6c95232e716f0abee8d" [alt]="concierto.nombre" class="concierto-imagen w-full h-48 object-cover">
+        <img [src]="concierto.imagenArtista" [alt]="concierto.nombre" class="concierto-imagen w-full h-48 object-cover">
     </div>
     
     <div class="card-body p-4">
@@ -12,8 +12,10 @@
         <p class="concierto-lugar text-gray-500 text-sm mb-2">
             <i class="fas fa-map-marker-alt mr-2"></i>{{ concierto.lugar }}
         </p>
-        <p class="concierto-precio font-semibold text-green-600">{{ concierto.precio | currency:'EUR' }}</p>
-        <button z-button>Ver mas</button>
+        <div class="flex justify-between items-center">
+            <button z-button>Ver mas</button>
+            <p class="concierto-precio font-semibold text-green-600">{{ concierto.precio | currency:'EUR' }}</p>
+        </div>
         <!-- <a [routerLink]="['/conciertos', concierto.slug]" class="concierto-detalles-link text-blue-500 hover:underline mt-4 inline-block">Ver detalles</a> -->
     </div>
 </div>

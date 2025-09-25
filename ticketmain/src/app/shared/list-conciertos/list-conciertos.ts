@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Concierto } from '../../core/models/conciertos.model';
-// 
+import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component';
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 
@@ -8,6 +8,7 @@ import { CardConciertos } from '../card-conciertos/card-conciertos';
     selector: 'app-list-conciertos',
     imports: [
         CardConciertos,
+        ZardSkeletonComponent
     ],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
@@ -17,6 +18,7 @@ import { CardConciertos } from '../card-conciertos/card-conciertos';
 export class ListConciertos implements OnInit {
     conciertos: Concierto[] = [];
     conciertosService = inject(ConciertosService);
+    skeletonArray = Array(20); 
 
     ngOnInit() {
         this.getConciertos();  
