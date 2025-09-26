@@ -3,3 +3,8 @@ export interface GeneroCarrousel {
     nombre: string;
     img: string;
 }
+
+export interface ConciertoCarrousel {
+    slug: string;
+    img: string;
+}

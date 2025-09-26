@@ -16,3 +16,22 @@
         </div>
     </div>
 }
+@if (conciertos && conciertos.length > 0) {
+    <h2>Nuestros Conciertos</h2>
+    <div class="embla embla-conciertos" emblaCarousel [options]="carouselConciertosOptions" >
+        <div class="embla__container embla__container-conciertos">
+            @for (item of conciertos; track item.slug) {
+                <div class="embla__slide embla__slide-conciertos">
+                    <div class="concert-card">
+                        <img 
+                        [src]="item.img" 
+                        [alt]="item.slug"
+                        class="concert-image"
+                        />
+                        <h3 class="concert-name">{{ item.slug }}</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
