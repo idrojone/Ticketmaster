@@ -15,7 +15,7 @@
 }
 
 .embla__slide {
-  flex: 0 0 100%; /* Cada slide ocupa el 100% del contenedor */
+  flex: 0 0 100%; 
   width: 100%;
   height: 100%;
   position: relative;
