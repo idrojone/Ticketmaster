@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild, viewChild } from '@angular/core';
-import { GeneroCarrousel } from 'src/app/core/models/carousel.model';
+import { ConciertoCarrousel, GeneroCarrousel } from 'src/app/core/models/carousel.model';
 import { EmblaCarouselDirective, EmblaCarouselType } from 'embla-carousel-angular';
 import type { EmblaOptionsType } from 'embla-carousel';
 
@@ -13,6 +13,7 @@ import type { EmblaOptionsType } from 'embla-carousel';
 })
 export class ItemsCarousel implements OnInit{
   @Input() generos ?: GeneroCarrousel[];
+  @Input() conciertos ?: ConciertoCarrousel[];
 
   @ViewChild(EmblaCarouselDirective) emblaRef!: EmblaCarouselDirective;
   emblaApi!: EmblaCarouselType;
@@ -27,6 +28,32 @@ export class ItemsCarousel implements OnInit{
     duration: 25, // Duración más rápida del snap
     dragThreshold: 10 // Umbral bajo para activar el cambio de slide
   };
+
+  carouselConciertosOptions: EmblaOptionsType = {
+    align: 'start',
+    slidesToScroll: 1, // Cambiado a 1 para mejor control
+    containScroll: 'trimSnaps',
+    dragFree: true, // Habilitamos drag libre para mejor experiencia
+    loop: true,
+    skipSnaps: false,
+    duration: 25,
+    dragThreshold: 10,
+    breakpoints: {
+      '(max-width: 1024px)': { slidesToScroll: 1 },
+      '(max-width: 768px)': { slidesToScroll: 1 },
+      '(max-width: 480px)': { slidesToScroll: 1 }
+    },
+    // autoplay: { delay: 3000}
+  };
+
+  // Autoplay para conciertos
+  startAutoplay(): void {
+    if (this.emblaApi) {
+      setInterval(() => {
+        this.emblaApi.scrollNext();
+      }, 3000); // Cambia cada 3 segundos
+    }
+  }
 
   constructor() { }
 
