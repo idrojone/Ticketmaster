@@ -27,6 +27,8 @@ class SpotifyAPI {
             console.error('Error al obtener información del artista:', error);
         }
     }
+
+    
 }
 
 module.exports = SpotifyAPI;
