@@ -1,17 +1,2 @@
-<div class="embla" emblaCarousel [options]="carouselOptions">
-  <div class="embla__container">
-    @for (item of carouselGeneros; track item.slug) {
-    <div class="embla__slide">
-      <div class="genre-card">
-        <img 
-          [src]="item.img" 
-          [alt]="item.nombre"
-          class="genre-image"
-        />
-        <h3 class="genre-name">{{ item.nombre }}</h3>
-      </div>
-    </div>
-    }
-  </div>
-</div>
+<app-items-carousel [generos]="item_generos"></app-items-carousel>
 
