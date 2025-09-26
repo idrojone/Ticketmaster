@@ -91,7 +91,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 485px) {
   .embla {
     height: 30vh; /* Incrementamos también en móvil */
   }
