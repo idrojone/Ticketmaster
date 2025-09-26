@@ -1,63 +1,53 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { EmblaCarouselDirective, EmblaCarouselType } from 'embla-carousel-angular';
 import { CarouselService } from 'src/app/core/services/carousel.service';
 import { GeneroCarrousel } from 'src/app/core/models/carousel.model';
 import type { EmblaOptionsType } from 'embla-carousel';
+import { ItemsCarousel } from 'src/app/shared/items-carousel/items-carousel';
 
 @Component({
   selector: 'app-carousel-generos',
-  imports: [EmblaCarouselDirective],
+  imports: [
+    ItemsCarousel
+  ],
   templateUrl: './carousel-generos.html',
   styleUrl: './carousel-generos.css',
   standalone: true
 })
-export class CarouselGeneros implements OnInit , AfterViewInit {
-  @ViewChild(EmblaCarouselDirective) emblaRef!: EmblaCarouselDirective;
-  emblaApi!: EmblaCarouselType;
+export class CarouselGeneros implements OnInit {
 
-  carouselGeneros: GeneroCarrousel[] = [];
+  @Input() page !: string;
+  item_generos ?: GeneroCarrousel[];
+
   carouselService = inject(CarouselService);
 
-  // Opciones del carrusel
-  carouselOptions: EmblaOptionsType = {
-    align: 'start',
-    slidesToScroll: 1,
-    containScroll: 'trimSnaps',
-    dragFree: false, // Deshabilitamos el drag libre para forzar el snap
-    loop: true, // Habilitamos loop para mejor experiencia
-    skipSnaps: false, // Mantenemos los snaps activos
-    duration: 25, // Duración más rápida del snap
-    dragThreshold: 10 // Umbral bajo para activar el cambio de slide
-  };
+  constructor( ) { }
 
   ngOnInit(): void {
-    this.get_carousel();
+    // this.get_carousel();
+    console.log("Página Carousel: ", this.page);
+    this.loadCarouselItems();
+
   }
 
-  ngAfterViewInit(): void {
-    if (this.emblaRef && this.emblaRef.emblaApi) {
-      this.emblaApi = this.emblaRef.emblaApi;
+  loadCarouselItems(): void {
+    if (this.page === 'carousel-home-generos') {
+      this.get_carousel_generos();
     }
+
   }
 
-  get_carousel(){
+  get_carousel_generos(){
     this.carouselService.get_carousel_data().subscribe(
       (data) => {
         // console.log("Carousel: "+data);
-        this.carouselGeneros = data as GeneroCarrousel[];
-        console.log("Carousel Generos: ", this.carouselGeneros);
+        this.item_generos = data as GeneroCarrousel[];
+        // console.log("Carousel Generos: ", this.item_generos);
       },
       (error) => {
         console.error('Error fetching carousel data:', error);
       }
     );
   }
-
-  // // Método para manejar errores de carga de imagen
-  // onImageError(event: Event): void {
-  //   const imgElement = event.target as HTMLImageElement;
-  //   imgElement.src = '/assets/img/placeholder-genre.png'; // Imagen por defecto
-  //   imgElement.alt = 'Imagen no disponible';
-  // }
 
 }

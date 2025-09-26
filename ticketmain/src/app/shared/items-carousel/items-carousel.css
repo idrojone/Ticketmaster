@@ -1,0 +1,115 @@
+.embla {
+  overflow: hidden;
+  width: 100%; /* Cambiado de 100vw a 100% */
+  height: 40vh; /* 40% de la altura de la viewport - incrementado */
+  margin: 0; /* Removido el margin negativo que causaba overflow */
+  position: relative;
+  max-width: 100%; /* Asegura que no exceda el contenedor padre */
+}
+
+.embla__container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  /* Removemos gap y padding para que las cards sean completamente full-width */
+}
+
+.embla__slide {
+  flex: 0 0 100%; /* Cada slide ocupa el 100% del contenedor */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95); /* Semi-transparente sobre el gradiente */
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px); /* Efecto glass */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.embla__slide:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 1);
+}
+
+.genre-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  max-width: 600px; /* Limitamos el contenido interno para mejor legibilidad */
+  margin: 0 auto; /* Centramos el contenido */
+}
+
+.genre-image {
+  width: 300px; /* Ancho fijo para mejor proporción en full-width */
+  height: 180px; /* Incrementamos la altura de la imagen también */
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.embla__slide:hover .genre-image {
+  transform: scale(1.05);
+}
+
+.genre-name {
+  font-size: 1.25rem; /* Texto más grande */
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .embla {
+    height: 35vh; /* Incrementamos también en tablet */
+  }
+  
+  .embla__slide {
+    padding: 1rem;
+  }
+  
+  .genre-card {
+    max-width: 400px;
+  }
+  
+  .genre-image {
+    width: 250px;
+    height: 130px; /* Mayor altura en tablet */
+  }
+  
+  .genre-name {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .embla {
+    height: 30vh; /* Incrementamos también en móvil */
+  }
+  
+  .embla__slide {
+    padding: 0.75rem;
+  }
+  
+  .genre-card {
+    max-width: 300px;
+  }
+  
+  .genre-image {
+    width: 200px;
+    height: 100px; /* Mayor altura en móvil */
+  }
+  
+  .genre-name {
+    font-size: 0.9rem;
+  }
+}
