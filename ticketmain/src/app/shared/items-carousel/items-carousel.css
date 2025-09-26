@@ -1,10 +1,14 @@
 .embla {
   overflow: hidden;
-  width: 100%; /* Cambiado de 100vw a 100% */
-  height: 60vh; /* Aumentado de 40vh a 60vh para mayor altura */
-  margin: 0; /* Removido el margin negativo que causaba overflow */
+  width: 100%;
+  /* Cambiado de 100vw a 100% */
+  height: 60vh;
+  /* Aumentado de 40vh a 60vh para mayor altura */
+  margin: 0;
+  /* Removido el margin negativo que causaba overflow */
   position: relative;
-  max-width: 100%; /* Asegura que no exceda el contenedor padre */
+  max-width: 100%;
+  /* Asegura que no exceda el contenedor padre */
 }
 
 .embla__container {
@@ -15,16 +19,19 @@
 }
 
 .embla__slide {
-  flex: 0 0 100%; 
+  flex: 0 0 100%;
+  /* Cada slide ocupa el 100% del contenedor */
   width: 100%;
   height: 100%;
   position: relative;
   border-radius: 1rem;
-  padding: 0; /* Removido padding para que la imagen ocupe todo */
+  padding: 0;
+  /* Removido padding para que la imagen ocupe todo */
   border: none;
   transition: all 0.3s ease;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Para que la imagen no se salga del border-radius */
+  overflow: hidden;
+  /* Para que la imagen no se salga del border-radius */
 }
 
 .embla__slide:hover {
@@ -40,9 +47,11 @@
   text-align: center;
   height: 100%;
   width: 100%;
-  justify-content: flex-end; /* Cambiado para posicionar texto en la parte inferior */
+  justify-content: flex-end;
+  /* Cambiado para posicionar texto en la parte inferior */
   position: relative;
-  padding: 2rem; /* Padding interno para el texto */
+  padding: 2rem;
+  /* Padding interno para el texto */
 }
 
 /* Overlay para mejorar legibilidad del texto */
@@ -65,9 +74,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 1rem; /* Mismo radio que el slide */
+  border-radius: 1rem;
+  /* Mismo radio que el slide */
   transition: transform 0.3s ease;
-  z-index: 1; /* Debajo del texto */
+  z-index: 1;
+  /* Debajo del texto */
 }
 
 .embla__slide:hover .genre-image {
@@ -75,34 +86,41 @@
 }
 
 .genre-name {
-  font-size: 1.25rem; /* Texto más grande */
+  font-size: 1.25rem;
+  /* Texto más grande */
   font-weight: 700;
-  color: white; /* Cambiado a blanco para contrastar con la imagen */
+  color: white;
+  /* Cambiado a blanco para contrastar con la imagen */
   margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7); /* Sombra más fuerte para legibilidad */
-  z-index: 2; /* Encima de la imagen */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  /* Sombra más fuerte para legibilidad */
+  z-index: 2;
+  /* Encima de la imagen */
   position: relative;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .embla {
-    height: 45vh; /* Aumentado de 35vh a 45vh en tablet */
+    height: 45vh;
+    /* Aumentado de 35vh a 45vh en tablet */
   }
-  
+
   .embla__slide {
-    padding: 0; /* Sin padding para que la imagen ocupe todo */
+    padding: 0;
+    /* Sin padding para que la imagen ocupe todo */
   }
-  
+
   .genre-card {
     max-width: 400px;
   }
-  
+
   .genre-image {
     width: 250px;
-    height: 130px; /* Mayor altura en tablet */
+    height: 130px;
+    /* Mayor altura en tablet */
   }
-  
+
   .genre-name {
     font-size: 1rem;
   }
@@ -110,22 +128,25 @@
 
 @media (max-width: 485px) {
   .embla {
-    height: 40vh; /* Incrementamos también en móvil */
+    height: 40vh;
+    /* Incrementamos también en móvil */
   }
-  
+
   .embla__slide {
-    padding: 0; /* Sin padding para que la imagen ocupe todo */
+    padding: 0;
+    /* Sin padding para que la imagen ocupe todo */
   }
-  
+
   .genre-card {
     max-width: 300px;
   }
-  
+
   .genre-image {
     width: 200px;
-    height: 100px; /* Mayor altura en móvil */
+    height: 100px;
+    /* Mayor altura en móvil */
   }
-  
+
   .genre-name {
     font-size: 0.9rem;
   }
@@ -135,7 +156,8 @@
 
 /* Carrusel de conciertos - contenedor principal */
 .embla-conciertos {
-  height: 30vh; /* Altura más pequeña para conciertos */
+  height: 30vh;
+  /* Altura más pequeña para conciertos */
   /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
   border-radius: 1rem;
   padding: 1rem;
@@ -143,12 +165,14 @@
 
 /* Container de conciertos con gap entre slides */
 .embla__container-conciertos {
-  gap: 1rem; /* Espacio entre cards */
+  gap: 1rem;
+  /* Espacio entre cards */
 }
 
 /* Slide individual de concierto - muestra 4 cards */
 .embla__slide-conciertos {
-  flex: 0 0 calc(25% - 0.75rem); /* 25% del ancho menos el gap */
+  flex: 0 0 calc(25% - 0.75rem);
+  /* 25% del ancho menos el gap */
   width: calc(25% - 0.75rem);
   height: 100%;
   position: relative;
@@ -159,7 +183,8 @@
   transition: all 0.3s ease;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  min-width: 0; /* Permite que el contenido se contraiga */
+  min-width: 0;
+  /* Permite que el contenido se contraiga */
   box-sizing: border-box;
 }
 
@@ -210,7 +235,8 @@
 /* Responsive para conciertos */
 @media (max-width: 1024px) {
   .embla__slide-conciertos {
-    flex: 0 0 calc(33.333% - 0.67rem); /* 3 cards en tablet grande */
+    flex: 0 0 calc(33.333% - 0.67rem);
+    /* 3 cards en tablet grande */
     width: calc(33.333% - 0.67rem);
   }
 }
@@ -220,18 +246,19 @@
     height: 25vh;
     padding: 0.75rem;
   }
-  
+
   .embla__slide-conciertos {
-    flex: 0 0 calc(50% - 0.5rem); /* 2 cards en tablet */
+    flex: 0 0 calc(50% - 0.5rem);
+    /* 2 cards en tablet */
     width: calc(50% - 0.5rem);
     padding: 0.75rem;
   }
-  
+
   .concert-image {
     max-width: 120px;
     height: 80px;
   }
-  
+
   .concert-name {
     font-size: 0.8rem;
   }
@@ -242,18 +269,19 @@
     height: 22vh;
     padding: 0.5rem;
   }
-  
+
   .embla__slide-conciertos {
-    flex: 0 0 calc(100% - 0.5rem); /* 1 card en móvil */
+    flex: 0 0 calc(100% - 0.5rem);
+    /* 1 card en móvil */
     width: calc(100% - 0.5rem);
     padding: 0.5rem;
   }
-  
+
   .concert-image {
     max-width: 100px;
     height: 70px;
   }
-  
+
   .concert-name {
     font-size: 0.75rem;
   }

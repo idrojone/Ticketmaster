@@ -1,5 +1,5 @@
 @if (generos && generos.length > 0) {
-    <div class="embla" emblaCarousel [options]="carouselGenerosOptions" >
+    <div class="embla mt-1000" emblaCarousel [options]="carouselGenerosOptions">
         <div class="embla__container">
             @for (item of generos; track item.slug) {
                 <div class="embla__slide">
@@ -9,7 +9,7 @@
                         [alt]="item.nombre"
                         class="genre-image"
                         />
-                        <h3 class="genre-name">{{ item.nombre }}</h3>
+                        <h3 class="genre-name text-center font-bold text-xl">{{ item.nombre }}</h3>
                     </div>
                 </div>
             }

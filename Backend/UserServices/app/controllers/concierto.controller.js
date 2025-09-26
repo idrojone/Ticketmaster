@@ -6,14 +6,14 @@ async function findAllConciertos(req, res) {
     try {
         const conciertos = await Concierto.find();
         const spotifyAPI = new SpotifyAPI();
-        const conciertosWithImages = await Promise.all(conciertos.map(async (concierto) => {
-            const artistImage = await spotifyAPI.getArtistImg(concierto.artista);
-            return {
-            ...concierto._doc,
-            imagenArtista: artistImage ? artistImage.url : null
-            };
-        }));
-        res.json(conciertosWithImages);
+        // const conciertosWithImages = await Promise.all(conciertos.map(async (concierto) => {
+        //     const artistImage = await spotifyAPI.getArtistImg(concierto.artista);
+        //     return {
+        //     ...concierto._doc,
+        //     imagenArtista: artistImage ? artistImage.url : null
+        //     };
+        // }));
+        res.json(conciertos);
     } catch (error) {
         res.status(500).json("Ha ocurrido un error", res.statusCode);
     }
