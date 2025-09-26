@@ -16,4 +16,11 @@ export class ConciertosService {
         );
     }
 
+    getConcierto(slug: string): Observable<Concierto> {
+        return this.apiService.get(`/api/conciertos/${slug}`).pipe(
+            tap((data) => console.log(data)),
+            map((response: any) => response as Concierto)
+        );
+    }
+
 }

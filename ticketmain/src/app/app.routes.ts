@@ -6,5 +6,8 @@ export const routes: Routes = [
     },
     {
         path: 'shop', loadComponent: () => import('./pages/shop/shop').then(m => m.Shop)
+    },
+    {
+        path: 'details', loadChildren: () => import('./pages/details/details.module').then(m => m.DetailsModule)
     }
 ];

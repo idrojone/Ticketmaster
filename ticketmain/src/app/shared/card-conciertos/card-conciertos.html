@@ -1,4 +1,4 @@
-<div class="card-concierto bg-white shadow-lg rounded-lg overflow-hidden m-4">
+<div class="card-concierto bg-white shadow-lg rounded-lg overflow-hidden m-4" [routerLink]="['/details', concierto.slug]" style="cursor: pointer;">
     <div class="card-header">
         <img [src]="concierto.imagenArtista" [alt]="concierto.nombre" class="concierto-imagen w-full h-48 object-cover">
     </div>
@@ -13,10 +13,11 @@
             <i class="fas fa-map-marker-alt mr-2"></i>{{ concierto.lugar }}
         </p>
         <div class="flex justify-between items-center">
-            <button z-button>Ver mas</button>
+            <button z-button [routerLink]="['/details', concierto.slug]">
+                Ver Detalles
+            </button>
             <p class="concierto-precio font-semibold text-green-600">{{ concierto.precio | currency:'EUR' }}</p>
         </div>
-        <!-- <a [routerLink]="['/conciertos', concierto.slug]" class="concierto-detalles-link text-blue-500 hover:underline mt-4 inline-block">Ver detalles</a> -->
     </div>
 </div>
 
