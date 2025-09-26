@@ -23,9 +23,11 @@ export class CarouselGeneros implements OnInit , AfterViewInit {
     align: 'start',
     slidesToScroll: 1,
     containScroll: 'trimSnaps',
-    dragFree: true,
-    loop: false,
-    skipSnaps: false
+    dragFree: false, // Deshabilitamos el drag libre para forzar el snap
+    loop: true, // Habilitamos loop para mejor experiencia
+    skipSnaps: false, // Mantenemos los snaps activos
+    duration: 25, // Duración más rápida del snap
+    dragThreshold: 10 // Umbral bajo para activar el cambio de slide
   };
 
   ngOnInit(): void {
