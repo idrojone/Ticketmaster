@@ -1,3 +1,6 @@
+/* Importar fuentes minimalistas y modernas */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 .embla {
   overflow: hidden;
   width: 100%;
@@ -47,25 +50,28 @@
   text-align: center;
   height: 100%;
   width: 100%;
-  justify-content: flex-end;
-  /* Cambiado para posicionar texto en la parte inferior */
+  justify-content: center;
+  /* Centrado en el medio de la slide */
   position: relative;
   padding: 2rem;
   /* Padding interno para el texto */
 }
 
-/* Overlay para mejorar legibilidad del texto */
+/* Overlay minimalista */
 .genre-card::before {
   content: '';
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  height: 50%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
-  border-radius: 0 0 1rem 1rem;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  /* Overlay muy sutil */
+  border-radius: 1rem;
   z-index: 1;
 }
+
+/* hola */
 
 .genre-image {
   position: absolute;
@@ -86,17 +92,23 @@
 }
 
 .genre-name {
-  font-size: 1.25rem;
-  /* Texto más grande */
-  font-weight: 700;
+  font-family: 'Inter', 'Poppins', 'Montserrat', sans-serif;
+  /* Fuentes modernas y ultra minimalistas */
+  font-size: 2.2rem;
+  /* Tamaño impactante */
+  font-weight: 600;
+  /* Peso medio para equilibrio */
   color: white;
-  /* Cambiado a blanco para contrastar con la imagen */
   margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-  /* Sombra más fuerte para legibilidad */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* Sombra sutil para legibilidad */
   z-index: 2;
-  /* Encima de la imagen */
   position: relative;
+  letter-spacing: 6px;
+  /* Espaciado generoso */
+  text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Responsive adjustments */
@@ -122,7 +134,10 @@
   }
 
   .genre-name {
-    font-size: 1rem;
+    font-size: 1.8rem;
+    /* Tamaño apropiado para tablet */
+    letter-spacing: 4px;
+    /* Espaciado ajustado para tablet */
   }
 }
 
@@ -148,11 +163,55 @@
   }
 
   .genre-name {
-    font-size: 0.9rem;
+    font-size: 1.4rem;
+    /* Tamaño apropiado para móvil */
+    letter-spacing: 3px;
+    /* Espaciado ajustado para móvil */
   }
 }
 
 /* ========== ESTILOS ESPECÍFICOS PARA CONCIERTOS ========== */
+
+/* Sección de título de conciertos */
+.concerts-section {
+  text-align: center;
+  margin: 4rem 0 2rem 0;
+  padding: 0 2rem;
+}
+
+.concerts-title {
+  font-family: 'Inter', 'Poppins', 'Montserrat', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+
+.concerts-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.concerts-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #666;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+  opacity: 0.8;
+}
 
 /* Carrusel de conciertos - contenedor principal */
 .embla-conciertos {
@@ -234,6 +293,14 @@
 
 /* Responsive para conciertos */
 @media (max-width: 1024px) {
+  .concerts-title {
+    font-size: 2.5rem;
+  }
+  
+  .concerts-subtitle {
+    font-size: 1rem;
+  }
+  
   .embla__slide-conciertos {
     flex: 0 0 calc(33.333% - 0.67rem);
     /* 3 cards en tablet grande */
@@ -242,6 +309,25 @@
 }
 
 @media (max-width: 768px) {
+  .concerts-section {
+    margin: 3rem 0 1.5rem 0;
+    padding: 0 1rem;
+  }
+  
+  .concerts-title {
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+  
+  .concerts-title::after {
+    width: 40px;
+    height: 2px;
+  }
+  
+  .concerts-subtitle {
+    font-size: 0.9rem;
+  }
+
   .embla-conciertos {
     height: 25vh;
     padding: 0.75rem;
@@ -265,6 +351,24 @@
 }
 
 @media (max-width: 480px) {
+  .concerts-section {
+    margin: 2rem 0 1rem 0;
+  }
+  
+  .concerts-title {
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .concerts-title::after {
+    width: 30px;
+    height: 2px;
+  }
+  
+  .concerts-subtitle {
+    font-size: 0.8rem;
+  }
+
   .embla-conciertos {
     height: 22vh;
     padding: 0.5rem;
