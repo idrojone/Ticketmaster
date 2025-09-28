@@ -24,14 +24,14 @@
     <div class="embla embla-conciertos" emblaCarousel [options]="carouselConciertosOptions" >
         <div class="embla__container embla__container-conciertos">
             @for (item of conciertos; track item.slug) {
-                <div class="embla__slide embla__slide-conciertos">
+                <div class="embla__slide embla__slide-conciertos" [routerLink]="['/details', item.slug]">
                     <div class="concert-card">
-                        <img 
-                        [src]="item.img" 
-                        [alt]="item.slug"
-                        class="concert-image"
-                        />
-                        <h3 class="concert-name">{{ item.slug }}</h3>
+                            <img 
+                            [src]="item.imagenArtista" 
+                            [alt]="item.slug"
+                            class="concert-image"
+                            />
+                        <h3 class="concert-name">{{ item.nombre }}</h3>
                     </div>
                 </div>
             }

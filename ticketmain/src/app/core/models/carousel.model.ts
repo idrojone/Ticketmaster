@@ -6,5 +6,6 @@ export interface GeneroCarrousel {
 
 export interface ConciertoCarrousel {
     slug: string;
-    img: string;
+    nombre: string;
+    imagenArtista: string;
 }

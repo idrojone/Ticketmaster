@@ -2,13 +2,18 @@ import { Component, Input, OnInit, ViewChild, viewChild } from '@angular/core';
 import { ConciertoCarrousel, GeneroCarrousel } from 'src/app/core/models/carousel.model';
 import { EmblaCarouselDirective, EmblaCarouselType } from 'embla-carousel-angular';
 import type { EmblaOptionsType } from 'embla-carousel';
+import { DetailsRoutingModule } from "src/app/pages/details/details-routing-module";
+import { RouterLink } from '@angular/router';
+
 
 
 @Component({
   selector: 'app-items-carousel',
-  imports: [EmblaCarouselDirective],
+  imports: [EmblaCarouselDirective, DetailsRoutingModule, RouterLink],
   templateUrl: './items-carousel.html',
-  styleUrl: './items-carousel.css',
+  styleUrls: [
+    './items-carousel.css'
+  ],
   standalone: true
 })
 export class ItemsCarousel implements OnInit{
