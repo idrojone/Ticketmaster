@@ -17,7 +17,10 @@
     </div>
 }
 @if (conciertos && conciertos.length > 0) {
-    <h2>Nuestros Conciertos</h2>
+    <div class="concerts-section">
+        <h2 class="concerts-title">Nuestros Conciertos</h2>
+        <div class="concerts-subtitle">Descubre los mejores eventos</div>
+    </div>
     <div class="embla embla-conciertos" emblaCarousel [options]="carouselConciertosOptions" >
         <div class="embla__container embla__container-conciertos">
             @for (item of conciertos; track item.slug) {
