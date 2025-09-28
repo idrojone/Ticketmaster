@@ -65,7 +65,8 @@ ConciertoSchema.methods.toConciertoResponse = async function () {
 ConciertoSchema.methods.toConciertoCarouselResponse = async function () {
     return {
         slug: this.slug,
-        imagenesShow: this.imagenesShow || [],
+        nombre: this.nombre,
+        imagenArtista: this.imagenArtista,
     }
 };
 

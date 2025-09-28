@@ -27,7 +27,7 @@
   width: 100%;
   height: 100%;
   position: relative;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   padding: 0;
   /* Removido padding para que la imagen ocupe todo */
   border: none;
@@ -37,11 +37,11 @@
   /* Para que la imagen no se salga del border-radius */
 }
 
-.embla__slide:hover {
+/* .embla__slide:hover {
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
   background: rgba(255, 255, 255, 1);
-}
+} */
 
 .genre-card {
   display: flex;
@@ -67,7 +67,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.2);
   /* Overlay muy sutil */
-  border-radius: 1rem;
+  /* border-radius: 1rem;  */
   z-index: 1;
 }
 
@@ -80,16 +80,16 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   /* Mismo radio que el slide */
   transition: transform 0.3s ease;
   z-index: 1;
   /* Debajo del texto */
 }
 
-.embla__slide:hover .genre-image {
+/* .embla__slide:hover .genre-image {
   transform: scale(1.05);
-}
+} */
 
 .genre-name {
   font-family: 'Inter', 'Poppins', 'Montserrat', sans-serif;
@@ -267,17 +267,17 @@
 /* Imagen de concierto */
 .concert-image {
   width: 100%;
-  max-width: 150px;
-  height: 100px;
+  max-width: 100%;
+  height: 75%;
   object-fit: cover;
   border-radius: 0.5rem;
   margin-bottom: 0.75rem;
   transition: transform 0.3s ease;
 }
 
-.embla__slide-conciertos:hover .concert-image {
+/* .embla__slide-conciertos:hover .concert-image {
   transform: scale(1.05);
-}
+} */
 
 /* Nombre de concierto */
 .concert-name {
@@ -286,6 +286,10 @@
   color: #1f2937;
   margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* background: linear-gradient(90deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
+  background-clip: text;
   word-wrap: break-word;
   max-width: 100%;
   line-height: 1.3;
