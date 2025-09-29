@@ -24,4 +24,13 @@ export class CarouselService {
         );
     }
 
+    get_carousel_concierto_details(slug: string): Observable<ConciertoCarrousel[]> {
+        console.log("Slug recibido en Service: ", slug);
+        console.log("URL construida: ", `/api/carousel/conciertos/${slug}`);
+        return this.apiService.get(`/api/carousel/conciertos/${slug}`).pipe(
+            tap(response => console.log('Carousel conciertos details data fetched:', response)),
+            map((response: any) => response.conciertos as ConciertoCarrousel[])
+        );
+    }
+
 }
