@@ -1,7 +1,6 @@
 const Genero = require('../models/genero.model.js');
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
-const conciertos = require("../controllers/concierto.controller.js");
 
 const create = asyncHandler(async (req, res) => {
 
