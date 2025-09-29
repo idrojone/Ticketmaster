@@ -4,6 +4,11 @@ export interface GeneroCarrousel {
     img: string;
 }
 
+export interface ConciertoCarrouselDetails {
+    slug: string;
+    imagenesShow?: string[];
+}
+
 export interface ConciertoCarrousel {
     slug: string;
     nombre: string;

@@ -15,10 +15,10 @@ export class DetailsResolver implements Resolve<Concierto> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Concierto> {
         return this.conciertoService.getConcierto(route.paramMap.get('slug')!).pipe(
-            catchError((error) => { {
+            catchError((error) => {
                 console.error('Error fetching concierto data', error);
                 throw error;
-            }
-        }));
+            })
+        );
     }
 } 
