@@ -23,7 +23,8 @@ const genero_schema = mongoose.Schema({
     id_genero: {
         type: String,
         required: true
-    }
+    },
+    conciertos: [{type: mongoose.Schema.Types.ObjectId ,ref: "Concierto" }]
 });
 
 genero_schema.plugin(uniqueValidator, { msg: "already taken" });
@@ -57,6 +58,24 @@ genero_schema.methods.toGeneroCarouselResponse = function() {
         nombre: this.nombre,
         img: this.img
     };
+}
+
+genero_schema.methods.addConcierto = function(concierto_id) {
+
+    if (this.conciertos.indexOf(concierto_id) === -1) {
+        this.conciertos.push(concierto_id);
+    }
+
+    return this.save();
+
+}
+
+genero_schema.methods.removeConcierto = function(concierto_id) {
+
+    if (this.conciertos.indexOf(concierto_id) !== -1) {
+        this.conciertos.pull(concierto_id);
+    }
+    return this.save();
 }
 
 module.exports = mongoose.model('Genero', genero_schema);

@@ -1,0 +1,220 @@
+[{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49213"
+  },
+  "slug": "rock-a3f7k2",
+  "nombre": "Rock",
+  "img": "assets/img/rock.jpg",
+  "descripcion": "Música rock clásica y moderna con guitarras eléctricas y ritmos potentes",
+  "id_genero": "GEN001",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49214"
+  },
+  "slug": "pop-m8n5w1",
+  "nombre": "Pop",
+  "img": "assets/img/pop.jpg",
+  "descripcion": "Música popular contemporánea con melodías pegadizas y comerciales",
+  "id_genero": "GEN002",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49215"
+  },
+  "slug": "hip-hop-x7z9q4",
+  "nombre": "Hip Hop",
+  "img": "assets/img/hiphop.jpg",
+  "descripcion": "Música urbana con rap, beats y cultura hip hop",
+  "id_genero": "GEN003",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49216"
+  },
+  "slug": "electronic-p2r6t8",
+  "nombre": "Electronic",
+  "img": "assets/img/electronic.jpg",
+  "descripcion": "Música electrónica, EDM y sonidos sintetizados",
+  "id_genero": "GEN004",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49217"
+  },
+  "slug": "reggaeton-k5h3n9",
+  "nombre": "Reggaeton",
+  "img": "assets/img/reggaeton.jpg",
+  "descripcion": "Música urbana latina con ritmos caribeños",
+  "id_genero": "GEN005",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49218"
+  },
+  "slug": "jazz-d1f4v7",
+  "nombre": "Jazz",
+  "img": "assets/img/jazz.jpg",
+  "descripcion": "Jazz clásico y contemporáneo con improvisación",
+  "id_genero": "GEN006",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49219"
+  },
+  "slug": "blues-s8l2b6",
+  "nombre": "Blues",
+  "img": "assets/img/blues.jpg",
+  "descripcion": "Blues tradicional con guitarra y armónica",
+  "id_genero": "GEN007",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a4921a"
+  },
+  "slug": "country-g3y5u0",
+  "nombre": "Country",
+  "img": "assets/img/country.jpg",
+  "descripcion": "Música country americana y folk",
+  "id_genero": "GEN008",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a4921b"
+  },
+  "slug": "classical-c9i1e4",
+  "nombre": "Classical",
+  "img": "assets/img/classical.jpg",
+  "descripcion": "Música clásica, orquestal y de cámara",
+  "id_genero": "GEN009",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a4921c"
+  },
+  "slug": "reggae-j6o8a2",
+  "nombre": "Reggae",
+  "img": "assets/img/reggae.jpg",
+  "descripcion": "Reggae jamaicano con ritmos relajados",
+  "id_genero": "GEN010",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a4921d"
+  },
+  "slug": "alternative-w4t7r5",
+  "nombre": "Alternative",
+  "img": "assets/img/alternative.jpg",
+  "descripcion": "Rock alternativo e indie underground",
+  "id_genero": "GEN011",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a4921e"
+  },
+  "slug": "metal-z1m9x3",
+  "nombre": "Metal",
+  "img": "assets/img/metal.jpg",
+  "descripcion": "Heavy metal y subgéneros extremos",
+  "id_genero": "GEN012",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a4921f"
+  },
+  "slug": "punk-n5q2l8",
+  "nombre": "Punk",
+  "img": "assets/img/punk.jpg",
+  "descripcion": "Punk rock rebelde y hardcore",
+  "id_genero": "GEN013",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49220"
+  },
+  "slug": "r-b-h7k4p1",
+  "nombre": "R&B",
+  "img": "assets/img/rnb.jpg",
+  "descripcion": "Rhythm and Blues contemporáneo",
+  "id_genero": "GEN014",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49221"
+  },
+  "slug": "soul-f3v6c9",
+  "nombre": "Soul",
+  "img": "assets/img/soul.jpg",
+  "descripcion": "Soul clásico y funk con groove",
+  "id_genero": "GEN015",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49222"
+  },
+  "slug": "folk-b8s1d4",
+  "nombre": "Folk",
+  "img": "assets/img/folk.jpg",
+  "descripcion": "Música folk tradicional y acústica",
+  "id_genero": "GEN016",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49223"
+  },
+  "slug": "latin-y2u5i7",
+  "nombre": "Latin",
+  "img": "assets/img/latin.jpg",
+  "descripcion": "Música latina tradicional y moderna",
+  "id_genero": "GEN017",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49224"
+  },
+  "slug": "flamenco-q6w3e0",
+  "nombre": "Flamenco",
+  "img": "assets/img/flamenco.jpg",
+  "descripcion": "Flamenco español tradicional con guitarra",
+  "id_genero": "GEN018",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49225"
+  },
+  "slug": "indie-l9r4t6",
+  "nombre": "Indie",
+  "img": "assets/img/indie.jpg",
+  "descripcion": "Música independiente y experimental",
+  "id_genero": "GEN019",
+  "conciertos": []
+},
+{
+  "_id": {
+    "$oid": "68dac3cd6cbb071eb8a49226"
+  },
+  "slug": "trap-a5g8j2",
+  "nombre": "Trap",
+  "img": "assets/img/trap.jpg",
+  "descripcion": "Trap urbano con beats pesados",
+  "id_genero": "GEN020",
+  "conciertos": []
+}]

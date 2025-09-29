@@ -1,0 +1,122 @@
+[
+  {
+    "slug": "bad-bunny-madrid-2024",
+    "nombre": "Bad Bunny World's Hottest Tour",
+    "fecha": "2024-11-15",
+    "artista": "Bad Bunny",
+    "lugar": "Estadio Santiago Bernabéu - Madrid",
+    "precio": 125,
+    "aforo": 81044,
+    "duracion": "2h 15min",
+    "imagenArtista": "https://i.scdn.co/image/ab6761610000517481f47f44084e0a09b5f0fa13",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "taylor-swift-barcelona-2024",
+    "nombre": "The Eras Tour",
+    "fecha": "2024-12-08",
+    "artista": "Taylor Swift",
+    "lugar": "Camp Nou - Barcelona",
+    "precio": 180,
+    "aforo": 99354,
+    "duracion": "2h 30min",
+    "imagenArtista": "https://i.scdn.co/image/ab67616100005174e672b5f553298dcdccb0e676",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "coldplay-sevilla-2024",
+    "nombre": "Music of the Spheres World Tour",
+    "fecha": "2024-10-22",
+    "artista": "Coldplay",
+    "lugar": "Estadio de La Cartuja - Sevilla",
+    "precio": 95.5,
+    "aforo": 60000,
+    "duracion": "2h 10min",
+    "imagenArtista": "https://i.scdn.co/image/ab676161000051741ba8fc5f5c73e7e9313cc6eb",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "dua-lipa-valencia-2024",
+    "nombre": "Radical Optimism Tour",
+    "fecha": "2024-11-30",
+    "artista": "Dua Lipa",
+    "lugar": "Palau de la Música - Valencia",
+    "precio": 75,
+    "aforo": 2000,
+    "duracion": "1h 45min",
+    "imagenArtista": "https://i.scdn.co/image/ab676161000051740c68f6c95232e716f0abee8d",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "the-weeknd-bilbao-2024",
+    "nombre": "After Hours til Dawn Tour",
+    "fecha": "2024-12-12",
+    "artista": "The Weeknd",
+    "lugar": "Bilbao Arena - Bilbao",
+    "precio": 110,
+    "aforo": 15400,
+    "duracion": "2h",
+    "imagenArtista": "https://i.scdn.co/image/ab676161000051749e528993a2820267b97f6aae",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "rosalia-madrid-2024",
+    "nombre": "Motomami World Tour",
+    "fecha": "2024-10-18",
+    "artista": "Rosalía",
+    "lugar": "WiZink Center - Madrid",
+    "precio": 85,
+    "aforo": 17000,
+    "duracion": "1h 50min",
+    "imagenArtista": "https://i.scdn.co/image/ab67616100005174d7bb678bef6d2f26110cae49",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "harry-styles-granada-2024",
+    "nombre": "Love On Tour",
+    "fecha": "2024-11-05",
+    "artista": "Harry Styles",
+    "lugar": "Palacio de Deportes - Granada",
+    "precio": 120,
+    "aforo": 10000,
+    "duracion": "2h 10min",
+    "imagenArtista": "https://i.scdn.co/image/ab67616100005174f7db7c8ede90a019c54590bb",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "metallica-zaragoza-2024",
+    "nombre": "M72 World Tour",
+    "fecha": "2024-12-20",
+    "artista": "Metallica",
+    "lugar": "Estadio de La Romareda - Zaragoza",
+    "precio": 140,
+    "aforo": 33500,
+    "duracion": "2h 20min",
+    "imagenArtista": "https://i.scdn.co/image/ab6761610000517469ca98dd3083f1082d740e44",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "ed-sheeran-santander-2024",
+    "nombre": "+-=÷x Tour (Mathematics Tour)",
+    "fecha": "2024-11-25",
+    "artista": "Ed Sheeran",
+    "lugar": "Palacio de Festivales - Santander",
+    "precio": 90,
+    "aforo": 2500,
+    "duracion": "2h",
+    "imagenArtista": "https://i.scdn.co/image/ab67616100005174d55c95ad400aed87da52daec",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  },
+  {
+    "slug": "billie-eilish-murcia-2024",
+    "nombre": "Happier Than Ever World Tour",
+    "fecha": "2024-10-28",
+    "artista": "Billie Eilish",
+    "lugar": "Auditorio Víctor Villegas - Murcia",
+    "precio": 100,
+    "aforo": 2000,
+    "duracion": "1h 50min",
+    "imagenArtista": "https://i.scdn.co/image/ab676161000051744a21b4760d2ecb7b0dcdc8da",
+    "imagenesShow": ["/assets/img/show.png","/assets/img/show2.png"]
+  }
+]
