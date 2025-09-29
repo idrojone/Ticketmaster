@@ -35,6 +35,10 @@ const ConciertoSchema = new mongoose.Schema({
     imagenesShow: { 
         type: [String], 
         default: [] 
+    },
+    id_genero: {
+        type: String,
+        required: true
     }
 });
 
@@ -60,7 +64,7 @@ ConciertoSchema.methods.toConciertoResponse = async function () {
         lugar: this.lugar,
         precio: this.precio
     }
-}
+};
 
 ConciertoSchema.methods.toConciertoCarouselResponse = async function () {
     return {
@@ -69,5 +73,6 @@ ConciertoSchema.methods.toConciertoCarouselResponse = async function () {
         imagenArtista: this.imagenArtista,
     }
 };
+
 
 module.exports = mongoose.model('Concierto', ConciertoSchema);

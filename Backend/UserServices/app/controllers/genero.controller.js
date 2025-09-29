@@ -1,6 +1,7 @@
 const Genero = require('../models/genero.model.js');
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
+const conciertos = require("../controllers/concierto.controller.js");
 
 const create = asyncHandler(async (req, res) => {
 
@@ -72,7 +73,23 @@ const findOneGenero = asyncHandler(async (req, res) => {
     
     const { slug } = req.params;
     const generos = await Genero.findOne({ slug });
+
+    // return res.json(generos);
+
     if (!generos) {
+        return res.status(404).json({
+            success: false,
+            message: "Genero not found",
+            status: 404
+        });
+    }
+    return res.json(generos);
+});
+
+const findOneGeneroById = asyncHandler(async (req, res) => {
+    const { id_genero } = req.params;
+    const genero = await Genero.findOne({ id_genero });
+    if (!genero) {
         return res.status(404).json({
             success: false,
             message: "Genero not found",
@@ -82,7 +99,7 @@ const findOneGenero = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: true,
         message: "Género obtenido correctamente",
-        data: generos.toGeneroResponse(),
+        data: genero.toGeneroResponse(),
         status: 200
     });
 });
@@ -90,5 +107,6 @@ const findOneGenero = asyncHandler(async (req, res) => {
 module.exports = { 
     create,
     findAllGeneros,
-    findOneGenero
+    findOneGenero,
+    findOneGeneroById
 }
