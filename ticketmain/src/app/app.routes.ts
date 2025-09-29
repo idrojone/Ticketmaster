@@ -8,6 +8,18 @@ export const routes: Routes = [
         path: 'shop', loadComponent: () => import('./pages/shop/shop').then(m => m.Shop)
     },
     {
-        path: 'details', loadChildren: () => import('./pages/details/details.module').then(m => m.DetailsModule)
-    }
+        path: 'details/concierto/:slug', 
+        loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsComponent),
+        resolve: {
+            concierto: () => import('./pages/details/details-resolver.service').then(m => m.DetailsResolver)
+        }
+    },
+    // Ruta futura para festivales
+    // {
+    //     path: 'details/festival/:slug', 
+    //     loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsComponent),
+    //     resolve: {
+    //         festival: () => import('./pages/details/details-resolver.service').then(m => m.DetailsResolver)
+    //     }
+    // }
 ];

@@ -74,5 +74,11 @@ ConciertoSchema.methods.toConciertoCarouselResponse = async function () {
     }
 };
 
+ConciertoSchema.methods.toConciertoDetailsResponse = async function () {
+    return {
+        slug: this.slug,
+        imagenesShow: this.imagenesShow
+    }
+}
 
 module.exports = mongoose.model('Concierto', ConciertoSchema);

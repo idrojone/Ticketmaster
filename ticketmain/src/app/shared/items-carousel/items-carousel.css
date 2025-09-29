@@ -394,3 +394,153 @@
     font-size: 0.75rem;
   }
 }
+
+
+
+/* ========== ESTILOS ESPECÍFICOS PARA CARRUSEL DE DETALLES ========== */
+
+/* Carrusel de detalles - contenedor principal */
+.embla-details {
+  height: 35vh;
+  /* background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); */
+  border-radius: 1.2rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Container de detalles con gap entre slides */
+.embla__container-details {
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Slide individual de detalle - muestra 3 cards */
+.embla__slide-details {
+  flex: 0 0 calc(33.333% - 1rem);
+  width: calc(33.333% - 1rem);
+  height: 100%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.embla__slide-details:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+/* Card de detalle */
+.details-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+  padding: 0;
+}
+
+/* Imagen de detalle */
+.details-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.embla__slide-details:hover .details-image {
+  transform: scale(1.03);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto de brillo en hover */
+.details-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  /* background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent); */
+  transform: rotate(45deg) translate(-100%, -100%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.embla__slide-details:hover .details-card::before {
+  transform: rotate(45deg) translate(100%, 100%);
+}
+
+/* Responsive para detalles */
+@media (max-width: 1024px) {
+  .embla-details {
+    height: 30vh;
+    padding: 1.2rem;
+  }
+
+  .embla__slide-details {
+    flex: 0 0 calc(50% - 0.75rem);
+    width: calc(50% - 0.75rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .embla-details {
+    height: 28vh;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .embla__container-details {
+    gap: 1rem;
+  }
+
+  .embla__slide-details {
+    flex: 0 0 calc(50% - 0.5rem);
+    width: calc(50% - 0.5rem);
+  }
+
+  .details-image {
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .embla-details {
+    height: 25vh;
+    padding: 0.8rem;
+    margin: 1rem 0;
+    border-radius: 1rem;
+  }
+
+  .embla__container-details {
+    gap: 0.8rem;
+  }
+
+  .embla__slide-details {
+    flex: 0 0 calc(100% - 0.5rem);
+    width: calc(100% - 0.5rem);
+  }
+
+  .details-image {
+    border-radius: 1rem;
+  }
+}

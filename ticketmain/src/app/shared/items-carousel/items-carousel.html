@@ -24,7 +24,7 @@
     <div class="embla embla-conciertos" emblaCarousel [options]="carouselConciertosOptions" >
         <div class="embla__container embla__container-conciertos">
             @for (item of conciertos; track item.slug) {
-                <div class="embla__slide embla__slide-conciertos" [routerLink]="['/details', item.slug]">
+                <div class="embla__slide embla__slide-conciertos" [routerLink]="['/details/concierto', item.slug]">
                     <div class="concert-card">
                             <img 
                             [src]="item.imagenArtista" 
@@ -32,6 +32,25 @@
                             class="concert-image"
                             />
                         <h3 class="concert-name">{{ item.nombre }}</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (item_concierto_details && item_concierto_details.length > 0) {
+    
+    <div class="embla embla-details mt-8" emblaCarousel [options]="carouselConceritoDetailsOptions" >
+        <div class="embla__container embla__container-details">
+            @for (item of item_concierto_details; track item) {
+                <div class="embla__slide embla__slide-details">
+                    <div class="details-card">
+                            <img 
+                            [src]="item" 
+                            [alt]="item"
+                            class="details-image"
+                            />
                     </div>
                 </div>
             }
