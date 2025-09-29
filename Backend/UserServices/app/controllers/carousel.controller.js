@@ -48,7 +48,7 @@ const getOneConciertoCarrusel = asyncHandler(async (req, res) => {
         });
     }
     return res.status(200).json({
-        concierto: await concierto.toConciertoCarouselResponse()
+        concierto: await concierto.toConciertoDetailsResponse()
     });
 });
 
