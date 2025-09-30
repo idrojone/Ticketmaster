@@ -1,11 +1,13 @@
-import { Component, OnInit, importProvidersFrom, inject } from "@angular/core";
+import { Component, OnInit, AfterViewInit, importProvidersFrom, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { CommonModule } from "@angular/common";
 import { catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
 import { Carousel } from "@shared/carousel/carousel";
 import { Concierto } from "src/app/core/models/conciertos.model";
 import { ConciertosService } from "src/app/core/services/conciertos.service";
 import { ZardCalendarComponent } from "@shared/components/calendar/calendar.component";
+import * as L from 'leaflet';
 
 
 @Component({
@@ -13,16 +15,21 @@ import { ZardCalendarComponent } from "@shared/components/calendar/calendar.comp
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [Carousel, ZardCalendarComponent]
+    imports: [CommonModule, Carousel, ZardCalendarComponent]
 })
 
-export class DetailsComponent  implements OnInit {
+export class DetailsComponent implements OnInit, AfterViewInit {
 
     concierto?: Concierto;
     slug: string | null = null;
+    private map?: L.Map;
 
     private route = inject(ActivatedRoute);
     private conciertoService = inject(ConciertosService);
+
+    get conciertoFecha(): Date | null {
+        return this.concierto?.fecha ? new Date(this.concierto.fecha) : null;
+    }
 
     ngOnInit() {
         this.slug = this.route.snapshot.paramMap.get('slug');
@@ -33,11 +40,15 @@ export class DetailsComponent  implements OnInit {
         this.loadDetails(tipo);
     }
 
+    ngAfterViewInit() {
+        this.loadmap();
+    }
+
     loadDetails(tipo: string) {
         if (tipo === 'concierto') {
             this.loadConciertoDetails();
-        } else if (tipo === 'festival') {
-            // Lógica futura para festivales
+        } else if (tipo === 'artista') {
+            // Lógica futura para artista
         } 
     }
 
@@ -50,7 +61,16 @@ export class DetailsComponent  implements OnInit {
         ).subscribe((concierto: Concierto) => {
             console.log('Concierto data:', concierto);
             this.concierto = concierto;
+            // // Cargar el mapa después de obtener los datos
+            // this.loadmap();
         });
     }
-       
+
+    loadmap() {
+        this.map = L.map('map').setView([40.416775, -3.703790], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(this.map);
+    }
 }
