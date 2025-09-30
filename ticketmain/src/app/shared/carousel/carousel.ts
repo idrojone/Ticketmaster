@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, inject, Input, OnInit } from '@angular/core';
 import { CarouselService } from 'src/app/core/services/carousel.service';
-import { GeneroCarrousel, ConciertoCarrousel, ConciertoCarrouselDetails, GeneroCarrouselSecundario } from 'src/app/core/models/carousel.model';
+import { GeneroCarrousel, ConciertoCarrousel, ConciertoCarrouselDetails, GeneroCarrouselSecundario, Imagenes } from 'src/app/core/models/carousel.model';
 import { ItemsCarousel } from 'src/app/shared/items-carousel/items-carousel';
 
 @Component({
@@ -16,7 +16,7 @@ export class Carousel implements OnInit {
 
 	@Input() page !: string;
 	@Input() slug?: string | null;
-	item_generos?: GeneroCarrousel[];
+	item_imagenes?: Imagenes[];
 	item_conciertos?: ConciertoCarrousel[];
 	item_concierto_details?: ConciertoCarrouselDetails[];
 	item_generos_secundario?: GeneroCarrouselSecundario[];
@@ -36,13 +36,25 @@ export class Carousel implements OnInit {
 			this.get_carousel_conciertos();
 		} else if (this.page === 'carousel-details-conciertos') {
 			this.get_carousel_concierto_details(this.imagenesShow);
+		} else if (this.page === 'imagenes') {
+			this.get_carousel_imagenes();
 		}
 	}
 
-	get_carousel_concierto_details(imagenesShow: any) {
-		console.log("Detalles Concierto Carousel: ", imagenesShow);
-		console.log("Tipo de datos: ", typeof imagenesShow, "Es array: ", Array.isArray(imagenesShow));
-		
+	get_carousel_imagenes() {
+		const imagenes = [
+			{ imagen: 'assets/img/img1.jpg' },
+			{ imagen: 'assets/img/img2.jpg' },
+			{ imagen: 'assets/img/img3.jpg' },
+			{ imagen: 'assets/img/img4.jpg' },
+			// { imagen: 'assets/img/img5.jpg' },
+			{ imagen: 'assets/img/img6.jpg' },
+		];
+		this.item_imagenes = imagenes;
+		console.log("Carousel Imágenes: ", this.item_imagenes);
+	}
+
+	get_carousel_concierto_details(imagenesShow: any) {		
 		// Asegurarse de que es un array
 		if (Array.isArray(imagenesShow)) {
 			this.item_concierto_details = imagenesShow;
@@ -71,7 +83,7 @@ export class Carousel implements OnInit {
 	get_carousel_generos() {
 		this.carouselService.get_carousel_data().subscribe(
 			(data) => {
-				this.item_generos = data as GeneroCarrousel[];
+				// this.item_generos = data as GeneroCarrousel[];
 				this.item_generos_secundario = data as GeneroCarrouselSecundario[];
 			},
 			(error) => {
