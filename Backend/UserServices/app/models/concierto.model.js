@@ -28,6 +28,14 @@ const ConciertoSchema = new mongoose.Schema({
         type: Number, 
         required: true 
     },
+    aforo: {
+        type: Number,
+        required: true,
+    },
+    duracion: { 
+        type: Number,
+        default: null
+    },
     imagenArtista: { 
         type: String, 
         default: null
@@ -38,7 +46,7 @@ const ConciertoSchema = new mongoose.Schema({
     },
     id_genero: {
         type: String,
-        required: true
+        // required: true
     }
 });
 
