@@ -16,6 +16,26 @@
         </div>
     </div>
 }
+
+@if (item_generos_secundario && item_generos_secundario.length > 0) {
+    <div class="concerts-section">
+        <h2 class="concerts-title">Los mejores Generos</h2>
+        <div class="concerts-subtitle">Descubre los mejores eventos</div>
+    </div>
+    <div class="embla embla-conciertos" emblaCarousel [options]="carouselGenerosSecundarioOptions">
+        <div class="embla__container embla__container-conciertos">
+            @for (item of item_generos_secundario; track item.slug) {
+                <div class="embla__slide embla__slide-conciertos">
+                    <div class="concert-card">
+                        <img [src]="item.img" [alt]="item.slug" class="concert-image" />
+                        <h3 class="concert-name">{{ item.nombre }}</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
 @if (conciertos && conciertos.length > 0) {
     <div class="concerts-section">
         <h2 class="concerts-title">Nuestros Conciertos</h2>

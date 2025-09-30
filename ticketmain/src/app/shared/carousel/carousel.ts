@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, inject, Input, OnInit } from '@angular/core';
 import { CarouselService } from 'src/app/core/services/carousel.service';
-import { GeneroCarrousel, ConciertoCarrousel, ConciertoCarrouselDetails } from 'src/app/core/models/carousel.model';
+import { GeneroCarrousel, ConciertoCarrousel, ConciertoCarrouselDetails, GeneroCarrouselSecundario } from 'src/app/core/models/carousel.model';
 import { ItemsCarousel } from 'src/app/shared/items-carousel/items-carousel';
 
 @Component({
@@ -19,6 +19,7 @@ export class Carousel implements OnInit {
 	item_generos?: GeneroCarrousel[];
 	item_conciertos?: ConciertoCarrousel[];
 	item_concierto_details?: ConciertoCarrouselDetails[];
+	item_generos_secundario?: GeneroCarrouselSecundario[];
 	@Input() imagenesShow?: any;
 
 	carouselService = inject(CarouselService);
@@ -29,12 +30,11 @@ export class Carousel implements OnInit {
 	}
 
 	loadCarouselItems(): void {
-		if (this.page === 'carousel-home-generos') {
+		if (this.page === 'carousel-home-generos' || this.page === 'carousel-home-generos-secundario') {
 			this.get_carousel_generos();
 		} else if (this.page === 'carousel-home-conciertos') {
 			this.get_carousel_conciertos();
 		} else if (this.page === 'carousel-details-conciertos') {
-			// console.log("Imágenes Show Carousel: ", this.imagenesShow);
 			this.get_carousel_concierto_details(this.imagenesShow);
 		}
 	}
@@ -47,7 +47,6 @@ export class Carousel implements OnInit {
 		if (Array.isArray(imagenesShow)) {
 			this.item_concierto_details = imagenesShow;
 		} else if (imagenesShow) {
-			// Si no es array, convertirlo en array
 			this.item_concierto_details = [imagenesShow];
 		} else {
 			this.item_concierto_details = [];
@@ -72,9 +71,8 @@ export class Carousel implements OnInit {
 	get_carousel_generos() {
 		this.carouselService.get_carousel_data().subscribe(
 			(data) => {
-				// console.log("Carousel: "+data);
 				this.item_generos = data as GeneroCarrousel[];
-				// console.log("Carousel Generos: ", this.item_generos);
+				this.item_generos_secundario = data as GeneroCarrouselSecundario[];
 			},
 			(error) => {
 				console.error('Error fetching carousel data:', error);
