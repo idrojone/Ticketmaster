@@ -24,6 +24,18 @@ const ConciertoSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
+    descripcion: { 
+        type: String, 
+        default: null
+    },
+    latitud: { 
+        type: Number,
+        default: null
+    },
+    longitud: { 
+        type: Number,
+        default: null
+    },
     precio: { 
         type: Number, 
         required: true 

@@ -4,6 +4,9 @@ export interface Concierto {
     fecha: string;
     artista: string;
     lugar: string;
+    descripcion?: string;
+    latitud?: number;
+    longitud?: number;
     precio: number;
     aforo: number;
     duracion?: number; 

@@ -41,7 +41,7 @@ export class DetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.loadmap();
+        // El mapa se carga ahora después de obtener los datos del concierto
     }
 
     loadDetails(tipo: string) {
@@ -61,16 +61,32 @@ export class DetailsComponent implements OnInit, AfterViewInit {
         ).subscribe((concierto: Concierto) => {
             console.log('Concierto data:', concierto);
             this.concierto = concierto;
-            // // Cargar el mapa después de obtener los datos
-            // this.loadmap();
+            // Cargar el mapa después de obtener los datos
+            this.loadmap();
         });
     }
 
     loadmap() {
-        this.map = L.map('map').setView([40.416775, -3.703790], 13);
+        this.map = L.map('map').setView([this.concierto?.latitud || 0, this.concierto?.longitud || 0], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(this.map);
+
+        const customIcon = L.icon({
+            iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        if (this.concierto?.latitud && this.concierto?.longitud) {
+            L.marker([this.concierto.latitud, this.concierto.longitud], { icon: customIcon })
+                .addTo(this.map)
+                .bindPopup(this.concierto.nombre || 'Concierto')
+                .openPopup();
+        }
     }
 }
