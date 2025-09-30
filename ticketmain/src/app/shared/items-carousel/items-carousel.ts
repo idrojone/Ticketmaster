@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ConciertoCarrousel, GeneroCarrousel, ConciertoCarrouselDetails, GeneroCarrouselSecundario } from 'src/app/core/models/carousel.model';
+import { ConciertoCarrousel, GeneroCarrousel, ConciertoCarrouselDetails, GeneroCarrouselSecundario, Imagenes } from 'src/app/core/models/carousel.model';
 import { EmblaCarouselDirective, EmblaCarouselType } from 'embla-carousel-angular';
 import type { EmblaOptionsType } from 'embla-carousel';
 import { DetailsRoutingModule } from "src/app/pages/details/details-routing-module";
@@ -21,6 +21,7 @@ export class ItemsCarousel implements OnInit {
     @Input() conciertos?: ConciertoCarrousel[];
     @Input() item_concierto_details?: ConciertoCarrouselDetails[];
     @Input() item_generos_secundario?: GeneroCarrouselSecundario[];
+    @Input() imagenes?: Imagenes[];
 
     @ViewChild(EmblaCarouselDirective) emblaRef!: EmblaCarouselDirective;
     emblaApi!: EmblaCarouselType;

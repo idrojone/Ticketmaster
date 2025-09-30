@@ -36,6 +36,21 @@
     </div>
 }
 
+@if (imagenes && imagenes.length > 0) {
+    <div class="embla mt-1000" emblaCarousel [options]="carouselGenerosOptions">
+         <div class="embla__container">
+            @for (item of imagenes; track item.imagen) {
+            <div class="embla__slide">
+                <div class="genre-card">
+                    <img [src]="item.imagen" [alt]="item.imagen" class="genre-image" />
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+}
+   
+
 @if (conciertos && conciertos.length > 0) {
     <div class="concerts-section">
         <h2 class="concerts-title">Nuestros Conciertos</h2>

@@ -20,3 +20,7 @@ export interface ConciertoCarrousel {
     nombre: string;
     imagenArtista: string;
 }
+
+export interface Imagenes {
+    imagen: string;
+}
