@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Input } from '@angular/core';
 import { Concierto } from '../../core/models/conciertos.model';
 import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component';
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
@@ -20,12 +20,29 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 export class ListConciertos implements OnInit {
     limit=4;
     offset=0;
+    @Input() page !: string;
     conciertos: Concierto[] = [];
     conciertosService = inject(ConciertosService);
     skeletonArray = Array(20); 
 
     ngOnInit() {
-        this.getConciertos();  
+         if (this.page === 'shop') {
+            this.getAllConciertos();
+        } else if (this.page === 'home') {
+            this.getConciertos();
+        }
+    }
+
+    getAllConciertos() {
+        this.conciertosService.get_all_conciertos().subscribe(
+            (data) => {
+                console.log(data);
+                this.conciertos = data as Concierto[];
+            },
+            (error) => {
+                console.error('Error fetching conciertos:', error);
+            }
+        );
     }
 
     getConciertos() {
