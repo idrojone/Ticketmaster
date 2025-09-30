@@ -211,7 +211,7 @@ const concierto_controller = {
     deleteConcierto: deleteConcierto,
     deleteAllConciertos: deleteAllConciertos,
     findConciertosByGenero: findConciertosByGenero,
-    findAllQuery: findAllQuery
+    // findAllQuery: findAllQuery
 };
 
 module.exports = concierto_controller;
