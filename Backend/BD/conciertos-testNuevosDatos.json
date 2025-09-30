@@ -228,5 +228,28 @@
       "/assets/img/show9.jpg",
       "/assets/img/show10.jpg"
     ]
+  },
+  {
+    "slug": "ciudad-jara-sevilla-2025",
+    "nombre": "La Velada Del Lobo",
+    "fecha": "2025-06-14",
+    "artista": "Ciudad Jara",
+    "lugar": "Estadio de La Cartuja - Sevilla",
+    "precio": 60,
+    "aforo": 60000,
+    "duracion": "2h",
+    "imagenesShow": [
+      "/assets/img/show1.jpg",
+      "/assets/img/show2.jpg",
+      "/assets/img/show3.jpg",
+      "/assets/img/show4.jpg",
+      "/assets/img/show5.jpg",
+      "/assets/img/show6.jpg",
+      "/assets/img/show7.jpg",
+      "/assets/img/show8.jpg",
+      "/assets/img/show9.jpg",
+      "/assets/img/show10.jpg"
+    ],
+    "id_genero": "68daccc26cbb071eb8a4923e"
   }
 ]
