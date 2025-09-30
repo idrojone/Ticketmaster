@@ -30,7 +30,7 @@ const ConciertoSchema = new mongoose.Schema({
     },
     aforo: {
         type: Number,
-        required: true,
+        required:true
     },
     duracion: { 
         type: Number,
@@ -87,6 +87,6 @@ ConciertoSchema.methods.toConciertoDetailsResponse = async function () {
         slug: this.slug,
         imagenesShow: this.imagenesShow
     }
-}
+};
 
 module.exports = mongoose.model('Concierto', ConciertoSchema);

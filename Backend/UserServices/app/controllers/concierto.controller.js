@@ -6,8 +6,17 @@ const genero=require('../models/genero.model.js');
 
 async function findAllConciertos(req, res) {
     try {
-        const conciertos = await Concierto.find();
+        const {offset, limit} = req.query;
+        let conciertos;
+
+        if ( offset && limit){
+             conciertos = await Concierto.find({},{},{skip: Number(offset), limit: Number(limit)});
+        }else{
+             conciertos = await Concierto.find();
+        }
+
         const spotifyAPI = new SpotifyAPI();
+
         // NO BORRAR
         const concierosWithImages = await Promise.all(conciertos.map(async concierto => {
             if (!concierto.imagenArtista) {
@@ -42,8 +51,8 @@ async function findOneConcierto(req, res) {
 
 async function createConcierto(req, res) {
     try {
-        const { nombre, fecha, artista, lugar, precio, id_genero } = req.body;
-        if (!nombre || !fecha || !artista || !lugar || !precio || !id_genero) {
+        const { nombre, fecha, artista, lugar, precio, duracion, aforo, id_genero } = req.body;
+        if (!nombre || !fecha || !artista || !lugar || !precio || !duracion || !aforo || !id_genero) {
             return res.status(400).json({ message: 'Faltan datos obligatorios', status: 400 });
         }
 
@@ -53,21 +62,23 @@ async function createConcierto(req, res) {
             artista,
             lugar,
             precio,
+            aforo,
+            duracion,
             id_genero
         }
-
         const find_genero= await genero.findById(id_genero);
 
         if(!find_genero){
             return res.status(404).json({ message: 'Genero no encontrado', status: 404 });
         }
 
-        const newConcierto = await new Concierto(data);
+        const newConcierto = new Concierto(data);
         const newConciertoSaved = await newConcierto.save();
-
+        
+        // Agregar el concierto al género
         await find_genero.addConcierto(newConciertoSaved._id);
 
-        res.json(newConciertoSaved);
+        return res.status(201).json(newConciertoSaved);
     } catch (error) {
         res.status(500).json("Ha ocurrido un error", res.statusCode);
     }
@@ -175,6 +186,23 @@ async function findConciertosByGenero(req, res) {
     }
 }
 
+// async function findAllQuery(req, res) {
+
+//     const {offset, limit} = req.query;
+
+//     const conciertos = await Concierto.find({},{},{skip: Number(offset), limit: Number(limit)});
+
+//     if (!conciertos) {
+//         return res.status(404).json({ message: "No se encontraron conciertos", status: 404 });
+//     }
+
+//     return res.status(200).json({
+//         conciertos: await Promise.all(conciertos.map(async concierto => {
+//             return await concierto.toConciertoResponse();
+//         }))
+//     });
+// }
+
 const concierto_controller = {
     findAllConciertos: findAllConciertos,
     findOneConcierto: findOneConcierto,
@@ -183,6 +211,7 @@ const concierto_controller = {
     deleteConcierto: deleteConcierto,
     deleteAllConciertos: deleteAllConciertos,
     findConciertosByGenero: findConciertosByGenero,
+    findAllQuery: findAllQuery
 };
 
 module.exports = concierto_controller;
