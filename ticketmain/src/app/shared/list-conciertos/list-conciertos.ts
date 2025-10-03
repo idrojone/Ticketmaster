@@ -4,6 +4,7 @@ import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-list-conciertos',
@@ -23,13 +24,36 @@ export class ListConciertos implements OnInit {
     @Input() page !: string;
     conciertos: Concierto[] = [];
     conciertosService = inject(ConciertosService);
+    ActivatedRoute = inject(ActivatedRoute);
     skeletonArray = Array(20); 
+    slug_genero!: string | null;
 
     ngOnInit() {
+
+        this.slug_genero = this.ActivatedRoute.snapshot.paramMap.get('slug');
+        
         if (this.page === 'shop') {
             this.limit = 12;
         }
-        this.getConciertos();
+        if (this.slug_genero !== null) {
+            console.log(this.slug_genero, 'list-conciertos');
+            this.get_conciertos_by_genero();
+        } else  {
+            this.getConciertos();
+        }
+        // this.getConciertos();
+    }
+
+    get_conciertos_by_genero() {
+        this.conciertosService.get_conciertos_by_genero(this.slug_genero!).subscribe(
+            (data: any) => {
+                console.log(data.conciertos);
+                this.conciertos = data.conciertos as Concierto[];
+            },
+            (error: any) => {
+                console.error('Error fetching conciertos by genero:', error);
+            }
+        );
     }
 
     // getAllConciertos() {
@@ -69,6 +93,8 @@ export class ListConciertos implements OnInit {
     }
 
     Scroll() {
-        this.getConciertos();
+        if (this.page === 'home' || this.page === 'shop' && this.slug_genero === null) {
+            this.getConciertos();
+        }
     }
 }

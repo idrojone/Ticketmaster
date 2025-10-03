@@ -25,12 +25,12 @@
     <div class="embla embla-conciertos" emblaCarousel [options]="carouselGenerosSecundarioOptions">
         <div class="embla__container embla__container-conciertos">
             @for (item of item_generos_secundario; track item.slug) {
-                <div class="embla__slide embla__slide-conciertos">
-                    <div class="concert-card">
-                        <img [src]="item.img" [alt]="item.slug" class="concert-image" />
-                        <h3 class="concert-name">{{ item.nombre }}</h3>
-                    </div>
+            <div class="embla__slide embla__slide-conciertos" [routerLink]="['/shop/generos', item.slug]">
+                <div class="concert-card">
+                <img [src]="item.img" [alt]="item.slug" class="concert-image" />
+                <h3 class="concert-name">{{ item.nombre }}</h3>
                 </div>
+            </div>
             }
         </div>
     </div>
