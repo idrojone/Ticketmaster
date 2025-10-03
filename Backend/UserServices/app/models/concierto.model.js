@@ -82,7 +82,15 @@ ConciertoSchema.methods.toConciertoResponse = async function () {
         fecha: this.fecha,
         artista: this.artista,
         lugar: this.lugar,
-        precio: this.precio
+        precio: this.precio,
+        aforo: this.aforo,
+        duracion: this.duracion,
+        imagenArtista: this.imagenArtista,
+        id_genero: this.id_genero,
+        descripcion: this.descripcion,
+        latitud: this.latitud,
+        longitud: this.longitud,
+        imagenesShow: this.imagenesShow
     }
 };
 

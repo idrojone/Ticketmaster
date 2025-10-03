@@ -26,32 +26,31 @@ export class ListConciertos implements OnInit {
     skeletonArray = Array(20); 
 
     ngOnInit() {
-         if (this.page === 'shop') {
-            this.getAllConciertos();
-        } else if (this.page === 'home') {
-            this.getConciertos();
+        if (this.page === 'shop') {
+            this.limit = 12;
         }
+        this.getConciertos();
     }
 
-    getAllConciertos() {
-        this.conciertosService.get_all_conciertos().subscribe(
-            (data) => {
-                console.log(data);
-                this.conciertos = data as Concierto[];
-            },
-            (error) => {
-                console.error('Error fetching conciertos:', error);
-            }
-        );
-    }
+    // getAllConciertos() {
+    //     this.conciertosService.get_all_conciertos().subscribe(
+    //         (data) => {
+    //             console.log(data);
+    //             this.conciertos = data as Concierto[];
+    //         },
+    //         (error) => {
+    //             console.error('Error fetching conciertos:', error);
+    //         }
+    //     );
+    // }
 
     getConciertos() {
         const params = this.getRequestParams(this.offset, this.limit);
 
         this.conciertosService.get_all_conciertos(params).subscribe(
-            (data) => {
-                console.log(data);
-                this.conciertos = data as Concierto[];
+            (data: any) => {
+                console.log(data.conciertos);
+                this.conciertos = data.conciertos as Concierto[];
                 this.limit=this.limit+4;
             },
             (error) => {
