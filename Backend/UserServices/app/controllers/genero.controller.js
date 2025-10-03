@@ -17,14 +17,6 @@ const create = asyncHandler(async (req, res) => {
         });
     }
 
-    if(typeof precio === 'string' && precio.trim().length === 0) { 
-        return res.status(400).json({
-            success: false,
-            message: "El campo precio no puede estar vacío",
-            status: 400
-        });
-    }
-
     const exsisteGenero = await Genero.findOne({ id_genero });
     if (exsisteGenero) {
         return res.status(409).json({
@@ -72,23 +64,7 @@ const findOneGenero = asyncHandler(async (req, res) => {
     
     const { slug } = req.params;
     const generos = await Genero.findOne({ slug });
-
-    // return res.json(generos);
-
     if (!generos) {
-        return res.status(404).json({
-            success: false,
-            message: "Genero not found",
-            status: 404
-        });
-    }
-    return res.json(generos);
-});
-
-const findOneGeneroById = asyncHandler(async (req, res) => {
-    const { id_genero } = req.params;
-    const genero = await Genero.findOne({ id_genero });
-    if (!genero) {
         return res.status(404).json({
             success: false,
             message: "Genero not found",
@@ -98,7 +74,7 @@ const findOneGeneroById = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: true,
         message: "Género obtenido correctamente",
-        data: genero.toGeneroResponse(),
+        data: generos.toGeneroResponse(),
         status: 200
     });
 });
@@ -106,6 +82,5 @@ const findOneGeneroById = asyncHandler(async (req, res) => {
 module.exports = { 
     create,
     findAllGeneros,
-    findOneGenero,
-    findOneGeneroById
+    findOneGenero
 }
