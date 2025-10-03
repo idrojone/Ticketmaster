@@ -93,7 +93,7 @@ export class ListConciertos implements OnInit {
     }
 
     Scroll() {
-        if (this.page === 'home') {
+        if (this.page === 'home' || this.page === 'shop' && this.slug_genero === null) {
             this.getConciertos();
         }
     }

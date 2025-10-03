@@ -46,9 +46,17 @@
   "duracion": 165,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174c4c77549095c86acb4e77b37",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
     "/assets/img/show3.jpg",
     "/assets/img/show4.jpg",
-    "/assets/img/show5.jpg"
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN001",
   "slug": "acdc-thunder-tour--fs9css",
@@ -70,9 +78,17 @@
   "duracion": 195,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174e2e8e7ff002a4afda1c7147e",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
     "/assets/img/show6.jpg",
     "/assets/img/show7.jpg",
-    "/assets/img/show8.jpg"
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN002",
   "slug": "taylor-swift-eras-tour-g3zfs6",
@@ -94,9 +110,17 @@
   "duracion": 120,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051740c68f6c95232e716f0abee8d",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
     "/assets/img/show9.jpg",
-    "/assets/img/show10.jpg",
-    "/assets/img/show1.jpg"
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN002",
   "slug": "dua-lipa-future-nostalgia-tour-e26wvx",
@@ -118,9 +142,17 @@
   "duracion": 135,
   "imagenArtista": "https://i.scdn.co/image/ab6761610000517439ba6dcd4355c03de0b50918",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
     "/assets/img/show2.jpg",
     "/assets/img/show3.jpg",
-    "/assets/img/show4.jpg"
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN003",
   "slug": "kendrick-lamar-big-steppers-tour-2xkj1z",
@@ -142,9 +174,17 @@
   "duracion": 150,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051744293385d324db8558179afd9",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
     "/assets/img/show5.jpg",
     "/assets/img/show6.jpg",
-    "/assets/img/show7.jpg"
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN003",
   "slug": "drake-it's-all-a-blur-tour--hselo2",
@@ -166,6 +206,14 @@
   "duracion": 180,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051741e4bcd2bef1896648762dd6b",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
     "/assets/img/show8.jpg",
     "/assets/img/show9.jpg",
     "/assets/img/show10.jpg"
@@ -190,9 +238,17 @@
   "duracion": 210,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174f150017ca69c8793503c2d4f",
   "imagenesShow": [
+    "/assets/img/show.jpg",
     "/assets/img/show1.jpg",
     "/assets/img/show2.jpg",
-    "/assets/img/show3.jpg"
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN004",
   "slug": "david-guetta-future-rave-wunpuk",
@@ -213,10 +269,18 @@
   "aforo": 57000,
   "duracion": 165,
   "imagenArtista": "https://i.scdn.co/image/ab6761610000517481f47f44084e0a09b5f0fa13",
-  "imagenesShow": [
+ "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
     "/assets/img/show4.jpg",
     "/assets/img/show5.jpg",
-    "/assets/img/show6.jpg"
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN005",
   "slug": "bad-bunny-world's-hottest-tour--pt32ze",
@@ -238,9 +302,17 @@
   "duracion": 140,
   "imagenArtista": "https://i.scdn.co/image/ab6761610000517466041ce9eb4497057cbc3496",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
     "/assets/img/show7.jpg",
     "/assets/img/show8.jpg",
-    "/assets/img/show9.jpg"
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN005",
   "slug": "karol-g-manana-sera-bonito-tour-jc5jtq",
@@ -262,9 +334,17 @@
   "duracion": 105,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174d1bfc97e11bb4c1f90f287a6",
   "imagenesShow": [
-    "/assets/img/show10.jpg",
+    "/assets/img/show.jpg",
     "/assets/img/show1.jpg",
-    "/assets/img/show2.jpg"
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN006",
   "slug": "diana-krall-intimate-jazz-night-as5s33",
@@ -286,9 +366,17 @@
   "duracion": 120,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174ca17170af02af227d6ea0c31",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
     "/assets/img/show3.jpg",
     "/assets/img/show4.jpg",
-    "/assets/img/show5.jpg"
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN006",
   "slug": "herbie-hancock-jazz-masters--l49qft",
@@ -310,9 +398,17 @@
   "duracion": 120,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174ca17170af02af227d6ea0c31",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
     "/assets/img/show3.jpg",
     "/assets/img/show4.jpg",
-    "/assets/img/show5.jpg"
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN006",
   "slug": "herbie-hancock-jazz-masters--m9045g",
@@ -334,9 +430,17 @@
   "duracion": 135,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174ef3c8d11a45e9cdf3bd5c202",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
     "/assets/img/show6.jpg",
     "/assets/img/show7.jpg",
-    "/assets/img/show8.jpg"
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN007",
   "slug": "joe-bonamassa-blues-guitar-master-48gd5i",
@@ -358,9 +462,17 @@
   "duracion": 110,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051748c765bbb4282647f432048d4",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
     "/assets/img/show9.jpg",
-    "/assets/img/show10.jpg",
-    "/assets/img/show1.jpg"
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN007",
   "slug": "beth-hart-soul-and-blues-hjgx0k",
@@ -382,9 +494,17 @@
   "duracion": 150,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174054c067d4cfa3b8094f3400f",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
     "/assets/img/show2.jpg",
     "/assets/img/show3.jpg",
-    "/assets/img/show4.jpg"
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN008",
   "slug": "keith-urban-country-roads-tour-prl0lh",
@@ -406,9 +526,17 @@
   "duracion": 125,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174c548c7ff983f25641dc71ffe",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
     "/assets/img/show5.jpg",
     "/assets/img/show6.jpg",
-    "/assets/img/show7.jpg"
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN008",
   "slug": "kacey-musgraves-golden-hour-tour-uen3rt",
@@ -430,6 +558,14 @@
   "duracion": 90,
   "imagenArtista": null,
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
     "/assets/img/show8.jpg",
     "/assets/img/show9.jpg",
     "/assets/img/show10.jpg"
@@ -454,9 +590,17 @@
   "duracion": 120,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174fb101ed2a035fcfa2bd6fee1",
   "imagenesShow": [
+    "/assets/img/show.jpg",
     "/assets/img/show1.jpg",
     "/assets/img/show2.jpg",
-    "/assets/img/show3.jpg"
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN009",
   "slug": "andrea-bocelli-opera-and-classics--e3lt9c",
@@ -478,9 +622,17 @@
   "duracion": 140,
   "imagenArtista": null,
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
     "/assets/img/show4.jpg",
     "/assets/img/show5.jpg",
-    "/assets/img/show6.jpg"
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN010",
   "slug": "damian-marley-roots-and-culture-g1fqpa",
@@ -502,9 +654,17 @@
   "duracion": 120,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174ff811e1e25b9cf99dc4e544f",
   "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
     "/assets/img/show7.jpg",
     "/assets/img/show8.jpg",
-    "/assets/img/show9.jpg"
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN010",
   "slug": "chronixx-new-generation-reggae-es6ox",
@@ -528,7 +688,15 @@
   "imagenesShow": [
     "/assets/img/show.jpg",
     "/assets/img/show1.jpg",
-    "/assets/img/show2.jpg"
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN001",
   "slug": "arctic-monkeys-the-car-tour--380gin",
@@ -549,7 +717,19 @@
   "aforo": 2300,
   "duracion": 120,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051744104fbd80f1f795728abbd59",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN011",
   "slug": "radiohead-ok-computer-anniversary--v2y537",
   "__v": 0
@@ -569,7 +749,19 @@
   "aforo": 1800,
   "duracion": 105,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051740bb49b0b71ab3f5871860617",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN011",
   "slug": "vampire-weekend-modern-vampires-lro1ex",
   "__v": 0
@@ -589,7 +781,19 @@
   "aforo": 1200,
   "duracion": 95,
   "imagenArtista": "https://i.scdn.co/image/ab6761610000517411be9310ef4b23734c13b5c8",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN012",
   "slug": "sara-baras-flamenco-eterno--hhuiir",
   "__v": 0
@@ -609,7 +813,19 @@
   "aforo": 900,
   "duracion": 85,
   "imagenArtista": null,
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN012",
   "slug": "vicente-amigo-tierra-del-fuego-x5j9wc",
   "__v": 0
@@ -629,7 +845,19 @@
   "aforo": 350,
   "duracion": 90,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051746554f29133d7e27979e009d7",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN014",
   "slug": "iron-and-wine-folk-intimacy--myta0h",
   "__v": 0
@@ -649,7 +877,19 @@
   "aforo": 500,
   "duracion": 100,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051747d079249b30567c81b006ba8",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN014",
   "slug": "devendra-banhart-folk-mystic-thn5ej",
   "__v": 0
@@ -669,7 +909,19 @@
   "aforo": 17000,
   "duracion": 115,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174ee3123e593174208f9754fab",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN015",
   "slug": "frank-ocean-blonde-experience--7l91tp",
   "__v": 0
@@ -689,7 +941,19 @@
   "aforo": 3500,
   "duracion": 105,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174417db49cde3ed1c5a65e3514",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN015",
   "slug": "h.e.r.-randb-sessions-nvunxh",
   "__v": 0
@@ -709,7 +973,19 @@
   "aforo": 1450,
   "duracion": 95,
   "imagenArtista": "https://i.scdn.co/image/ab67616100005174d5112a5b16a01e971ebb049c",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN016",
   "slug": "leon-bridges-soul-revival-vdvbdy",
   "__v": 0
@@ -729,7 +1005,19 @@
   "aforo": 2500,
   "duracion": 125,
   "imagenArtista": "https://i.scdn.co/image/ab6761610000517496287bd47570ff13f0c01496",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN016",
   "slug": "anderson-.paak-soul-funk-experience-7lm6oc",
   "__v": 0
@@ -749,7 +1037,19 @@
   "aforo": 2200,
   "duracion": 100,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051749fabcfc29eafa94841a28a9b",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN017",
   "slug": "quevedo-bzrp-music-sessions-live--8bhna6",
   "__v": 0
@@ -769,7 +1069,19 @@
   "aforo": 2500,
   "duracion": 110,
   "imagenArtista": "https://i.scdn.co/image/ab676161000051740f682e8d99b232d621a25c3b",
-  "imagenesShow": [],
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
   "id_genero": "GEN017",
   "slug": "duki-desde-el-fin-del-mundo--gln6cc",
   "__v": 0
