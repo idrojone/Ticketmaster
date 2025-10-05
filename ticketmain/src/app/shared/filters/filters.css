@@ -1,0 +1,168 @@
+/* ========== CENTRADO Y MARGEN ========== */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 2rem 1rem;
+  margin-top: 2rem;
+}
+
+/* ========== MARGEN AL HEADER ========== */
+app-header {
+  margin-bottom: 2rem;
+}
+
+/* ========== GÉNERO SELECCIONADO ========== */
+.selected-genre {
+  background-color: #dbeafe !important;
+  border-left: 3px solid #3b82f6 !important;
+  font-weight: 600 !important;
+}
+
+.selected-genre span {
+  color: #1d4ed8 !important;
+}
+
+/* ========== SLIDER STYLES ========== */
+z-slider {
+  position: relative;
+}
+
+/* Asegurar que el valor del slider sea visible */
+z-slider [data-value],
+z-slider .slider-value,
+z-slider .z-slider-value {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  background: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  position: absolute;
+  top: -2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* Container del preview del slider */
+.preview {
+  margin-top: 1rem;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  :host {
+    padding: 1.5rem 1rem;
+    margin-top: 1.5rem;
+  }
+
+  app-header {
+    margin-bottom: 1.5rem;
+  }
+
+  z-slider [data-value],
+  z-slider .slider-value,
+  z-slider .z-slider-value {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 1rem 0.5rem;
+    margin-top: 1rem;
+  }
+
+  app-header {
+    margin-bottom: 1rem;
+  }
+
+  z-slider [data-value],
+  z-slider .slider-value,
+  z-slider .z-slider-value {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.35rem;
+  }
+}
+
+/* ========== DATE PICKER STYLES ========== */
+.date-picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.date-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+.selected-date-info {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.selected-date-info p:first-child {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.selected-date-info p:last-child {
+  margin: 0;
+  color: #667eea;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Estilos para los botones del popover */
+z-popover .flex.gap-2 button[z-button] {
+  transition: all 0.2s ease;
+}
+
+z-popover .flex.gap-2 button[z-button]:hover {
+  transform: translateY(-1px);
+}
+
+z-popover .flex.gap-2 button[z-button][disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Espaciado del popover */
+z-popover .space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+z-popover .space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+/* Responsive para date picker */
+@media (max-width: 480px) {
+  .selected-date-info {
+    padding: 0.5rem;
+  }
+  
+  .selected-date-info p:last-child {
+    font-size: 0.85rem;
+  }
+  
+  z-popover .space-y-4 {
+    padding: 1rem;
+  }
+}

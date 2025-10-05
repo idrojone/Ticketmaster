@@ -1,17 +1,22 @@
 import { Component, inject, OnInit, Input } from '@angular/core';
+import { Location } from '@angular/common';
 import { Concierto } from '../../core/models/conciertos.model';
 import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component';
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { ActivatedRoute } from '@angular/router';
+import { FiltersComponent } from '../filters/filters';
+import { Genero } from 'src/app/core/models/generos.model';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
     selector: 'app-list-conciertos',
     imports: [
         CardConciertos,
         // ZardSkeletonComponent,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        FiltersComponent
     ],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
@@ -21,27 +26,51 @@ import { ActivatedRoute } from '@angular/router';
 export class ListConciertos implements OnInit {
     limit=4;
     offset=0;
+    slug_category!: string | null ;
+    routeFilters!: string | null ;
+
     @Input() page !: string;
+
     conciertos: Concierto[] = [];
+    listGeneros: Genero[] = [];
+
     conciertosService = inject(ConciertosService);
+
     ActivatedRoute = inject(ActivatedRoute);
     skeletonArray = Array(20); 
     slug_genero!: string | null;
 
-    ngOnInit() {
+    constructor( private Router: Router, private Location: Location) { }
 
-        this.slug_genero = this.ActivatedRoute.snapshot.paramMap.get('slug');
-        
-        if (this.page === 'shop') {
+    ngOnInit() {
+        // console.log("ngOnInit list conciertos");
+         if (this.page === 'shop') {
+            // console.log("ngOnInit shop conciertos");
             this.limit = 12;
-        }
-        if (this.slug_genero !== null) {
-            console.log(this.slug_genero, 'list-conciertos');
-            this.get_conciertos_by_genero();
-        } else  {
+            this.slug_genero = this.ActivatedRoute.snapshot.paramMap.get('slug');
+            this.routeFilters=this.ActivatedRoute.snapshot.paramMap.get('filters');
+
+            if(this.slug_genero!== null && this.slug_genero!== ''){
+                this.get_conciertos_by_genero();
+            }else if(this.routeFilters!== null){
+                this.get_list_filtered(this.routeFilters);
+            }else{
+                this.getConciertos();
+            }
+        } else if (this.page === 'home') {
             this.getConciertos();
         }
-        // this.getConciertos();
+
+    }
+
+    get_list_filtered(event: any) {
+        let params: any = atob(this.routeFilters!);
+        console.log(params);
+    }
+
+
+    getAllConciertosFiltered() {
+
     }
 
     get_conciertos_by_genero() {
