@@ -1,16 +1,21 @@
 import { Component, inject, OnInit, Input } from '@angular/core';
+import { Location } from '@angular/common';
 import { Concierto } from '../../core/models/conciertos.model';
 import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component';
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { FiltersComponent } from '../filters/filters';
+import { Genero } from 'src/app/core/models/generos.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-list-conciertos',
     imports: [
         CardConciertos,
         // ZardSkeletonComponent,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        FiltersComponent
     ],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
@@ -20,17 +25,45 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 export class ListConciertos implements OnInit {
     limit=4;
     offset=0;
+    slug_category!: string | null ;
+    routeFilters!: string | null ;
+
     @Input() page !: string;
+
     conciertos: Concierto[] = [];
+    listGeneros: Genero[] = [];
+
     conciertosService = inject(ConciertosService);
+
     skeletonArray = Array(20); 
 
+    constructor(private ActivatedRoute: ActivatedRoute, private Router: Router, private Location: Location) { }
+
     ngOnInit() {
+        // console.log("ngOnInit list conciertos");
          if (this.page === 'shop') {
-            this.getAllConciertos();
+            // console.log("ngOnInit shop conciertos");
+            this.slug_category= this.ActivatedRoute.snapshot.paramMap.get('slug');
+            this.routeFilters=this.ActivatedRoute.snapshot.paramMap.get('filters');
+
+            if(this.slug_category!== null && this.slug_category!== ''){
+                this.getConciertos();
+            }else if(this.routeFilters!== null){
+                
+            }
         } else if (this.page === 'home') {
             this.getConciertos();
         }
+
+    }
+
+    get_list_filtered(event: any) {
+
+    }
+
+
+    getAllConciertosFiltered() {
+
     }
 
     getAllConciertos() {
