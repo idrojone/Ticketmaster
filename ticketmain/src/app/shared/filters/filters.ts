@@ -75,6 +75,9 @@ export class FiltersComponent implements OnInit {
       this.selectedGenero.set({nombre: routeFilters.genero_nombre, slug: routeFilters.genero_slug, img: '', descripcion: ''});
       this.startDate.set(routeFilters.startDate);
       this.endDate.set(routeFilters.endDate);
+      // this.startDate.set(routeFilters.startDate ? new Date(routeFilters.startDate) : null);
+      // this.endDate.set(routeFilters.endDate ? new Date(routeFilters.endDate) : null);
+
     }
   }
 
@@ -95,22 +98,25 @@ export class FiltersComponent implements OnInit {
       console.log(this.filters);
     }
 
+    this.filters.fecha_inicio=undefined;
+    this.filters.fecha_fin=undefined;
+
     if(this.startDate() && this.endDate()){
-      this.filters.fecha_inicio=this.startDate()?.toISOString().split('T')[0];
-      this.filters.fecha_fin=this.endDate()?.toISOString().split('T')[0];
+      this.filters.fecha_inicio=this.formatDateToLocal(this.startDate()!);
+      this.filters.fecha_fin=this.formatDateToLocal(this.endDate()!);
     }else if(this.startDate() && !this.endDate()){
-      this.filters.fecha_inicio=this.startDate()?.toISOString().split('T')[0];
+      this.filters.fecha_inicio=this.formatDateToLocal(this.startDate()!);
       this.filters.fecha_fin=undefined;
     }else if(!this.startDate() && this.endDate()){
       this.filters.fecha_inicio=undefined;
-      this.filters.fecha_fin=this.endDate()?.toISOString().split('T')[0];
+      this.filters.fecha_fin=this.formatDateToLocal(this.endDate()!);
     }
 
     setTimeout(() => {
       // console.log("timeout");
       this.Router.navigate(['/shop', btoa(JSON.stringify(this.filters))]);
       this.eventofiltros.emit(this.filters)
-    }, 200);
+    }, 400);
 
   }
 
@@ -243,6 +249,14 @@ export class FiltersComponent implements OnInit {
   // Método para verificar si una fecha es válida
   isValidDate(date: Date | null): boolean {
     return date instanceof Date && !isNaN(date.getTime());
+  }
+
+  // Método para formatear fecha a string local (evita problemas de zona horaria)
+  private formatDateToLocal(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
 }

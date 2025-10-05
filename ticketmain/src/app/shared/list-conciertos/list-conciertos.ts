@@ -63,10 +63,6 @@ export class ListConciertos implements OnInit {
 
     }
 
-    getAllConciertosFiltered() {
-
-    }
-
     get_conciertos_by_genero() {
         this.conciertosService.get_conciertos_by_genero(this.slug_genero!).subscribe(
             (data: any) => {
