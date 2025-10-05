@@ -59,7 +59,7 @@ export class FiltersComponent implements OnInit {
   fillFiltros(){
     this.generosService.get_all_generos().subscribe(
       (data) => {
-          console.log(data);
+          // console.log(data);
           this.generos = data as Genero[];
       },
       (error) => {
@@ -70,7 +70,7 @@ export class FiltersComponent implements OnInit {
   
   Highlights(){
     let routeFilters= JSON.parse(atob(this.ActivatedRoute.snapshot.paramMap.get('filters') || ''));
-    console.log("entra higthligth " + JSON.stringify(routeFilters));
+    // console.log("entra higthligth " + JSON.stringify(routeFilters));
     if(routeFilters.nombre == undefined){
       this.selectedGenero.set({nombre: routeFilters.genero_nombre, slug: routeFilters.genero_slug, img: '', descripcion: ''});
       this.startDate.set(routeFilters.startDate);
@@ -92,7 +92,7 @@ export class FiltersComponent implements OnInit {
     if(this.selectedGenero()){
       this.filters.genero=this.selectedGenero()?.slug;
       this.filters.genero_nombre=this.selectedGenero()?.nombre;
-      console.log(this.filters);
+      // console.log(this.filters);
     }
 
     if(this.startDate() && this.endDate()){
@@ -107,9 +107,9 @@ export class FiltersComponent implements OnInit {
     }
 
     setTimeout(() => {
-      console.log("timeout");
+      // console.log("timeout");
       this.Router.navigate(['/shop', btoa(JSON.stringify(this.filters))]);
-      // this.eventofiltros.emit(this.filters)
+      this.eventofiltros.emit(this.filters)
     }, 200);
 
   }

@@ -53,7 +53,7 @@ export class ListConciertos implements OnInit {
             if(this.slug_genero!== null && this.slug_genero!== ''){
                 this.get_conciertos_by_genero();
             }else if(this.routeFilters!== null){
-                
+                this.get_list_filtered(this.routeFilters);
             }else{
                 this.getConciertos();
             }
@@ -64,7 +64,8 @@ export class ListConciertos implements OnInit {
     }
 
     get_list_filtered(event: any) {
-
+        let params: any = atob(this.routeFilters!);
+        console.log(params);
     }
 
 
