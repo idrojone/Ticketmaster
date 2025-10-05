@@ -91,8 +91,8 @@ export class FiltersComponent implements OnInit {
 
     if(this.selectedGenero()){
       this.filters.genero=this.selectedGenero()?.slug;
-      this.filters.genero_nombre=this.selectedGenero()?.nombre;
-      // console.log(this.filters);
+      this.filters.genero_nombre=this.selectedGenero()?.nombre
+      console.log(this.filters);
     }
 
     if(this.startDate() && this.endDate()){

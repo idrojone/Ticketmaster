@@ -53,7 +53,7 @@ export class ListConciertos implements OnInit {
             if(this.slug_genero!== null && this.slug_genero!== ''){
                 this.get_conciertos_by_genero();
             }else if(this.routeFilters!== null){
-                this.get_list_filtered(this.routeFilters);
+                this.getConciertos(this.routeFilters);
             }else{
                 this.getConciertos();
             }
@@ -62,12 +62,6 @@ export class ListConciertos implements OnInit {
         }
 
     }
-
-    get_list_filtered(event: any) {
-        let params: any = atob(this.routeFilters!);
-        console.log(params);
-    }
-
 
     getAllConciertosFiltered() {
 
@@ -85,29 +79,33 @@ export class ListConciertos implements OnInit {
         );
     }
 
-    // getAllConciertos() {
-    //     this.conciertosService.get_all_conciertos().subscribe(
-    //         (data) => {
-    //             console.log(data);
-    //             this.conciertos = data as Concierto[];
-    //         },
-    //         (error) => {
-    //             console.error('Error fetching conciertos:', error);
-    //         }
-    //     );
-    // }
-
-    getConciertos() {
-        const params = this.getRequestParams(this.offset, this.limit);
+    getConciertos(routeFilters: string | null = null) {
+        let params: any = {};
+        
+        if (routeFilters) {
+            try {
+            const decodedString = atob(routeFilters);
+            params = JSON.parse(decodedString);
+            } catch (error) {
+            console.error('Error parsing route filters:', error);
+            params = this.getRequestParams(this.offset, this.limit);
+            }
+        } else {
+            params = this.getRequestParams(this.offset, this.limit);
+        }
 
         this.conciertosService.get_all_conciertos(params).subscribe(
             (data: any) => {
-                console.log(data.conciertos);
+            console.log(data.conciertos);
+            if (this.offset === 0) {
                 this.conciertos = data.conciertos as Concierto[];
-                this.limit=this.limit+4;
+            } else {
+                this.conciertos = [...this.conciertos, ...data.conciertos as Concierto[]];
+            }
+            this.offset += this.limit;
             },
             (error) => {
-                console.error('Error fetching conciertos:', error);
+            console.error('Error fetching conciertos:', error);
             }
         );
     }
