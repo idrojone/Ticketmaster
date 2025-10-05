@@ -36,6 +36,8 @@ export class FiltersComponent implements OnInit {
   routeFilters: string | null = null;
   filters!: Filters;
 
+  nombre: string | undefined = ''; 
+
   // Signal para el género seleccionado//ESTA LINEA
   selectedGenero = signal<Genero | null>(null);
   
@@ -248,5 +250,4 @@ export class FiltersComponent implements OnInit {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-
 }
