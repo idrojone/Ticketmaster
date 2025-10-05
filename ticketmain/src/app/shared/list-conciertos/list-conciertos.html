@@ -1,5 +1,5 @@
 @if (page === 'shop') {
-    <!-- <app-search (searchEvent)="getConciertos($event)"></app-search> -->
+    <app-search (searchEvent)="getConciertos($event)"></app-search>
 
     <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
     <div class="list-conciertos">
