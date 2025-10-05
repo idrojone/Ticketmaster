@@ -115,7 +115,8 @@ export class FiltersComponent implements OnInit {
     setTimeout(() => {
       // console.log("timeout");
       this.Router.navigate(['/shop', btoa(JSON.stringify(this.filters))]);
-      this.eventofiltros.emit(this.filters)
+      this.eventofiltros.emit(this.filters);
+      console.log("datos a enviar filtros: " + JSON.stringify(this.filters));
     }, 400);
 
   }
