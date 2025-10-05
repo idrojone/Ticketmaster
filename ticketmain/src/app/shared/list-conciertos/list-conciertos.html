@@ -2,10 +2,11 @@
     <!-- <app-search (searchEvent)="getConciertos($event)"></app-search> -->
 
     <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
-
+    <div class="list-conciertos">
     @for (concierto of conciertos; track concierto.slug) {
-         <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
+            <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
     }
+    </div>
 
 }@else {
     <div
