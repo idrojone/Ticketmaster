@@ -9,26 +9,31 @@
 - **GET**: [http://localhost:3000/api/conciertos/{slug}](http://localhost:3000/api/conciertos/{slug}) - Retrieve, update, or delete a specific concert by slug.
 - **POST**: [http://localhost:3000/api/conciertos](http://localhost:3000/api/conciertos) - Create a new concert.
 
-EJEMPLOS:
-{
-    "nombre": "Bad Bunny World's Hottest Tour",
-    "fecha": "2024-11-15",
-    "artista": "Bad Bunny",
-    "lugar": "Estadio Santiago Bernabéu, Madrid",
-    "precio": 125,
-    "aforo": 81044,
-    "duracion": 135,
-    "imagenArtista": null,
-    "imagenesShow": [],
-    "id_genero": "68daccc26cbb071eb8a49242",
-    "_id": "68dc1a34d2e352486d084f5f",
-    "slug": "bad-bunny-world's-hottest-tour-hrzysn",
-    "__v": 0
-}
-
 - **GET**: [http://localhost:3000/api/conciertos](http://localhost:3000/api/conciertos) - Retrieve all concerts.
 
 ## Generos
 - **POST**: [http://localhost:3000/api/generos](http://localhost:3000/api/generos) - Create a new genre.
 - **GET**: [http://localhost:3000/api/generos](http://localhost:3000/api/generos) - Retrieve all genres.
 - **GET**: [http://localhost:3000/api/generos/{slug}](http://localhost:3000/api/generos/{slug}) - Retrieve, update, or delete a specific genre by slug.
+
+
+### Ejemplos
+
+crear concierto
+{
+  "nombre": "Metallica World Tour 2024",
+  "fecha": "2024-11-15",
+  "artista": "Metallica",
+  "lugar": "Wanda Metropolitano, Madrid",
+  "precio": 85,
+  "aforo": 68000,
+  "imagenArtista": "https://i.scdn.co/image/ab6761610000517469ca98dd3083f1082d740e44",
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg"
+  ],
+  "duracion": 180,
+  "id_genero": "GEN001",
+  "slug": "metallica-world-tour-2024-bf21k6"
+}
