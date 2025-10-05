@@ -29,7 +29,7 @@ async function findAllConciertos(req, res) {
 
     console.log("Parámetros procesados:", { genero, nombre, fecha_inicio, fecha_fin })
 
-    let nombreReg = new RegExp(nombre);
+    let nombreReg = new RegExp(nombre, 'i'); // 'i' para case-insensitive
 
     query = {
         nombre: { $regex: nombreReg }
