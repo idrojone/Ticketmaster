@@ -116,6 +116,7 @@ export class ListConciertos implements OnInit {
             }
         );
     }
+    
 
     getRequestParams(offset: number, limit: number): any {
         let params: any = {};
