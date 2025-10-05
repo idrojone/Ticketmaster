@@ -68,9 +68,8 @@ export class ListConciertos implements OnInit {
         console.log(params);
     }
 
-
     getAllConciertosFiltered() {
-
+        
     }
 
     get_conciertos_by_genero() {
