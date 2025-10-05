@@ -2,8 +2,8 @@
   "_id": {
     "$oid": "68dfd940d6645741a8f5addd"
   },
-  "nombre": "Metallica World Tour 2024",
-  "fecha": "2024-11-15T20:00:00.000Z",
+  "nombre": "Metallica World Tour 2025",
+  "fecha": "2025-11-15T20:00:00.000Z",
   "artista": "Metallica",
   "lugar": "Wanda Metropolitano, Madrid",
   "descripcion": "El Wanda Metropolitano es el estadio oficial del Club Atlético de Madrid desde 2017. Con una capacidad de 68,456 espectadores, es uno de los recintos deportivos más modernos de Europa. Su diseño vanguardista y su excelente acústica lo convierten en el escenario perfecto para los grandes eventos musicales.",
@@ -27,7 +27,7 @@
     "/assets/img/show10.jpg"
   ],
   "id_genero": "GEN001",
-  "slug": "metallica-world-tour-2024-bf21k6",
+  "slug": "metallica-world-tour-2025-bf21k6",
   "__v": 0
 },
 {
@@ -35,7 +35,7 @@
     "$oid": "68dfdaaed6645741a8f5ae20"
   },
   "nombre": "AC/DC Thunder Tour",
-  "fecha": "2024-12-20T21:00:00.000Z",
+  "fecha": "2025-12-20T21:00:00.000Z",
   "artista": "AC/DC",
   "lugar": "Estadio Santiago Bernabéu, Madrid",
   "descripcion": "AC/DC regresa con su legendario show lleno de energía. Thunderstruck y todos sus hits en vivo.",
@@ -67,7 +67,7 @@
     "$oid": "68dfdab4d6645741a8f5ae26"
   },
   "nombre": "Taylor Swift Eras Tour",
-  "fecha": "2024-10-25T19:30:00.000Z",
+  "fecha": "2025-10-25T19:30:00.000Z",
   "artista": "Taylor Swift",
   "lugar": "Camp Nou, Barcelona",
   "descripcion": "Taylor Swift presenta todos sus éxitos en un espectáculo visual impresionante que recorre todas sus eras musicales.",
@@ -99,7 +99,7 @@
     "$oid": "68dfdab9d6645741a8f5ae2c"
   },
   "nombre": "Dua Lipa Future Nostalgia Tour",
-  "fecha": "2024-11-08T20:30:00.000Z",
+  "fecha": "2025-11-08T20:30:00.000Z",
   "artista": "Dua Lipa",
   "lugar": "WiZink Center, Madrid",
   "descripcion": "Dua Lipa presenta su álbum Future Nostalgia con un show lleno de baile y energía pop.",
@@ -131,7 +131,7 @@
     "$oid": "68dfdabfd6645741a8f5ae32"
   },
   "nombre": "Kendrick Lamar Big Steppers Tour",
-  "fecha": "2024-09-30T21:00:00.000Z",
+  "fecha": "2025-09-30T21:00:00.000Z",
   "artista": "Kendrick Lamar",
   "lugar": "Palau de Esports, Barcelona",
   "descripcion": "Kendrick Lamar presenta su aclamado álbum con un show íntimo lleno de liricas profundas y beats innovadores.",
@@ -163,7 +163,7 @@
     "$oid": "68dfdac5d6645741a8f5ae38"
   },
   "nombre": "Drake It's All A Blur Tour",
-  "fecha": "2024-12-05T20:00:00.000Z",
+  "fecha": "2025-12-05T20:00:00.000Z",
   "artista": "Drake",
   "lugar": "Estadio La Cartuja, Sevilla",
   "descripcion": "Drake trae sus mayores éxitos en un espectáculo que combina rap, R&B y producción de clase mundial.",
@@ -195,7 +195,7 @@
     "$oid": "68dfdacad6645741a8f5ae3e"
   },
   "nombre": "Calvin Harris Live Nation",
-  "fecha": "2024-07-20T22:00:00.000Z",
+  "fecha": "2025-07-20T22:00:00.000Z",
   "artista": "Calvin Harris",
   "lugar": "Cala Mijas, Málaga",
   "descripcion": "Calvin Harris presenta un set único con sus hits más bailables en un ambiente de festival electrónico.",
@@ -227,7 +227,7 @@
     "$oid": "68dfdacfd6645741a8f5ae44"
   },
   "nombre": "David Guetta Future Rave",
-  "fecha": "2024-08-15T23:00:00.000Z",
+  "fecha": "2025-08-15T23:00:00.000Z",
   "artista": "David Guetta",
   "lugar": "Ushuaïa Ibiza",
   "descripcion": "David Guetta lleva su Future Rave a Ibiza con un show lleno de luces, efectos visuales y beats electrónicos.",
@@ -259,7 +259,7 @@
     "$oid": "68dfdad4d6645741a8f5ae4a"
   },
   "nombre": "Bad Bunny World's Hottest Tour",
-  "fecha": "2024-06-12T21:30:00.000Z",
+  "fecha": "2025-06-12T21:30:00.000Z",
   "artista": "Bad Bunny",
   "lugar": "Estadio Olímpico, Sevilla",
   "descripcion": "Bad Bunny presenta sus éxitos más recientes en un show que mezcla reggaeton, trap y música urbana latina.",
@@ -291,7 +291,7 @@
     "$oid": "68dfdadad6645741a8f5ae50"
   },
   "nombre": "Karol G Mañana Será Bonito Tour",
-  "fecha": "2024-05-18T20:00:00.000Z",
+  "fecha": "2025-05-18T20:00:00.000Z",
   "artista": "Karol G",
   "lugar": "Palacio de Deportes, Madrid",
   "descripcion": "Karol G presenta su álbum más exitoso con un espectáculo lleno de color, baile y reggaeton.",
@@ -323,7 +323,7 @@
     "$oid": "68dfdb11d6645741a8f5ae5c"
   },
   "nombre": "Diana Krall Intimate Jazz Night",
-  "fecha": "2024-10-15T21:00:00.000Z",
+  "fecha": "2025-10-15T21:00:00.000Z",
   "artista": "Diana Krall",
   "lugar": "Kursaal Donostia, San Sebastián",
   "descripcion": "Diana Krall presenta una noche íntima de jazz con sus interpretaciones únicas de clásicos y composiciones propias.",
@@ -355,7 +355,7 @@
     "$oid": "68dfdb17d6645741a8f5ae62"
   },
   "nombre": "Herbie Hancock Jazz Masters",
-  "fecha": "2024-11-22T20:30:00.000Z",
+  "fecha": "2025-11-22T20:30:00.000Z",
   "artista": "Herbie Hancock",
   "lugar": "Palau de la Música Catalana, Barcelona",
   "descripcion": "El legendario Herbie Hancock presenta un concierto único con sus mejores composiciones de jazz y fusión.",
@@ -387,7 +387,7 @@
     "$oid": "68dfdb24d6645741a8f5ae68"
   },
   "nombre": "Herbie Hancock Jazz Masters",
-  "fecha": "2024-11-22T20:30:00.000Z",
+  "fecha": "2025-11-22T20:30:00.000Z",
   "artista": "Herbie Hancock",
   "lugar": "Palau de la Música Catalana, Barcelona",
   "descripcion": "El legendario Herbie Hancock presenta un concierto único con sus mejores composiciones de jazz y fusión.",
@@ -419,7 +419,7 @@
     "$oid": "68dfdb2bd6645741a8f5ae6e"
   },
   "nombre": "Joe Bonamassa Blues Guitar Master",
-  "fecha": "2024-09-12T21:30:00.000Z",
+  "fecha": "2025-09-12T21:30:00.000Z",
   "artista": "Joe Bonamassa",
   "lugar": "Teatro Real, Madrid",
   "descripcion": "Joe Bonamassa trae su virtuosismo guitarrístico en una noche dedicada al blues más auténtico y potente.",
@@ -451,7 +451,7 @@
     "$oid": "68dfdb34d6645741a8f5ae74"
   },
   "nombre": "Beth Hart Soul & Blues",
-  "fecha": "2024-10-08T20:00:00.000Z",
+  "fecha": "2025-10-08T20:00:00.000Z",
   "artista": "Beth Hart",
   "lugar": "Sala Apolo, Barcelona",
   "descripcion": "Beth Hart presenta su poderosa voz en un concierto íntimo cargado de soul, blues y emociones profundas.",
@@ -483,7 +483,7 @@
     "$oid": "68dfdb3dd6645741a8f5ae7a"
   },
   "nombre": "Keith Urban Country Roads Tour",
-  "fecha": "2024-07-25T20:30:00.000Z",
+  "fecha": "2025-07-25T20:30:00.000Z",
   "artista": "Keith Urban",
   "lugar": "IFEMA, Madrid",
   "descripcion": "Keith Urban trae el mejor country contemporáneo con su guitarra virtuosa y sus grandes éxitos.",
@@ -515,7 +515,7 @@
     "$oid": "68dfdb43d6645741a8f5ae80"
   },
   "nombre": "Kacey Musgraves Golden Hour Tour",
-  "fecha": "2024-08-30T19:00:00.000Z",
+  "fecha": "2025-08-30T19:00:00.000Z",
   "artista": "Kacey Musgraves",
   "lugar": "Festival Internacional de Benicàssim",
   "descripcion": "Kacey Musgraves presenta su country pop único en un ambiente festival lleno de buenas vibraciones.",
@@ -547,7 +547,7 @@
     "$oid": "68dfdb49d6645741a8f5ae86"
   },
   "nombre": "Concierto Sinfónico Beethoven",
-  "fecha": "2024-12-15T19:30:00.000Z",
+  "fecha": "2025-12-15T19:30:00.000Z",
   "artista": "Orquesta Sinfónica de Madrid",
   "lugar": "Auditorio Nacional, Madrid",
   "descripcion": "La Orquesta Sinfónica de Madrid interpreta las sinfonías más emblemáticas de Ludwig van Beethoven.",
@@ -579,7 +579,7 @@
     "$oid": "68dfdb4ed6645741a8f5ae8c"
   },
   "nombre": "Andrea Bocelli Opera & Classics",
-  "fecha": "2024-11-30T20:00:00.000Z",
+  "fecha": "2025-11-30T20:00:00.000Z",
   "artista": "Andrea Bocelli",
   "lugar": "Gran Teatre del Liceu, Barcelona",
   "descripcion": "Andrea Bocelli ofrece una velada única interpretando las arias de ópera más bellas y clásicos inmortales.",
@@ -611,7 +611,7 @@
     "$oid": "68dfdb55d6645741a8f5ae92"
   },
   "nombre": "Damian Marley Roots & Culture",
-  "fecha": "2024-06-20T21:00:00.000Z",
+  "fecha": "2025-06-20T21:00:00.000Z",
   "artista": "Damian Marley",
   "lugar": "Razzmatazz, Barcelona",
   "descripcion": "Damian Marley trae el reggae más auténtico con mensaje social y ritmos jamaicanos tradicionales.",
@@ -643,7 +643,7 @@
     "$oid": "68dfdb5ad6645741a8f5ae98"
   },
   "nombre": "Chronixx New Generation Reggae",
-  "fecha": "2024-07-10T20:30:00.000Z",
+  "fecha": "2025-07-10T20:30:00.000Z",
   "artista": "Chronixx",
   "lugar": "Sala La Riviera, Madrid",
   "descripcion": "Chronixx representa la nueva generación del reggae con letras conscientes y sonidos frescos.",
@@ -675,7 +675,7 @@
     "$oid": "68dfe4a5175796983cd1aefc"
   },
   "nombre": "Arctic Monkeys The Car Tour",
-  "fecha": "2024-09-18T20:30:00.000Z",
+  "fecha": "2025-09-18T20:30:00.000Z",
   "artista": "Arctic Monkeys",
   "lugar": "Caja Mágica, Madrid",
   "descripcion": "Arctic Monkeys presenta su último álbum 'The Car' con su característico sonido indie rock evolutivo.",

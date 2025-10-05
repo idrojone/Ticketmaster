@@ -120,17 +120,6 @@ export class FiltersComponent implements OnInit {
 
   }
 
-
-
-
-
-
-
-
-
-
-
-
   //GENEROS
   // Método para seleccionar un género
   onGeneroSelect(genero: Genero): void {

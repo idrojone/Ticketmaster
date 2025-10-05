@@ -75,16 +75,28 @@ export class ListConciertos implements OnInit {
         );
     }
 
-    getConciertos(routeFilters: string | null = null) {
+    getConciertos(routeFilters: any | null = null) {
         let params: any = {};
-        
+        console.log("getConciertos", routeFilters);
         if (routeFilters) {
-            try {
-            const decodedString = atob(routeFilters);
-            params = JSON.parse(decodedString);
-            } catch (error) {
-            console.error('Error parsing route filters:', error);
-            params = this.getRequestParams(this.offset, this.limit);
+            if (typeof routeFilters === 'string') {
+                try {
+                    const urlDecoded = decodeURIComponent(routeFilters);
+                    const decodedString = atob(urlDecoded);
+                    const parsedFilters = JSON.parse(decodedString);
+                    params = {
+                        ...parsedFilters,
+                        offset: this.offset,
+                        limit: this.limit
+                    };
+                } catch (error) {
+                    console.error('Error parsing route filters:', error);
+                    this.offset = 0;
+                    params = this.getRequestParams(this.offset, this.limit);
+                }
+            } else {
+                // routeFilters is already an object
+                params = routeFilters;
             }
         } else {
             params = this.getRequestParams(this.offset, this.limit);
@@ -117,7 +129,7 @@ export class ListConciertos implements OnInit {
 
     Scroll() {
         if (this.page === 'home' || this.page === 'shop' && this.slug_genero === null) {
-            this.getConciertos();
+            this.getConciertos(this.routeFilters);
         }
     }
 }

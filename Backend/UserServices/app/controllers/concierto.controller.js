@@ -18,16 +18,35 @@ async function findAllConciertos(req, res) {
 
     let genero = tratarUndefined(req.query.genero, "");
     let nombre = tratarUndefined(req.query.nombre, "");
-    let priceMin = tratarUndefined(req.query.priceMin, 0);
-    let priceMax = tratarUndefined(req.query.priceMax, Number.MAX_SAFE_INTEGER);
+    let fecha_inicio = tratarUndefined(req.query.fecha_inicio, null);
+    let fecha_fin = tratarUndefined(req.query.fecha_fin, null);
 
-    console.log(genero, "genero")
+    // Manejar valores undefined que vienen del frontend
+    if (genero === "undefined") genero = "";
+    if (nombre === "undefined") nombre = "";
+    if (fecha_inicio === "undefined") fecha_inicio = null;
+    if (fecha_fin === "undefined") fecha_fin = null;
+
+    console.log("Parámetros procesados:", { genero, nombre, fecha_inicio, fecha_fin })
 
     let nombreReg = new RegExp(nombre);
 
     query = {
-        nombre: { $regex: nombreReg },
-        $and: [{ precio: { $gte: priceMin } }, { precio: { $lte: priceMax } }]
+        nombre: { $regex: nombreReg }
+    };
+
+    if (fecha_inicio && fecha_fin) {
+        // Las fechas en BD están como strings ISO, comparamos como strings
+        const fechaInicioISO = fecha_inicio + "T00:00:00.000Z";
+        const fechaFinISO = fecha_fin + "T23:59:59.999Z";
+        query.fecha = {
+            $gte: fechaInicioISO,
+            $lte: fechaFinISO
+        };
+    } else if (fecha_inicio) {
+        query.fecha = { $gte: fecha_inicio + "T00:00:00.000Z" };
+    } else if (fecha_fin) {
+        query.fecha = { $lte: fecha_fin + "T23:59:59.999Z" };
     }
 
     if (genero !== "") {
@@ -41,7 +60,7 @@ async function findAllConciertos(req, res) {
     }
 
 
-    console.log(query);
+    console.log("Query final:", JSON.stringify(query, null, 2));
 
     const conciertos = await Concierto.find(query).skip(Number(offset)).limit(Number(limit));
     const concierto_count = await Concierto.find(query).countDocuments();
