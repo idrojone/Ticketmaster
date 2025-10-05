@@ -8,6 +8,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FiltersComponent } from '../filters/filters';
 import { Genero } from 'src/app/core/models/generos.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Search } from '../search/search';
 
 
 @Component({
@@ -16,7 +17,8 @@ import { ActivatedRoute, Router } from '@angular/router';
         CardConciertos,
         // ZardSkeletonComponent,
         InfiniteScrollModule,
-        FiltersComponent
+        FiltersComponent,
+        Search
     ],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
