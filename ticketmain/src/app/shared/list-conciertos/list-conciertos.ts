@@ -63,7 +63,11 @@ export class ListConciertos implements OnInit {
                 this.getConciertos();
             }
         } else if (this.page === 'home') {
-            this.getConciertos();
+            // console.log("ngOnInit home conciertos");
+            this.filters = new Filters();
+            this.filters.limit = 4;
+            this.filters.offset = 0;
+            this.getConciertos(this.filters);
         }
 
     }
@@ -90,6 +94,7 @@ export class ListConciertos implements OnInit {
     }
 
     getConciertos(filters?: Filters) {
+
         console.log("filters recibidos en list conciertos: " + JSON.stringify(filters));
 
         this.conciertosService.get_all_conciertos(filters).subscribe(
@@ -115,8 +120,12 @@ export class ListConciertos implements OnInit {
 
     Scroll() {
         // console.log("scroll FILTROS: " + JSON.stringify(this.filters));
+        
         if (this.page === 'home') {
-            this.getConciertos();
+            this.filters.limit = (this.filters.limit || 4) + 4  ;
+            console.log("scroll FILTROS ACTUALIZADOS: " + JSON.stringify(this.filters));
+            this.getConciertos(this.filters);
+
         }
     }
 }
