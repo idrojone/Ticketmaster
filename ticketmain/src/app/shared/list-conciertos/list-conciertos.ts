@@ -58,6 +58,7 @@ export class ListConciertos implements OnInit {
             if(this.slug_genero!== null && this.slug_genero!== ''){
                 this.get_conciertos_by_genero();
             }else if(this.routeFilters!== null){
+                this.filters= JSON.parse(atob(this.routeFilters!));
                 this.getConciertos(this.filters);
             }else{
                 this.getConciertos();

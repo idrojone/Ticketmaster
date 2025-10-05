@@ -98,8 +98,8 @@ export class FiltersComponent implements OnInit {
       console.log(this.filters);
     }
 
-    this.filters.fecha_inicio=undefined;
-    this.filters.fecha_fin=undefined;
+    // this.filters.fecha_inicio=undefined;
+    // this.filters.fecha_fin=undefined;
 
     if(this.startDate() && this.endDate()){
       this.filters.fecha_inicio=this.formatDateToLocal(this.startDate()!);
