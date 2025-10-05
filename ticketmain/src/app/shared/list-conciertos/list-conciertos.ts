@@ -5,13 +5,10 @@ import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-<<<<<<< HEAD
 import { FiltersComponent } from '../filters/filters';
 import { Genero } from 'src/app/core/models/generos.model';
 import { ActivatedRoute, Router } from '@angular/router';
-=======
-import { ActivatedRoute } from '@angular/router';
->>>>>>> 1919518a54bc41fdb82b46d09638ff76433bca35
+
 
 @Component({
     selector: 'app-list-conciertos',
