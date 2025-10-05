@@ -2,41 +2,14 @@ const Concierto = require('../models/concierto.model.js');
 const SpotifyAPI = require('../utils/SpotifyAPI.js');
 const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
-const genero=require('../models/genero.model.js');
+const GeneroModel = require('../models/genero.model.js');
 
 async function findAllConciertos(req, res) {
-    // try {
-    //     const {offset, limit} = req.query;
-    //     let conciertos;
-
-    //     if ( offset && limit){
-    //          conciertos = await Concierto.find({},{},{skip: Number(offset), limit: Number(limit)});
-    //     }else{
-    //          conciertos = await Concierto.find();
-    //     }
-
-    //     const spotifyAPI = new SpotifyAPI();
-
-    //     // NO BORRAR
-    //     const concierosWithImages = await Promise.all(conciertos.map(async concierto => {
-    //         if (!concierto.imagenArtista) {
-    //             const artistaInfo = await spotifyAPI.getArtistImg(concierto.artista);
-    //             if (artistaInfo && artistaInfo.image) {
-    //                 await Concierto.findByIdAndUpdate(concierto._id, { imagenArtista: artistaInfo.image });
-    //                 concierto.imagenArtista = artistaInfo.image;
-    //             }
-    //         }
-    //         return concierto;
-    //     }));
-    //     res.json(concierosWithImages);
-    // } catch (error) {
-    //     res.status(500).json("Ha ocurrido un error", res.statusCode);
-    // }
-
+    console.log(req.query, "query");
     let query = {};
     const spotifyAPI = new SpotifyAPI();
 
-    let tratarUndefined = (varQuery, otroResultado) => {
+    const tratarUndefined = (varQuery, otroResultado) => {
         return varQuery !== undefined ? varQuery : otroResultado;
     }
 
@@ -48,6 +21,8 @@ async function findAllConciertos(req, res) {
     let priceMin = tratarUndefined(req.query.priceMin, 0);
     let priceMax = tratarUndefined(req.query.priceMax, Number.MAX_SAFE_INTEGER);
 
+    console.log(genero, "genero")
+
     let nombreReg = new RegExp(nombre);
 
     query = {
@@ -56,10 +31,19 @@ async function findAllConciertos(req, res) {
     }
 
     if (genero !== "") {
-        query.id_genero = genero;
+        const generoFound = await GeneroModel.findOne({ slug: genero });
+        if (generoFound) {
+            genero = generoFound.id_genero;
+            query.id_genero = genero;
+        }
+    } else {
+        console.log("No se ha proporcionado género");
     }
 
-    const conciertos = await Concierto.find({},{},{skip: Number(offset), limit: Number(limit)});
+
+    console.log(query);
+
+    const conciertos = await Concierto.find(query).skip(Number(offset)).limit(Number(limit));
     const concierto_count = await Concierto.find(query).countDocuments();
 
     const concierosWithImages = await Promise.all(conciertos.map(async concierto => {
@@ -93,7 +77,7 @@ const findAllConciertosQuery = asyncHandler(async(req, res) => {
     let limit = tratarUndefined(req.query.limit, 10);
     let offset = tratarUndefined(req.query.offset, 0);
     
-    let genero = tratarUndefined(req.query.genero, "");
+    let genero_filtro = tratarUndefined(req.query.genero, "");
     let nombre = tratarUndefined(req.query.nombre, "");
     let priceMin = tratarUndefined(req.query.priceMin, 0);
     let priceMax = tratarUndefined(req.query.priceMax, Number.MAX_SAFE_INTEGER);
@@ -104,9 +88,14 @@ const findAllConciertosQuery = asyncHandler(async(req, res) => {
         nombre: { $regex: nombreReg },
         $and: [{ precio: { $gte: priceMin } }, { precio: { $lte: priceMax } }]
     }
-    console.log(genero);   
-    if (genero !== "") {
-        query.id_genero = genero;
+
+    console.log(genero_filtro);
+
+    if (genero_filtro !== "") {
+        const generoFound = await GeneroModel.findOne({ slug: genero_filtro });
+        if (generoFound) {
+            query.id_genero = generoFound.id_genero;
+        }
     }
 
     console.log(query);
@@ -158,7 +147,7 @@ async function createConcierto(req, res) {
             });
         }
 
-        const find_genero = await genero.findOne({ id_genero: id_genero });
+        const find_genero = await GeneroModel.findOne({ id_genero: id_genero });
 
         if (!find_genero) {
             return res.status(404).json({ 
@@ -290,7 +279,7 @@ async function findConciertosByGenero(req, res) {
     try {
         const slug = req.params.slug;
 
-        const generoFound = await genero.findOne({slug}).exec();
+        const generoFound = await GeneroModel.findOne({slug}).exec();
 
         if (!generoFound) {
             return res.status(404).json({ message: "Genero no encontrado", status: 404 });
