@@ -1,10 +1,14 @@
 @if (page === 'shop') {
     <app-search (searchEvent)="getConciertos($event)"></app-search>
-    <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
-}
 
-<!-- <app-filters (eventofiltros)="get_list_filtered($event)" [listGeneros]="listGeneros"></app-filters> -->
-<div
+    <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
+
+    @for (concierto of conciertos; track concierto.slug) {
+         <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
+    }
+
+}@else {
+    <div
     infinite-scroll
     [infiniteScrollDistance]="1"
     [infiniteScrollThrottle]="1500"
@@ -17,4 +21,7 @@
             <div class="animate-pulse bg-white shadow-lg rounded-lg overflow-hidden m-4" style="min-width: 400px; height: 400px;"></div>
         }
     }
-</div>
+    </div>  
+}
+
+<!-- <app-filters (eventofiltros)="get_list_filtered($event)" [listGeneros]="listGeneros"></app-filters> -->
