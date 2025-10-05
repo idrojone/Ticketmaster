@@ -5,9 +5,13 @@ import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+<<<<<<< HEAD
 import { FiltersComponent } from '../filters/filters';
 import { Genero } from 'src/app/core/models/generos.model';
 import { ActivatedRoute, Router } from '@angular/router';
+=======
+import { ActivatedRoute } from '@angular/router';
+>>>>>>> 1919518a54bc41fdb82b46d09638ff76433bca35
 
 @Component({
     selector: 'app-list-conciertos',
@@ -35,21 +39,26 @@ export class ListConciertos implements OnInit {
 
     conciertosService = inject(ConciertosService);
 
+    ActivatedRoute = inject(ActivatedRoute);
     skeletonArray = Array(20); 
+    slug_genero!: string | null;
 
-    constructor(private ActivatedRoute: ActivatedRoute, private Router: Router, private Location: Location) { }
+    constructor( private Router: Router, private Location: Location) { }
 
     ngOnInit() {
         // console.log("ngOnInit list conciertos");
          if (this.page === 'shop') {
             // console.log("ngOnInit shop conciertos");
-            this.slug_category= this.ActivatedRoute.snapshot.paramMap.get('slug');
+            this.limit = 12;
+            this.slug_genero = this.ActivatedRoute.snapshot.paramMap.get('slug');
             this.routeFilters=this.ActivatedRoute.snapshot.paramMap.get('filters');
 
-            if(this.slug_category!== null && this.slug_category!== ''){
-                this.getConciertos();
+            if(this.slug_genero!== null && this.slug_genero!== ''){
+                this.get_conciertos_by_genero();
             }else if(this.routeFilters!== null){
                 
+            }else{
+                this.getConciertos();
             }
         } else if (this.page === 'home') {
             this.getConciertos();
@@ -66,25 +75,37 @@ export class ListConciertos implements OnInit {
 
     }
 
-    getAllConciertos() {
-        this.conciertosService.get_all_conciertos().subscribe(
-            (data) => {
-                console.log(data);
-                this.conciertos = data as Concierto[];
+    get_conciertos_by_genero() {
+        this.conciertosService.get_conciertos_by_genero(this.slug_genero!).subscribe(
+            (data: any) => {
+                console.log(data.conciertos);
+                this.conciertos = data.conciertos as Concierto[];
             },
-            (error) => {
-                console.error('Error fetching conciertos:', error);
+            (error: any) => {
+                console.error('Error fetching conciertos by genero:', error);
             }
         );
     }
+
+    // getAllConciertos() {
+    //     this.conciertosService.get_all_conciertos().subscribe(
+    //         (data) => {
+    //             console.log(data);
+    //             this.conciertos = data as Concierto[];
+    //         },
+    //         (error) => {
+    //             console.error('Error fetching conciertos:', error);
+    //         }
+    //     );
+    // }
 
     getConciertos() {
         const params = this.getRequestParams(this.offset, this.limit);
 
         this.conciertosService.get_all_conciertos(params).subscribe(
-            (data) => {
-                console.log(data);
-                this.conciertos = data as Concierto[];
+            (data: any) => {
+                console.log(data.conciertos);
+                this.conciertos = data.conciertos as Concierto[];
                 this.limit=this.limit+4;
             },
             (error) => {
@@ -103,6 +124,8 @@ export class ListConciertos implements OnInit {
     }
 
     Scroll() {
-        this.getConciertos();
+        if (this.page === 'home' || this.page === 'shop' && this.slug_genero === null) {
+            this.getConciertos();
+        }
     }
 }

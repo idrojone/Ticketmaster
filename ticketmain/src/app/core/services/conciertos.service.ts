@@ -22,4 +22,12 @@ export class ConciertosService {
         );
     }
 
+    get_conciertos_by_genero(slug: string): Observable<Concierto[]> {
+        console.log(slug, 'servicio');
+        return this.apiService.get(`/api/conciertos/genero/${slug}`).pipe(
+            tap((data) => console.log(data, slug, 'servicio')),
+            map((response: any) => response as Concierto[])
+        );
+    }
+
 }
