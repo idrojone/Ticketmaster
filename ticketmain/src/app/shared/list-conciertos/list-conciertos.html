@@ -26,3 +26,4 @@
 }
 
 <!-- <app-filters (eventofiltros)="get_list_filtered($event)" [listGeneros]="listGeneros"></app-filters> -->
+ <z-pagination [zPageIndex]="1" [zTotal]="numeroConciertos" [(ngModel)]="filters.offset" (zPageIndexChange)="setPageTo($event)"/>
