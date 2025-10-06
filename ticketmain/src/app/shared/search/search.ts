@@ -1,10 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Concierto } from 'src/app/core/models/conciertos.model';
 import { Filters } from 'src/app/core/models/filters.model';
 import { ConciertosService } from 'src/app/core/services/conciertos.service';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -16,40 +17,97 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './search.html',
   styleUrl: './search.css'
 })
-export class Search implements OnInit {
+export class Search implements OnInit, OnDestroy {
 
   @Output() searchEvent: EventEmitter<Filters> = new EventEmitter();
 
   routeFilters!: string | null;
-  filters: Filters = new Filters();
+  filters: Filters = new Filters(8, 0); // Inicializar con valores correctos
   search_value: string | undefined = '';
   search: any;
   listProducts: Concierto[] = [];
+  limit: number = 8;
+  offset: number = 0;
+  
+  private routeSubscription: Subscription = new Subscription();
 
   private ConciertosService = inject(ConciertosService);
   private Router = inject(Router);
   private ActivatedRoute = inject(ActivatedRoute);
   private Location = inject(Location);
+
   ngOnInit(): void {
+    // Cargar filtros iniciales
+    this.loadFiltersFromRoute();
+    
+    // Escuchar cambios en los parámetros de la ruta
+    this.routeSubscription = this.ActivatedRoute.paramMap.subscribe(params => {
+      this.loadFiltersFromRoute();
+    });
+  }
+  
+  ngOnDestroy(): void {
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
+  
+  private loadFiltersFromRoute(): void {
     this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
     if (this.routeFilters !== null) {
-      this.filters = JSON.parse(atob(this.routeFilters));
+      const parsedFilters = JSON.parse(atob(this.routeFilters));
+      this.filters = new Filters(
+        parsedFilters.limit,
+        parsedFilters.offset,
+        parsedFilters.genero,
+        parsedFilters.genero_nombre,
+        parsedFilters.fecha_inicio,
+        parsedFilters.fecha_fin,
+        parsedFilters.nombre,
+        parsedFilters.ciudad
+      );
+      this.offset = this.filters.offset || 0;
+      this.limit = this.filters.limit || 8;
+      
+      // Si hay filtros de género o fecha pero no hay nombre, limpiar el search
+      if ((parsedFilters.genero || parsedFilters.fecha_inicio || parsedFilters.fecha_fin) && !parsedFilters.nombre) {
+        this.search_value = '';
+        this.filters.nombre = undefined;
+        console.log('Campo de búsqueda limpiado por filtros aplicados');
+      } else {
+        this.search_value = this.filters.nombre || '';
+      }
+      
       this.searchEvent.emit(this.filters);
+    } else {
+      this.filters = new Filters(this.limit, this.offset);
+      this.search_value = '';
     }
-    this.search_value = this.filters.nombre || undefined;
   }
 
   public type_event(weittingValue: any): void {
-
-
-    this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
-    if (this.routeFilters !== null) {
-      this.filters = JSON.parse(atob(this.routeFilters));
+    if (!this.filters.nombre && !this.filters.genero) {
+      this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
+      if (this.routeFilters !== null) {
+        const parsedFilters = JSON.parse(atob(this.routeFilters));
+        this.filters = new Filters(
+          parsedFilters.limit,
+          parsedFilters.offset,
+          parsedFilters.genero,
+          parsedFilters.genero_nombre,
+          parsedFilters.fecha_inicio,
+          parsedFilters.fecha_fin,
+          parsedFilters.nombre,
+          parsedFilters.ciudad
+        );
+      }
     }
     console.log(this.filters, "FILTROS SEARCH");
-    this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
+    
     this.search = weittingValue;
     this.filters.nombre = this.search;
+    
+    this.resetPagination();
 
     setTimeout(() => {
       this.searchEvent.emit(this.filters);
@@ -64,22 +122,32 @@ export class Search implements OnInit {
   getListConciertos() {
     console.log(this.filters, "FILTROS SEARCH");
     this.filters.nombre = this.search;
-    this.ConciertosService.get_all_conciertos(this.filters).subscribe((data) => {
-      (data: any) => {
-        this.listProducts = data;
-        console.log(this.listProducts);
-        if (data === null) {
-          console.log('no hay datos');
-        }
+    this.filters.limit = this.filters.limit || this.limit;
+    this.filters.offset = this.filters.offset || this.offset;
+    
+    this.ConciertosService.get_all_conciertos(this.filters).subscribe((data: any) => {
+      if (data && data.conciertos) {
+        this.listProducts = data.conciertos;
+      } else {
+        this.listProducts = data || [];
+      }
+      console.log(this.listProducts);
+      if (data === null) {
+        console.log('no hay datos');
       }
     });
   }
 
-  public search_event(data: any): void {
-    if (typeof data.search_value === 'string') {
-      this.filters = data.search_value;
-      // this.filters.offset = 0;
-      this.Router.navigate(['/shop/' + btoa(JSON.stringify(this.filters))]);
-    }
+  public search_event(): void {
+    this.filters.nombre = this.search_value || '';
+    this.resetPagination();
+    this.searchEvent.emit(this.filters);
+    this.Router.navigate(['/shop/' + btoa(JSON.stringify(this.filters))]);
+  }
+  
+  private resetPagination(): void {
+    this.offset = 0;
+    this.filters.offset = this.offset;
+    this.filters.limit = this.limit;
   }
 }
