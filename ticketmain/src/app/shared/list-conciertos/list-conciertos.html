@@ -1,7 +1,9 @@
 @if (page === 'shop') {
-    <app-search (searchEvent)="getConciertos($event)"></app-search>
 
-    <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
+    <div class="flex justify-between items-center">
+        <app-search (searchEvent)="getConciertos($event)"></app-search>
+        <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
+    </div>
     <div class="list-conciertos">
     @for (concierto of conciertos; track concierto.slug) {
             <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
