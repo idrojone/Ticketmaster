@@ -10,6 +10,8 @@ import { Genero } from 'src/app/core/models/generos.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Search } from '../search/search';
 import { Filters } from '../../core/models/filters.model';
+import { ZardPaginationModule } from '@shared/components/pagination/pagination.module';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -21,6 +23,8 @@ import { Filters } from '../../core/models/filters.model';
         InfiniteScrollModule,
         FiltersComponent,
         Search
+        ,ZardPaginationModule,
+        FormsModule
     ],
     templateUrl: './list-conciertos.html',
     styleUrl: './list-conciertos.css',
@@ -29,6 +33,7 @@ import { Filters } from '../../core/models/filters.model';
 
 export class ListConciertos implements OnInit {
     @Input() page !: string;
+    // @Input () numeroConciertosShop !: number;
 
     limit=4;
     offset=0;
@@ -39,6 +44,7 @@ export class ListConciertos implements OnInit {
     listGeneros: Genero[] = [];
     skeletonArray = Array(20); 
     slug_genero!: string | null;
+    numeroConciertos!: number;
 
     Router = inject(Router);
     Location = inject(Location);
@@ -49,7 +55,6 @@ export class ListConciertos implements OnInit {
         // console.log("ngOnInit list conciertos");
          if (this.page === 'shop') {
             // console.log("ngOnInit shop conciertos");
-            this.limit = 12;
             this.slug_genero = this.ActivatedRoute.snapshot.paramMap.get('slug');
             this.routeFilters=this.ActivatedRoute.snapshot.paramMap.get('filters');
 
@@ -57,6 +62,7 @@ export class ListConciertos implements OnInit {
                 this.get_conciertos_by_genero();
             }else if(this.routeFilters!== null){
                 this.filters= JSON.parse(atob(this.routeFilters!));
+                // this.filters.limit = this.limit;
                 this.refreshRouteFilter();
                 this.getConciertos(this.filters);
             }else{
@@ -94,13 +100,22 @@ export class ListConciertos implements OnInit {
     }
 
     getConciertos(filters?: Filters) {
-
-        console.log("filters recibidos en list conciertos: " + JSON.stringify(filters));
+        if (filters === undefined) {
+            filters = new Filters();
+            filters.limit = this.limit;
+            filters.offset = this.offset;
+        }
+        console.log("filters recibidos en list conciertos: " , filters);
 
         this.conciertosService.get_all_conciertos(filters).subscribe(
             (data: any) => {
                 this.conciertos = data.conciertos as Concierto[];
-                // console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
+                this.numeroConciertos = data.concierto_count/this.limit;
+                if (this.numeroConciertos < 1 && this.numeroConciertos > 0) {
+                    this.numeroConciertos = 1;
+                }
+                console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
+                console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
             },
             (error) => {
                 console.error('Error fetching conciertos:', error);
@@ -108,6 +123,13 @@ export class ListConciertos implements OnInit {
         );
     }
     
+    setPageTo(pageNum: number): void {
+        if (pageNum < 1 || pageNum > this.numeroConciertos) {
+            return;
+        }
+        this.filters.offset = (pageNum - 1) * this.limit;
+        this.getConciertos(this.filters);
+    }
 
     getRequestParams(offset: number, limit: number): any {
         let params: any = {};
