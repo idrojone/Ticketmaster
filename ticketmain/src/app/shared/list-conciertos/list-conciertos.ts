@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 
 
 
+
 @Component({
     selector: 'app-list-conciertos',
     imports: [
@@ -35,7 +36,7 @@ export class ListConciertos implements OnInit {
     @Input() page !: string;
     // @Input () numeroConciertosShop !: number;
 
-    limit=4;
+    limit=8;
     offset=0;
     slug_category!: string | null ;
     routeFilters!: string | null ;
@@ -62,7 +63,6 @@ export class ListConciertos implements OnInit {
                 this.get_conciertos_by_genero();
             }else if(this.routeFilters!== null){
                 this.filters= JSON.parse(atob(this.routeFilters!));
-                // this.filters.limit = this.limit;
                 this.refreshRouteFilter();
                 this.getConciertos(this.filters);
             }else{
@@ -103,7 +103,7 @@ export class ListConciertos implements OnInit {
         if (filters === undefined) {
             filters = new Filters();
             filters.limit = this.limit;
-            filters.offset = this.offset;
+            filters.offset = this.offset;   
         }
         console.log("filters recibidos en list conciertos: " , filters);
 
@@ -114,8 +114,8 @@ export class ListConciertos implements OnInit {
                 if (this.numeroConciertos < 1 && this.numeroConciertos > 0) {
                     this.numeroConciertos = 1;
                 }
-                console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
-                console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
+                // console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
+                // console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
             },
             (error) => {
                 console.error('Error fetching conciertos:', error);
@@ -128,6 +128,8 @@ export class ListConciertos implements OnInit {
             return;
         }
         this.filters.offset = (pageNum - 1) * this.limit;
+        this.filters.limit = this.limit;
+        console.log("Página cambiada a: " + pageNum + ", offset: " + this.filters.offset);
         this.getConciertos(this.filters);
     }
 
