@@ -49,7 +49,8 @@ userSchema.methods.generateAccessToken = function() {
         {
             id: this._id,
             email: this.email,
-            username: this.username
+            username: this.username,
+            password: this.password
         },
         process.env.JWT_SECRET,
         {expiresIn: '1d'}
@@ -63,7 +64,7 @@ userSchema.methods.toUserResponse = function() {
         email: this.email,
         bio: this.bio,
         image: this.image,
-        token: this.generateAccessToken()  // Ahora es síncrono, funciona correctamente
+        token: this.generateAccessToken()
     }
 };
 
