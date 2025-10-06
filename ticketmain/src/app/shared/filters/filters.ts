@@ -97,7 +97,7 @@ export class FiltersComponent implements OnInit {
     if(this.selectedGenero()){
       this.filters.genero=this.selectedGenero()?.slug;
       this.filters.genero_nombre=this.selectedGenero()?.nombre
-      console.log(this.filters);
+      // console.log(this.filters);
     }
 
     // this.filters.fecha_inicio=undefined;
@@ -122,6 +122,29 @@ export class FiltersComponent implements OnInit {
     }, 400);
 
   }
+
+  clear_filters(){
+    this.selectedGenero.set(null);
+    this.startDate.set(null);
+    this.endDate.set(null);
+
+    setTimeout(() => {
+      this.Router.navigate(['/shop']);
+      this.eventofiltros.emit(new Filters());
+      console.log("filtros limpiados");
+    }
+    , 400);
+  }
+
+
+
+
+
+
+
+
+
+
 
   //GENEROS
   // Método para seleccionar un género
