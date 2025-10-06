@@ -8,7 +8,6 @@
         Géneros
       }
     </button>
-    
     <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
       @for (item of generos; track item.slug) {
         <z-dropdown-menu-item 
@@ -18,6 +17,32 @@
           <div class="flex items-center justify-between w-full">
             <span>{{ item.nombre }}</span>
             @if (isGeneroSelected(item)) {
+              <span class="text-black font-bold">✓</span>
+            }
+          </div>
+        </z-dropdown-menu-item>
+      }
+    </z-dropdown-menu-content>
+  </div>
+
+  <!-- Dropdown de Ciudades -->
+  <div class="filter-item">
+    <button z-button zType="outline" z-dropdown [zDropdownMenu]="ciudadMenu" class="filter-button">
+      @if (selectedCiudad()) {
+        {{ selectedCiudad() }}
+      } @else {
+        Ciudades
+      }
+    </button>
+    <z-dropdown-menu-content #ciudadMenu="zDropdownMenuContent" class="w-56 max-h-60 overflow-y-auto">
+      @for (ciudad of ciudades; track ciudad) {
+        <z-dropdown-menu-item 
+          (click)="onCiudadSelect(ciudad)"
+          [class.selected-genre]="isCiudadSelected(ciudad)"
+        >
+          <div class="flex items-center justify-between w-full">
+            <span>{{ ciudad }}</span>
+            @if (isCiudadSelected(ciudad)) {
               <span class="text-black font-bold">✓</span>
             }
           </div>

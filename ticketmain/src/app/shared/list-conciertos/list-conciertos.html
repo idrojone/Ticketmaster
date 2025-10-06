@@ -1,5 +1,4 @@
 @if (page === 'shop') {
-
     <div class="flex justify-between items-center">
         <app-search (searchEvent)="getConciertos($event)"></app-search>
         <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
@@ -9,9 +8,13 @@
             <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
     }
     </div>
-     <z-pagination [zPageIndex]="1" [zTotal]="numeroConciertos" [(ngModel)]="filters.offset" (zPageIndexChange)="setPageTo($event)"/>
-
+    <z-pagination [zPageIndex]="1" [zTotal]="numeroConciertos" [(ngModel)]="filters.offset" (zPageIndexChange)="setPageTo($event)"/>
 }@else {
+    <div class="concerts-section">
+        <h2 class="concerts-title">Los mejores Conciertos</h2>
+        <div class="concerts-subtitle">Descubre los mejores conciertos</div>
+    </div>
+
     <div
     infinite-scroll
     [infiniteScrollDistance]="1"

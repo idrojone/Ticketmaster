@@ -81,13 +81,21 @@ export class ListConciertos implements OnInit {
     refreshRouteFilter() {
         this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
         if(typeof(this.routeFilters) == "string" ){
-            this.filters = JSON.parse(atob(this.routeFilters));
+            const parsedFilters = JSON.parse(atob(this.routeFilters));
+            this.filters = new Filters(
+                parsedFilters.limit,
+                parsedFilters.offset,
+                parsedFilters.genero,
+                parsedFilters.genero_nombre,
+                parsedFilters.fecha_inicio,
+                parsedFilters.fecha_fin,
+                parsedFilters.nombre,
+                parsedFilters.ciudad
+            );
         }else{
             this.filters = new Filters();
-        }
-    }
-
-    get_conciertos_by_genero() {
+        }
+    }    get_conciertos_by_genero() {
         this.conciertosService.get_conciertos_by_genero(this.slug_genero!).subscribe(
             (data: any) => {
                 console.log(data.conciertos);
@@ -104,6 +112,18 @@ export class ListConciertos implements OnInit {
             filters = new Filters();
             filters.limit = this.limit;
             filters.offset = this.offset;   
+        } else {
+            // Actualizar los filtros locales con los recibidos
+            this.filters = new Filters(
+                filters.limit,
+                filters.offset,
+                filters.genero,
+                filters.genero_nombre,
+                filters.fecha_inicio,
+                filters.fecha_fin,
+                filters.nombre,
+                filters.ciudad
+            );
         }
         console.log("filters recibidos en list conciertos: " , filters);
 
@@ -130,6 +150,10 @@ export class ListConciertos implements OnInit {
         this.filters.offset = (pageNum - 1) * this.limit;
         this.filters.limit = this.limit;
         console.log("Página cambiada a: " + pageNum + ", offset: " + this.filters.offset);
+        
+        // Actualizar la URL con los nuevos filtros
+        this.Location.replaceState('/shop/' + btoa(JSON.stringify(this.filters)));
+        
         this.getConciertos(this.filters);
     }
 
