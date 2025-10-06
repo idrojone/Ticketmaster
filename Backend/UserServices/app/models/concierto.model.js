@@ -24,6 +24,10 @@ const ConciertoSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
+    ciudad: { 
+        type: String, 
+        required: true 
+    },
     descripcion: { 
         type: String, 
         default: null
@@ -82,6 +86,7 @@ ConciertoSchema.methods.toConciertoResponse = async function () {
         fecha: this.fecha,
         artista: this.artista,
         lugar: this.lugar,
+        ciudad: this.ciudad,
         precio: this.precio,
         aforo: this.aforo,
         duracion: this.duracion,

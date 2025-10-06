@@ -20,14 +20,27 @@ async function findAllConciertos(req, res) {
     let nombre = tratarUndefined(req.query.nombre, "");
     let fecha_inicio = tratarUndefined(req.query.fecha_inicio, null);
     let fecha_fin = tratarUndefined(req.query.fecha_fin, null);
+    let ciudad = tratarUndefined(req.query.ciudad, "");
 
     // Manejar valores undefined que vienen del frontend
-    if (genero === "undefined") genero = "";
-    if (nombre === "undefined") nombre = "";
-    if (fecha_inicio === "undefined") fecha_inicio = null;
-    if (fecha_fin === "undefined") fecha_fin = null;
+    if (genero === "undefined" || genero === "null") genero = "";
+    if (nombre === "undefined" || nombre === "null") nombre = "";
+    if (fecha_inicio === "undefined" || fecha_inicio === "null") fecha_inicio = null;
+    if (fecha_fin === "undefined" || fecha_fin === "null") fecha_fin = null;
+    if (ciudad === "undefined" || ciudad === "null") ciudad = "";
 
-    console.log("Parámetros procesados:", { genero, nombre, fecha_inicio, fecha_fin })
+    // Validar que las fechas sean fechas válidas (formato YYYY-MM-DD)
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (fecha_inicio && !fechaRegex.test(fecha_inicio)) {
+        console.log(`Fecha inicio inválida: ${fecha_inicio}, reseteando a null`);
+        fecha_inicio = null;
+    }
+    if (fecha_fin && !fechaRegex.test(fecha_fin)) {
+        console.log(`Fecha fin inválida: ${fecha_fin}, reseteando a null`);
+        fecha_fin = null;
+    }
+
+    console.log("Parámetros procesados:", { genero, nombre, fecha_inicio, fecha_fin, ciudad });
 
     let nombreReg = new RegExp(nombre, 'i');
 
@@ -47,6 +60,11 @@ async function findAllConciertos(req, res) {
         query.fecha = { $gte: fecha_inicio + "T00:00:00.000Z" };
     } else if (fecha_fin) {
         query.fecha = { $lte: fecha_fin + "T23:59:59.999Z" };
+    }
+
+    if (ciudad !== "") {    
+        const ciudadReg = new RegExp(ciudad, 'i');
+        query.ciudad = { $regex: ciudadReg };
     }
 
     if (genero !== "") {
@@ -153,10 +171,10 @@ async function findOneConcierto(req, res) {
 async function createConcierto(req, res) {
     try {
         console.log('req.body:', req.body); 
-        
-        const { nombre, fecha, artista, lugar, precio, duracion, aforo, id_genero, descripcion, imagenesShow } = req.body;
-        
-        const camposRequeridos = { nombre, fecha, artista, lugar, precio, duracion, aforo, id_genero };
+
+        const { nombre, fecha, artista, lugar, precio, duracion, aforo, id_genero, descripcion, imagenesShow, ciudad } = req.body;
+
+        const camposRequeridos = { nombre, fecha, artista, lugar, precio, duracion, aforo, id_genero, ciudad };
         const camposFaltantes = Object.keys(camposRequeridos).filter(key => !camposRequeridos[key]);
 
         if (camposFaltantes.length > 0) {
@@ -180,6 +198,7 @@ async function createConcierto(req, res) {
             fecha,
             artista,
             lugar,
+            ciudad,
             precio: Number(precio),
             aforo: Number(aforo),
             duracion: Number(duracion),
@@ -217,7 +236,7 @@ async function createConcierto(req, res) {
 async function updateConcierto(req, res) {
     try {
         const slug = req.params.slug;
-        const { nombre, fecha, artista, lugar, precio } = req.body;
+        const { nombre, fecha, artista, lugar, precio, ciudad } = req.body;
 
 
         // avisar quins datos falten
@@ -227,6 +246,7 @@ async function updateConcierto(req, res) {
         if (!artista) faltan.push('artista');
         if (!lugar) faltan.push('lugar');
         if (!precio) faltan.push('precio');
+        if (!ciudad) faltan.push('ciudad');
 
         if (faltan.length > 0) {
             return res.status(400).json({ 
@@ -247,6 +267,7 @@ async function updateConcierto(req, res) {
         conciertoExistente.artista = artista;
         conciertoExistente.lugar = lugar;
         conciertoExistente.precio = precio;
+        conciertoExistente.ciudad = ciudad;
 
         if (nombreCambio) {
             conciertoExistente.slug = undefined; // per a que canvie el slug
@@ -269,7 +290,7 @@ async function deleteConcierto(req, res) {
             return res.status(404).json({ message: 'Concierto no encontrado', status: 404 });
         } 
 
-        const GeneroTarget = await genero.findById(concierto.id_genero);
+        const GeneroTarget = await GeneroModel.findById(concierto.id_genero);
 
         try {
             await GeneroTarget.removeConcierto(concierto._id);
@@ -316,6 +337,20 @@ async function findConciertosByGenero(req, res) {
     }
 }
 
+async function findAllCiudades(_req, res) {
+    try {
+
+        const ciudades = await Concierto.distinct("ciudad", { 
+            ciudad: { $exists: true, $ne: null, $ne: "" } 
+        });
+        
+        return res.status(200).json({ ciudades: ciudades.sort() });
+    } catch (error) {
+        console.error('Error in findAllCiudades:', error);
+        res.status(500).json({ message: "Ha ocurrido un error", error: error.message, status: 500 });
+    }
+}
+
 
 const concierto_controller = {
     findAllConciertos: findAllConciertos,
@@ -326,6 +361,7 @@ const concierto_controller = {
     deleteAllConciertos: deleteAllConciertos,
     findConciertosByGenero: findConciertosByGenero,
     findAllConciertosQuery: findAllConciertosQuery,
+    findAllCiudades: findAllCiudades,
     // findAllQuery: findAllQuery
 };
 
