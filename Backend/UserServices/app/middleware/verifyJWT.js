@@ -28,7 +28,7 @@ const verifyJWT = (req, res, next) => {
             req.email = decoded.email;
             req.username = decoded.username;
             req.password = decoded.password;
-            
+
             next();
         }
     );

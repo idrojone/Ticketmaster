@@ -1,6 +1,7 @@
 const User=require('../models/user.model');
 const asyncHandler=require('express-async-handler');
 const bcrypt=require('bcrypt');
+const e = require('express');
 
 const registerUser= asyncHandler( async (req,res) => {
 
@@ -65,11 +66,10 @@ const loginUser= asyncHandler( async (req,res) => {
 //Acciones una vez autenticado --> Pasar por el middleware de autenticación
 
 const getUserData= asyncHandler( async (req,res) => {
-
     // Recibimos el email y lo buscamos
-    const { email }=req.email;
+    const email =req.email;
 
-    const encontrarUsuario= await User.findOne({ email }).exec();
+    const encontrarUsuario= await User.findOne( {email} ).exec();
 
     if(!encontrarUsuario){
         return res.status(404).json({message: "Email del Usuario no encontrado"});
@@ -83,27 +83,27 @@ const getUserData= asyncHandler( async (req,res) => {
 
 const updateUser= asyncHandler( async (req,res) => {
     //Confirmar que tenemos un objeto para actualizar valido
-    const { user,email,password,image,bio }=req.body;
+    const { username,email,password,image,bio }=req.body.user;
 
-    if(!user && !email){
+    if(!username && !email){
         return res.status(400).json({message: "No puedes dejar el emauil y el usuario vacio"});
     }
 
     //Si los datos para actualizar son validos
     const emailDecoded = req.email;
 
-    const encontrarUsuario= await User.findOne({ emailDecoded }).exec();
+    const encontrarUsuario= await User.findOne( {email: emailDecoded} ).exec();
 
     if(!encontrarUsuario){
         return res.status(404).json({message: "No se puede actualizar un usuario que no existe"});
     }
 
-    if(user.email){
-        encontrarUsuario.email=user.email;
+    if(email){
+        encontrarUsuario.email=email;
     }
 
-    if(user.username){
-        encontrarUsuario.username=user.username;
+    if(username){
+        encontrarUsuario.username=username;
     }
 
     if(password){
