@@ -12,6 +12,7 @@ module.exports = (app) => {
     app.delete('/api/conciertos', conciertos.deleteAllConciertos);
 
     app.get('/api/conciertos/genero/:slug', conciertos.findConciertosByGenero);
+    app.get('/api/ciudades/', conciertos.findAllCiudades);
     // app.get('/api/conciertos/:id_genero', conciertos.findConciertosByGenero);
 
     // app.get('/api/conciertos-query', conciertos.findAllQuery);

@@ -30,4 +30,11 @@ export class ConciertosService {
         );
     }
 
+    get_all_ciudades(params?: any): Observable<string[]> {
+        return this.apiService.get('/api/ciudades', params ? params : {}).pipe(
+            tap((data) => console.log(data)),
+            map((response: any) => response as string[])
+        );
+    }
+
 }

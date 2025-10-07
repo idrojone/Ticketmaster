@@ -1,11 +1,13 @@
- <button z-button zType="outline" z-dropdown [zDropdownMenu]="menu">
-  @if (selectedGenero()) {
-    {{ selectedGenero()!.nombre }}
-  } @else {
-    Géneros
-  }
-</button>
- 
+<div class="filters-container">
+  <!-- Dropdown de Géneros -->
+  <div class="filter-item">
+    <button z-button zType="outline" z-dropdown [zDropdownMenu]="menu" class="filter-button">
+      @if (selectedGenero()) {
+        {{ selectedGenero()!.nombre }}
+      } @else {
+        Géneros
+      }
+    </button>
     <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
       @for (item of generos; track item.slug) {
         <z-dropdown-menu-item 
@@ -15,26 +17,65 @@
           <div class="flex items-center justify-between w-full">
             <span>{{ item.nombre }}</span>
             @if (isGeneroSelected(item)) {
-              <span class="text-blue-600">✓</span>
+              <span class="text-black font-bold">✓</span>
             }
           </div>
         </z-dropdown-menu-item>
       }
     </z-dropdown-menu-content>
+  </div>
 
-<button z-button zPopover [zContent]="popoverContent" zType="outline">
-  @if (isDateRangeComplete()) {
-    Rango: {{ startDate()?.toLocaleDateString('es-ES') }} - {{ endDate()?.toLocaleDateString('es-ES') }}
-  } @else if (startDate()) {
-    Desde: {{ startDate()?.toLocaleDateString('es-ES') }}
-  } @else if (endDate()) {
-    Hasta: {{ endDate()?.toLocaleDateString('es-ES') }}
-  } @else {
-    Seleccionar Rango de Fechas
-  }
-</button>
+  <!-- Dropdown de Ciudades -->
+  <div class="filter-item">
+    <button z-button zType="outline" z-dropdown [zDropdownMenu]="ciudadMenu" class="filter-button">
+      @if (selectedCiudad()) {
+        {{ selectedCiudad() }}
+      } @else {
+        Ciudades
+      }
+    </button>
+    <z-dropdown-menu-content #ciudadMenu="zDropdownMenuContent" class="w-56 max-h-60 overflow-y-auto">
+      @for (ciudad of ciudades; track ciudad) {
+        <z-dropdown-menu-item 
+          (click)="onCiudadSelect(ciudad)"
+          [class.selected-genre]="isCiudadSelected(ciudad)"
+        >
+          <div class="flex items-center justify-between w-full">
+            <span>{{ ciudad }}</span>
+            @if (isCiudadSelected(ciudad)) {
+              <span class="text-black font-bold">✓</span>
+            }
+          </div>
+        </z-dropdown-menu-item>
+      }
+    </z-dropdown-menu-content>
+  </div>
 
-<button z-button style="margin-left: 1rem;" (click)="filter_products()"> Filtrar </button>
+  <!-- Selector de Fechas -->
+  <div class="filter-item">
+    <button z-button zPopover [zContent]="popoverContent" zType="outline" class="filter-button">
+      @if (isDateRangeComplete()) {
+        Rango: {{ startDate()?.toLocaleDateString('es-ES') }} - {{ endDate()?.toLocaleDateString('es-ES') }}
+      } @else if (startDate()) {
+        Desde: {{ startDate()?.toLocaleDateString('es-ES') }}
+      } @else if (endDate()) {
+        Hasta: {{ endDate()?.toLocaleDateString('es-ES') }}
+      } @else {
+        Seleccionar Rango de Fechas
+      }
+    </button>
+  </div>
+
+  <!-- Botones de Acción -->
+  <div class="filter-actions">
+    <button z-button class="search-button-style" (click)="filter_products()">
+      Filtrar
+    </button>
+    <button z-button class="search-button-style" (click)="clear_filters()">
+      Limpiar Filtros
+    </button>
+  </div>
+</div>
 
 <ng-template #popoverContent>
   <z-popover>

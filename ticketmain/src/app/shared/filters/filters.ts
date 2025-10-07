@@ -9,6 +9,7 @@ import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
 import { GenerosService } from 'src/app/core/services/generos.service';
 import { Genero } from 'src/app/core/models/generos.model';
 import { Filters } from '../../core/models/filters.model';
+import { ConciertosService } from 'src/app/core/services/conciertos.service';
 
 @Component({
   selector: 'app-filters',
@@ -31,23 +32,37 @@ export class FiltersComponent implements OnInit {
   @Output() eventofiltros : EventEmitter<Filters> = new EventEmitter;
 
   generos: Genero[] = [];
-  generosService = inject(GenerosService);
-  
   routeFilters: string | null = null;
   filters!: Filters;
-
-  nombre: string | undefined = ''; 
-
-  // Signal para el género seleccionado//ESTA LINEA
+  ciudades: string[] = [];
+  selectedCiudad = signal<string | null>(null);
   selectedGenero = signal<Genero | null>(null);
-  
-  // Signals para el rango de fechas
   startDate = signal<Date | null>(null);
   endDate = signal<Date | null>(null);
 
-  constructor(private ActivatedRoute: ActivatedRoute, private Router: Router, private Location: Location) {
-    this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
+  private generosService = inject(GenerosService);
+  private ActivatedRoute = inject(ActivatedRoute);
+  private Router = inject(Router)
+  private Location = inject(Location);
+  private ConciertosService = inject(ConciertosService);
 
+  constructor() {
+    this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
+    this.getCiudades();
+  }
+
+  getCiudades(): void {
+    this.ConciertosService.get_all_ciudades().subscribe((data: any) => {
+      if (data && data.ciudades) {
+        this.ciudades = data.ciudades;
+      } else {
+        this.ciudades = data || [];
+      }
+      console.log(this.ciudades);
+      if (data === null) {
+        console.log('no hay datos');
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -72,37 +87,83 @@ export class FiltersComponent implements OnInit {
   
   Highlights(){
     let routeFilters= JSON.parse(atob(this.ActivatedRoute.snapshot.paramMap.get('filters') || ''));
-    // console.log("entra higthligth " + JSON.stringify(routeFilters));
-    if(routeFilters.nombre == undefined){
-      this.selectedGenero.set({nombre: routeFilters.genero_nombre, slug: routeFilters.genero_slug, img: '', descripcion: ''});
-      this.startDate.set(routeFilters.startDate);
-      this.endDate.set(routeFilters.endDate);
-      // this.startDate.set(routeFilters.startDate ? new Date(routeFilters.startDate) : null);
-      // this.endDate.set(routeFilters.endDate ? new Date(routeFilters.endDate) : null);
+    console.log("Highlights - filtros parseados:", JSON.stringify(routeFilters));
+    
+    // Limpiar filtros previos
+    this.selectedGenero.set(null);
+    this.startDate.set(null);
+    this.endDate.set(null);
+    this.selectedCiudad.set(null);
+    
+    // Destacar género seleccionado si existe (solo si no hay búsqueda de texto)
+    if(routeFilters.genero && routeFilters.genero_nombre && !routeFilters.nombre){
+      this.selectedGenero.set({
+        nombre: routeFilters.genero_nombre, 
+        slug: routeFilters.genero, 
+        img: '', 
+        descripcion: ''
+      });
+      console.log("Género destacado:", routeFilters.genero_nombre);
+    }
 
+    if (routeFilters.ciudad && !routeFilters.nombre) {
+      this.selectedCiudad.set(routeFilters.ciudad);
+      console.log("Ciudad destacada:", routeFilters.ciudad);
+    }
+    
+    // Destacar fechas seleccionadas si existen (solo si no hay búsqueda de texto)
+    if(routeFilters.fecha_inicio && !routeFilters.nombre){
+      this.startDate.set(new Date(routeFilters.fecha_inicio));
+      console.log("Fecha inicio destacada:", routeFilters.fecha_inicio);
+    }
+    
+    if(routeFilters.fecha_fin && !routeFilters.nombre){
+      this.endDate.set(new Date(routeFilters.fecha_fin));
+      console.log("Fecha fin destacada:", routeFilters.fecha_fin);
+    }
+    
+    // Si hay búsqueda de texto, limpiar filtros visuales
+    if(routeFilters.nombre){
+      console.log("Búsqueda de texto activa, filtros visuales limpiados");
     }
   }
 
   filter_products(){
     this.routeFilters=this.ActivatedRoute.snapshot.paramMap.get('filters');
     if(this.routeFilters != null){
-      // console.log("entra");
-      this.filters=new Filters();
-      this.filters=JSON.parse(atob(this.routeFilters));
-      // console.log(this.filters);
+      // Parsear filtros existentes
+      const existingFilters = JSON.parse(atob(this.routeFilters));
+      // Crear nuevos filtros - NO preservar el nombre de búsqueda cuando se aplican filtros
+      this.filters = new Filters(
+        8, // limit consistente con list-conciertos
+        0, // resetear offset para nueva búsqueda
+        existingFilters.genero,
+        existingFilters.genero_nombre,
+        existingFilters.fecha_inicio,
+        existingFilters.fecha_fin,
+        undefined, // Limpiar búsqueda cuando se aplican filtros
+        existingFilters.ciudad
+      );
     }else {
-      this.filters=new Filters();
+      // Crear filtros nuevos con limit correcto
+      this.filters = new Filters(8, 0);
     }
 
     if(this.selectedGenero()){
       this.filters.genero=this.selectedGenero()?.slug;
       this.filters.genero_nombre=this.selectedGenero()?.nombre
-      console.log(this.filters);
+      // console.log(this.filters);
+    }
+
+    if(this.selectedCiudad()){
+      this.filters.ciudad=this.selectedCiudad() || undefined;
+      // console.log(this.filters);
     }
 
     // this.filters.fecha_inicio=undefined;
     // this.filters.fecha_fin=undefined;
 
+    // Aplicar filtros de fecha
     if(this.startDate() && this.endDate()){
       this.filters.fecha_inicio=this.formatDateToLocal(this.startDate()!);
       this.filters.fecha_fin=this.formatDateToLocal(this.endDate()!);
@@ -114,13 +175,31 @@ export class FiltersComponent implements OnInit {
       this.filters.fecha_fin=this.formatDateToLocal(this.endDate()!);
     }
 
+    // Asegurar que la paginación esté correcta para filtros nuevos
+    this.filters.limit = 8;
+    this.filters.offset = 0;
+
     setTimeout(() => {
-      // console.log("timeout");
       this.Router.navigate(['/shop', btoa(JSON.stringify(this.filters))]);
       this.eventofiltros.emit(this.filters);
       console.log("datos a enviar filtros: " + JSON.stringify(this.filters));
     }, 400);
 
+  }
+
+  clear_filters(){
+    this.selectedGenero.set(null);
+    this.startDate.set(null);
+    this.endDate.set(null);
+    this.selectedCiudad.set(null);
+
+    setTimeout(() => {
+      this.Router.navigate(['/shop']);
+      // Emitir filtros limpios con paginación correcta
+      this.eventofiltros.emit(new Filters(8, 0));
+      console.log("filtros limpiados");
+    }
+    , 400);
   }
 
   //GENEROS
@@ -146,6 +225,29 @@ export class FiltersComponent implements OnInit {
   clearSelectedGenero(): void {
     this.selectedGenero.set(null);
   }
+
+  //CIUDAD
+  // Método para seleccionar una ciudad
+  onCiudadSelect(ciudad: string): void {
+    // Si ya está seleccionado, lo deseleccionamos
+    if (this.selectedCiudad() === ciudad) {
+      this.selectedCiudad.set(null);
+      console.log('Ciudad deseleccionada');
+    } else {
+      this.selectedCiudad.set(ciudad);
+      console.log('Ciudad seleccionada:', ciudad);
+    }
+  }
+
+  // Método para verificar si una ciudad está seleccionada
+  isCiudadSelected(ciudad: string): boolean {
+    return this.selectedCiudad() === ciudad;
+  }
+  // Método para limpiar ciudad seleccionada
+  clearSelectedCiudad(): void {
+    this.selectedCiudad.set(null);
+  }
+
 
 //////FECHAS
   // Método para manejar cambios de fecha de inicio
