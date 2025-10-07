@@ -16,6 +16,32 @@
 - **GET**: [http://localhost:3000/api/generos](http://localhost:3000/api/generos) - Retrieve all genres.
 - **GET**: [http://localhost:3000/api/generos/{slug}](http://localhost:3000/api/generos/{slug}) - Retrieve, update, or delete a specific genre by slug.
 
+## Auth
+- **POST**: [http://localhost:3000/api/register](http://localhost:3000/api/register) - Create a new user.
+- **POST**: [http://localhost:3000/api/login](http://localhost:3000/api/login) - Login user.
+
+### Ejemplos Auth
+
+#### Registro de usuario
+```json
+{
+  "user": {
+    "username": "mariagarcia",
+    "email": "maria.garcia@gmail.com",
+    "password": "SecurePass456"
+  }
+}
+```
+
+#### Login de usuario
+```json
+{
+  "user": {
+    "email": "maria.garcia@gmail.com",
+    "password": "SecurePass456"
+  }
+}
+```
 
 ### Ejemplos
 
@@ -37,3 +63,4 @@ crear concierto
   "id_genero": "GEN001",
   "slug": "metallica-world-tour-2024-bf21k6"
 }
+
