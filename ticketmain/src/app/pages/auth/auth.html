@@ -1,1 +1,118 @@
-<p>auth works!</p>
+<div class="auth-container">
+  <div class="auth-card">
+    @if (modoLogin) {
+      <h2>Sign In</h2>
+    } @else {
+      <h2>Sign Up</h2>
+    }
+    
+    <!-- Mensajes de error generales -->
+    @if (hasGeneralError()) {
+      <div class="general-error">
+        {{ getGeneralError() }}
+      </div>
+    }
+    
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
+      
+    <!-- Campo Username (solo para registro) -->
+    @if (!modoLogin) {
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          z-input
+          type="text"
+          id="username"
+          formControlName="username"
+          placeholder="Ingresa tu nombre de usuario"
+          [class.error]="isFieldInvalid('username')">
+        @if (isFieldInvalid('username')) {
+          <div class="error-message">
+            {{ getFieldError('username') }}
+          </div>
+        }
+      </div>
+    }
+    
+    <!-- Campo Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input 
+        z-input
+        type="email"
+        id="email"
+        formControlName="email"
+        placeholder="Ingresa tu email"
+        [class.error]="isFieldInvalid('email')">
+      @if (isFieldInvalid('email')) {
+        <div class="error-message">
+          {{ getFieldError('email') }}
+        </div>
+      }
+    </div>
+    
+    <!-- Campo Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input 
+        z-input
+        type="password"
+        id="password"
+        formControlName="password"
+        placeholder="Ingresa tu contraseña"
+        [class.error]="isFieldInvalid('password')">
+      @if (isFieldInvalid('password')) {
+        <div class="error-message">
+          {{ getFieldError('password') }}
+        </div>
+      }
+    </div>
+    
+    <!-- Campo Confirmar Password (solo para registro) -->
+    @if (!modoLogin) {
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          z-input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Confirma tu contraseña"
+          [class.error]="isFieldInvalid('confirmPassword')">
+        @if (isFieldInvalid('confirmPassword')) {
+          <div class="error-message">
+            {{ getFieldError('confirmPassword') }}
+          </div>
+        }
+      </div>
+    }
+    
+    <!-- Botón Submit -->
+    <button class="black-button"
+      z-button
+      type="submit"
+      [disabled]="authForm.invalid || enviando">
+      @if (!enviando) {
+        {{ modoLogin ? 'Sign In' : 'Sign Up' }}
+      } @else {
+        {{ modoLogin ? 'Signing In...' : 'Signing Up...' }}
+      }
+    </button>
+    </form>
+    
+    <!-- Switch Mode -->
+    <div class="switch-mode">
+      @if (modoLogin) {
+        <p>
+          ¿No tienes una cuenta?
+          <a (click)="cambiarModo()" class="link">Regístrate aquí</a>
+        </p>
+      } @else {
+        <p>
+          Ya tienes una cuenta?
+          <a (click)="cambiarModo()" class="link">Inicia sesión aquí</a>
+        </p>
+      }
+    </div>
+  </div>
+</div>
