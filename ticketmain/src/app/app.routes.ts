@@ -18,4 +18,8 @@ export const routes: Routes = [
             concierto: () => import('./pages/details/details-resolver.service').then(m => m.DetailsResolver)
         }
     },
+    {
+        path: 'auth',
+        loadChildren: () => import('./pages/auth/auth-routing.module').then(m => m.AuthRoutingModule)
+    }
 ];

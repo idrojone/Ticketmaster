@@ -27,8 +27,14 @@
 
         <!-- Auth Buttons -->
         <div class="auth-buttons flex space-x-4">
-            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100">Sign Up</a>
-            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100">Sign In</a>
+            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2" [routerLink]="'/auth/register'">
+                <i class="fas fa-user-plus w-4 h-4"></i>
+                Sign Up
+            </a>
+            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2" [routerLink]="'/auth/login'">
+                <i class="fas fa-sign-in-alt w-4 h-4"></i>
+                Sign In
+            </a>
         </div>
     <!-- </div> -->
 </header>
