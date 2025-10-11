@@ -91,17 +91,6 @@ export class Auth implements OnInit {
       error: (error) => {
         console.error(`Error en ${authType}:`, error);
         this.enviando = false;
-        
-        // Manejar diferentes tipos de errores
-        if (error.error && error.error.errors) {
-          this.errors = error.error.errors;
-        } else if (error.error && error.error.message) {
-          this.errors = { general: error.error.message };
-        } else {
-          this.errors = { 
-            general: `Error en ${this.modoLogin ? 'login' : 'registro'}. Inténtalo de nuevo.` 
-          };
-        }
       }
     });
   }

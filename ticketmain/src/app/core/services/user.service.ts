@@ -25,7 +25,7 @@ export class UserService {
     // If JWT detected, attempt to get & store user's info
     const token = this.jwtService.getToken();
     if (token) {
-      this.apiService.get("/user").subscribe(
+      this.apiService.get("/api/user").subscribe(
         (data) => {
           return this.setAuth({ ...data.user, token });
         },
@@ -66,6 +66,13 @@ export class UserService {
         return data;
       }
     ));
+  }
+
+  getUserProfile(username: string): Observable<User> {
+    return this.apiService.get(`/api/user/${username}`)
+      .pipe(map(data => {
+        return data.user;
+      }));
   }
 
   getCurrentUser(): User {

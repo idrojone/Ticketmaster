@@ -25,16 +25,36 @@
             </ul>
         </nav>
 
-        <!-- Auth Buttons -->
-        <div class="auth-buttons flex space-x-4">
-            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2" [routerLink]="'/auth/register'">
-                <i class="fas fa-user-plus w-4 h-4"></i>
-                Sign Up
-            </a>
-            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2" [routerLink]="'/auth/login'">
-                <i class="fas fa-sign-in-alt w-4 h-4"></i>
-                Sign In
-            </a>
-        </div>
-    <!-- </div> -->
+        @if(currentUser !== undefined) {
+            <div class="items-center">
+                <button z-dropdown [zDropdownMenu]="menu" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2">
+                    Bienvenido {{ currentUser.username }}
+                </button>
+                <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+                    <z-dropdown-menu-label>Tu cuenta</z-dropdown-menu-label>
+                    <z-dropdown-menu-item [routerLink]="['/profile/me', currentUser.username]">
+                       <i class="fas fa-user"></i>Perfil
+                    </z-dropdown-menu-item>
+                    <z-divider zSpacing="sm" class="-mx-1"></z-divider>
+                    <z-dropdown-menu-item (click)="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Log out
+                    </z-dropdown-menu-item>
+                </z-dropdown-menu-content>
+            </div>
+        } @else {
+            <!-- Auth Buttons -->
+            <div class="auth-buttons flex space-x-4">
+                <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2"
+                    [routerLink]="'/auth/register'">
+                    <i class="fas fa-user-plus w-4 h-4"></i>
+                    Sign Up
+                </a>
+                <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2"
+                    [routerLink]="'/auth/login'">
+                    <i class="fas fa-sign-in-alt w-4 h-4"></i>
+                    Sign In
+                </a>
+            </div>
+            <!-- </div> -->
+        }
 </header>
