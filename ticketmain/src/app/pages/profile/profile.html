@@ -1,0 +1,8 @@
+<h1>Bienvenido a tu perfil {{ currentUser?.username }}</h1>
+
+<p>Esta es tu página de perfil donde puedes ver y editar tu información personal.</p>
+<p>Tu correo electrónico registrado es: {{ currentUser?.email }}</p>
+
+@if(this.editable === true) {
+    <button z-button [routerLink]="['/profile/edit']">Editar Perfil</button>   
+}

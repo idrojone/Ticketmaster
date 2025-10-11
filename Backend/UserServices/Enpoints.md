@@ -43,6 +43,10 @@
 }
 ```
 
+## Usuarios
+- **GET**: [http://localhost:3000/api/user](http://localhost:3000/api/user) - Get current user.
+- **PUT**: [http://localhost:3000/api/user](http://localhost:3000/api/user) - Update current user.
+
 ### Ejemplos
 
 crear concierto

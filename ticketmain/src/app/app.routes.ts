@@ -21,5 +21,9 @@ export const routes: Routes = [
     {
         path: 'auth',
         loadChildren: () => import('./pages/auth/auth-routing.module').then(m => m.AuthRoutingModule)
+    },
+    {
+        path: 'profile',
+        loadChildren: () => import('./pages/profile/profile-routing.module').then(m => m.ProfileRoutingModule)
     }
 ];

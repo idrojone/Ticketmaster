@@ -16,4 +16,5 @@ export const appConfig: ApplicationConfig = {
     ),
     NoAuthGuard
   ]
+  
 };
