@@ -86,7 +86,7 @@ const updateUser= asyncHandler( async (req,res) => {
     const { username,email,password,image,bio }=req.body.user;
 
     if(!username && !email){
-        return res.status(400).json({message: "No puedes dejar el emauil y el usuario vacio"});
+        return res.status(400).json({message: "No puedes dejar el email y el usuario vacio"});
     }
 
     //Si los datos para actualizar son validos
