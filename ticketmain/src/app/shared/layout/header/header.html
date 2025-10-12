@@ -25,14 +25,14 @@
             </ul>
         </nav>
 
-        @if(currentUser !== undefined) {
+        @if(loggedIn) {
             <div class="items-center">
                 <button z-dropdown [zDropdownMenu]="menu" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2">
-                    Bienvenido {{ currentUser.username }}
+                    Bienvenido {{ currentUser?.username }}
                 </button>
                 <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
                     <z-dropdown-menu-label>Tu cuenta</z-dropdown-menu-label>
-                    <z-dropdown-menu-item [routerLink]="['/profile/me', currentUser.username]">
+                    <z-dropdown-menu-item [routerLink]="['/profile', currentUser?.username]">
                        <i class="fas fa-user"></i>Perfil
                     </z-dropdown-menu-item>
                     <z-divider zSpacing="sm" class="-mx-1"></z-divider>

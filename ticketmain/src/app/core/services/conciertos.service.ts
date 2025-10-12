@@ -10,7 +10,7 @@ export class ConciertosService {
     apiService = inject(ApiService);
     get_all_conciertos(params?: any): Observable<Concierto[]> {
         return this.apiService.get('/api/conciertos', params ? params : {}).pipe(
-            tap((data) => console.log(data)),
+            // tap((data) => console.log(data)),
             map((response: any) => response as Concierto[])
         );
     }
@@ -32,7 +32,7 @@ export class ConciertosService {
 
     get_all_ciudades(params?: any): Observable<string[]> {
         return this.apiService.get('/api/ciudades', params ? params : {}).pipe(
-            tap((data) => console.log(data)),
+            // tap((data) => console.log(data)),
             map((response: any) => response as string[])
         );
     }

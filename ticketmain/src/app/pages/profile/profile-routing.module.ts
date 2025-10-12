@@ -13,11 +13,6 @@ const routes: Routes = [
         path: ':username',
         component: Profile,
         resolve: {}
-    },
-    {
-        path: 'me/:username',
-        component: Profile,
-        resolve: {}
     }
 ];
 

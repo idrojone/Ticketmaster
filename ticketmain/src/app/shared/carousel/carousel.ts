@@ -25,7 +25,7 @@ export class Carousel implements OnInit {
 	carouselService = inject(CarouselService);
 
 	ngOnInit(): void {
-		console.log("Página Carousel: ", this.page);
+		// console.log("Página Carousel: ", this.page);
 		this.loadCarouselItems();
 	}
 
@@ -51,7 +51,7 @@ export class Carousel implements OnInit {
 			{ imagen: 'assets/img/img6.jpg' },
 		];
 		this.item_imagenes = imagenes;
-		console.log("Carousel Imágenes: ", this.item_imagenes);
+		// console.log("Carousel Imágenes: ", this.item_imagenes);
 	}
 
 	get_carousel_concierto_details(imagenesShow: any) {		
