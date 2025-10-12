@@ -1,8 +1,28 @@
-<h1>Bienvenido a tu perfil {{ currentUser?.username }}</h1>
-
-<p>Esta es tu página de perfil donde puedes ver y editar tu información personal.</p>
-<p>Tu correo electrónico registrado es: {{ currentUser?.email }}</p>
-
-@if(this.editable === true) {
-    <button z-button [routerLink]="['/profile/edit']">Editar Perfil</button>   
+@if(noEncutraUsuario) {
+    <div class="flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-8 mt-6">
+        <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-4"></i>
+        <p class="text-red-600 text-center text-xl font-semibold">Usuario no encontrado</p>
+        <p class="text-gray-500 text-center mt-2">Por favor verifica el nombre de usuario o intenta nuevamente.</p>
+    </div>
+} @else {
+    <div class="flex flex-col items-center bg-white rounded-lg shadow-md p-8 mt-6">
+        <img 
+            src="https://static.productionready.io/images/smiley-cyrus.jpg" 
+            alt="Foto de perfil de idrojone" 
+            class="w-32 h-32 rounded-full mb-4 border-4 border-blue-500 object-cover"
+        />
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Bienvenido, <span class="text-blue-600">{{ datosProfile?.username }}</span></h1>
+        <p class="text-gray-600 mb-2">Esta es tu página de perfil donde puedes ver y editar tu información personal.</p>
+        <p class="text-gray-700 mb-2">Correo electrónico: <span class="font-medium">{{ datosProfile?.email }}</span></p>
+        <p class="text-gray-500 italic mb-2">Bio: <span>{{ datosProfile?.bio || "Sin biografía disponible." }}</span></p>
+        @if(this.editable === true) {
+            <button 
+                z-button 
+                [routerLink]="['/settings']" 
+                class="self-start ml-0 mt-4 px-4 py- text-white rounded"
+            >
+                Editar Perfil
+            </button>
+        }
+    </div>
 }

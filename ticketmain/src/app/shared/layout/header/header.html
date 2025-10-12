@@ -32,7 +32,7 @@
                 </button>
                 <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
                     <z-dropdown-menu-label>Tu cuenta</z-dropdown-menu-label>
-                    <z-dropdown-menu-item [routerLink]="['/profile', currentUser?.username]">
+                    <z-dropdown-menu-item [routerLink]="['/profile/me', currentUser?.username]">
                        <i class="fas fa-user"></i>Perfil
                     </z-dropdown-menu-item>
                     <z-divider zSpacing="sm" class="-mx-1"></z-divider>

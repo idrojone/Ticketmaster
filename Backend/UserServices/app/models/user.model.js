@@ -89,7 +89,7 @@ userSchema.methods.toUserDetails = function() {
     return {
         public_id: this.public_id,
         username: this.username,
-        // email: this.email,
+        email: this.email,
         bio: this.bio,
         image: this.image
     }

@@ -15,6 +15,6 @@ module.exports = (app) => {
     app.put('/api/user', verifyJWT, auth.updateUser);
 
     //Get User Details by username
-    app.get('/api/users/:username', auth.getDetailsUser);
+    app.get('/api/user/:username', auth.getDetailsUser);
     
 };

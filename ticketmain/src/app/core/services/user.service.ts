@@ -68,7 +68,7 @@ export class UserService {
     ));
   }
 
-  getUserProfile(username: string): Observable<User> {
+  getUserProfile(username: string | null): Observable<User> {
     return this.apiService.get(`/api/user/${username}`)
       .pipe(map(data => {
         return data.user;
@@ -82,7 +82,7 @@ export class UserService {
   // Update the user on the server (email, pass, etc)
   update(user: User): Observable<User> {
     return this.apiService
-    .put('/user', { user })
+    .put('/api/user', { user })
     .pipe(map(data => {
       // Update the currentUser observable
       this.currentUserSubject.next(data.user);
