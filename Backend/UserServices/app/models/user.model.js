@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const jwt = require('jsonwebtoken');
+const { use } = require('react');
 
 const userSchema = new mongoose.Schema({
 
@@ -42,6 +43,13 @@ const userSchema = new mongoose.Schema({
     ]
 },{timestamps:true});
 
+userSchema.pre('save', function(next){
+    if (!this.image){
+        this.image = 'https://static.productionready.io/images/smiley-cyrus.jpg';
+    }
+    next();
+});
+
 userSchema.plugin(uniqueValidator, {message: 'is already taken.'});
 
 userSchema.methods.generateAccessToken = function() {
@@ -65,6 +73,15 @@ userSchema.methods.toUserResponse = function() {
         bio: this.bio,
         image: this.image,
         token: this.generateAccessToken()
+    }
+};
+
+userSchema.methods.toUserDetails = function() {
+    return {
+        username: this.username,
+        email: this.email,
+        bio: this.bio,
+        image: this.image
     }
 };
 

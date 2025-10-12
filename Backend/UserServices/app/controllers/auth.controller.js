@@ -12,6 +12,12 @@ const registerUser= asyncHandler( async (req,res) => {
         return res.status(400).json({message: "Asegurese de tener todos los campos"});
     }
 
+    //Asegura que el email no este en uso
+    const emailExist= await User.findOne( { $or: [ { email: user.email },{ username: user.username } ] } );
+    if(emailExist){
+        return res.status(409).json({message: "El email o el usuario ya estan en uso"});
+    }
+
     //Hashear la contraseña
     const hashedPassword= await bcrypt.hash(user.password,10);
 
@@ -29,8 +35,10 @@ const registerUser= asyncHandler( async (req,res) => {
         return res.status(201).json({
             user: crearUsuario.toUserResponse(),
         });
+    }else {
+        return res.status(400).json({message: "Error al crear el usuario"});
     }
-
+    
 });
 
 const loginUser= asyncHandler( async (req,res) => {
