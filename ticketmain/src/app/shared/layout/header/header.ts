@@ -26,13 +26,19 @@ export class Header implements OnInit {
   private router = inject(Router); 
 
   currentUser?: User;
+  loggedIn: boolean = false;
 
 
   ngOnInit() {
     this.userService.currentUser.subscribe(
       (userData) => {
-        this.currentUser = (userData && Object.keys(userData).length > 0) ? userData : undefined;
-        console.log(this.currentUser);
+        if (userData && Object.keys(userData).length > 0) {
+          this.currentUser = userData;
+          this.loggedIn = true;
+        } else {
+          this.currentUser = undefined;
+          this.loggedIn = false;
+        }
         this.cd.markForCheck();
       }
     );
