@@ -145,19 +145,13 @@ const updateUser= asyncHandler( async (req,res) => {
 });
 
 const getDetailsUser= asyncHandler( async (req,res) => {
-    const public_id=req.params.public_id;
+    const username=req.params.username;
 
-    if(!public_id){
-        return res.status(400).json({message: "No se ha especificado el public_id del usuario"});
+    if(!username){
+        return res.status(400).json({message: "No se ha especificado el username del usuario"});
     }
 
-    //Validar formato UUID
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if(!uuidRegex.test(public_id)){
-        return res.status(400).json({message: "El formato del public_id no es válido"});
-    }
-
-    const encontrarUsuario= await User.findOne( {public_id} ).exec();
+    const encontrarUsuario= await User.findOne( {username: username.toLowerCase()} ).exec();
 
     if(!encontrarUsuario){
         return res.status(404).json({message: "No se ha encontrado el usuario"});
