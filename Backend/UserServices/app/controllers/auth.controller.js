@@ -1,7 +1,6 @@
 const User=require('../models/user.model');
 const asyncHandler=require('express-async-handler');
 const bcrypt=require('bcrypt');
-const e = require('express');
 
 const registerUser= asyncHandler( async (req,res) => {
 
@@ -106,11 +105,21 @@ const updateUser= asyncHandler( async (req,res) => {
         return res.status(404).json({message: "No se puede actualizar un usuario que no existe"});
     }
 
-    if(email){
+    //Verificar que el nuevo email no esté en uso por otro usuario
+    if(email && email !== emailDecoded){
+        const emailExist = await User.findOne({ email: email });
+        if(emailExist){
+            return res.status(409).json({message: "El email ya está en uso por otro usuario"});
+        }
         encontrarUsuario.email=email;
     }
 
-    if(username){
+    //Verificar que el nuevo username no esté en uso por otro usuario
+    if(username && username !== encontrarUsuario.username){
+        const usernameExist = await User.findOne({ username: username });
+        if(usernameExist){
+            return res.status(409).json({message: "El username ya está en uso por otro usuario"});
+        }
         encontrarUsuario.username=username;
     }
 
@@ -135,13 +144,38 @@ const updateUser= asyncHandler( async (req,res) => {
     });
 });
 
+const getDetailsUser= asyncHandler( async (req,res) => {
+    const public_id=req.params.public_id;
+
+    if(!public_id){
+        return res.status(400).json({message: "No se ha especificado el public_id del usuario"});
+    }
+
+    //Validar formato UUID
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if(!uuidRegex.test(public_id)){
+        return res.status(400).json({message: "El formato del public_id no es válido"});
+    }
+
+    const encontrarUsuario= await User.findOne( {public_id} ).exec();
+
+    if(!encontrarUsuario){
+        return res.status(404).json({message: "No se ha encontrado el usuario"});
+    }
+
+    res.status(200).json({
+        user: encontrarUsuario.toUserDetails()
+    });
+});
+
 /////////////////////////////////////////////////////////77
 
 const auth_controller = {
     registerUser: registerUser,
     loginUser: loginUser,
     getUserData: getUserData,
-    updateUser: updateUser
+    updateUser: updateUser,
+    getDetailsUser: getDetailsUser
 };
 
 module.exports = auth_controller;
