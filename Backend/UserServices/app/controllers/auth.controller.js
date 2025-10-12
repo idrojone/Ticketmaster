@@ -12,9 +12,14 @@ const registerUser= asyncHandler( async (req,res) => {
     }
 
     //Asegura que el email no este en uso
-    const emailExist= await User.findOne( { $or: [ { email: user.email },{ username: user.username } ] } );
-    if(emailExist){
-        return res.status(409).json({message: "El email o el usuario ya estan en uso"});
+    const emailExist = await User.findOne({ email: user.email });
+    if (emailExist) {
+        return res.status(409).json({ message: "El email ya está en uso", type: "email" });
+    }
+
+    const usernameExist = await User.findOne({ username: user.username });
+    if (usernameExist) {
+        return res.status(409).json({ message: "El usuario ya está en uso", type: "username" });
     }
 
     //Hashear la contraseña

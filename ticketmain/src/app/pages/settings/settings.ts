@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/core/models/user.model';
 import { UserService } from 'src/app/core/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-settings',
@@ -49,9 +50,25 @@ export class Settings implements OnInit {
     this.updateUser(this.settingsForm.value);
 
     this.userService.update(this.user).subscribe(
-      updatedUser => this.router.navigateByUrl('/profile/' + updatedUser.username),
-      err => {
+      updatedUser => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Usuario actualizado correctamente',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        this.router.navigateByUrl('/profile/' + updatedUser.username);
+        this.isSubmitting = false;
+        this.cd.markForCheck();
+      },
+      (err: any) => {
         this.errors = err;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al actualizar usuario',
+          text: err?.message || 'Ocurrió un error inesperado',
+          showConfirmButton: true
+        });
         this.isSubmitting = false;
         this.cd.markForCheck();
       }

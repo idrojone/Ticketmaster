@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ZardButtonComponent } from '../../shared/components/button/button.component';
 import { ZardInputDirective } from '../../shared/components/input/input.directive';
 import { UserService } from '../../core/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-auth',
@@ -85,12 +86,19 @@ export class Auth implements OnInit {
         // Redirigir al usuario después del login/registro exitoso
         this.router.navigate(['/']);
         
-        // Mostrar mensaje de éxito (opcional)
-        console.log(`¡${this.modoLogin ? 'Login' : 'Registro'} exitoso!`);
+        // Mostrar mensaje de éxito con SweetAlert2
+        Swal.fire({
+          icon: 'success',
+          title: this.modoLogin ? '¡Login exitoso!' : '¡Registro exitoso!',
+          text: `Bienvenido${this.modoLogin ? '' : ', tu cuenta ha sido creada correctamente.'}`,
+          confirmButtonText: 'Continuar'
+        });
+
       },
       error: (error) => {
         console.error(`Error en ${authType}:`, error);
         this.enviando = false;
+        this.errors = {general: error.message || 'Error desconocido'};
       }
     });
   }

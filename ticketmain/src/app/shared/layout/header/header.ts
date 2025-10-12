@@ -5,6 +5,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { AuthRoutingModule } from "src/app/pages/auth/auth-routing.module";
 import { ZardDividerComponent } from '../../components/divider/divider.component';
 import { ZardDropdownModule } from '../../components/dropdown/dropdown.module';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -47,6 +48,13 @@ export class Header implements OnInit {
   logout() {
     this.userService.purgeAuth();
     this.router.navigateByUrl('/');
+    // Mostrar mensaje de éxito con SweetAlert2
+    Swal.fire({
+      icon: 'success',
+      title: '¡Cierre de sesión exitoso!',
+      text: 'Has cerrado sesión correctamente.',
+      confirmButtonText: 'Continuar'
+    });
   }
 
 }
