@@ -1,6 +1,7 @@
 const User=require('../models/user.model');
 const asyncHandler=require('express-async-handler');
-const bcrypt=require('bcrypt');
+// const bcrypt=require('bcrypt');
+const argon2 = require('argon2');
 
 const registerUser= asyncHandler( async (req,res) => {
 
@@ -23,7 +24,8 @@ const registerUser= asyncHandler( async (req,res) => {
     }
 
     //Hashear la contraseña
-    const hashedPassword= await bcrypt.hash(user.password,10);
+    // const hashedPassword= await bcrypt.hash(user.password,10);
+    const hashedPassword = await argon2.hash(user.password);
 
     //Definimos el objeto de Usuario
     const userObject={
@@ -62,7 +64,7 @@ const loginUser= asyncHandler( async (req,res) => {
     }
 
     //Si lo encuentra comprueba que la contraseña sea correcta
-    const match=await bcrypt.compare(user.password, encontrarUsuario.password);
+    const match=await argon2.verify(encontrarUsuario.password, user.password);
 
     if(!match){
         return res.status(401).json({message: "Contraseña incorrecta"});
@@ -130,7 +132,7 @@ const updateUser= asyncHandler( async (req,res) => {
 
     if(password){
         //Hashear la contraseña
-        const hashedPassword= await bcrypt.hash(password,10);
+        const hashedPassword= await argon2.hash(password);
         encontrarUsuario.password=hashedPassword;
     }
 
