@@ -18,8 +18,7 @@ const routes: Routes = [
         path: 'me/:username',
         component: Profile,
         resolve: {}
-    }
-
+    },
 ];
 
 @NgModule({
