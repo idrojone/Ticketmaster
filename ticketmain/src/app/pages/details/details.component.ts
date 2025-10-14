@@ -121,6 +121,7 @@ export class DetailsComponent implements OnInit, AfterViewInit {
         });
         this._loadMap(this.concierto());
     }
+    
 
     private _loadMap(manel):void {
         console.log('Cargando mapa...');
