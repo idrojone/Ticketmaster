@@ -20,6 +20,7 @@ import * as L from 'leaflet';
 
 export class DetailsComponent implements OnInit, AfterViewInit {
 
+        
     concierto?: Concierto;
     slug: string | null = null;
     private map?: L.Map;
