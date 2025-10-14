@@ -23,6 +23,6 @@ export class Main implements OnInit {
 
   userService = inject(UserService);
   ngOnInit() {
-    this.userService.populate();
+    // this.userService.populate();
   }
 }
