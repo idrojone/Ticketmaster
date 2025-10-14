@@ -28,6 +28,7 @@ export const routes: Routes = [
     },
     {
         path: 'settings',
-        loadChildren: () => import('./pages/settings/settings-routing.module').then(m => m.SettingsRoutingModule)
+        loadComponent: () => import('./shared/settings/settings').then(m => m.Settings)
     }
+  
 ];

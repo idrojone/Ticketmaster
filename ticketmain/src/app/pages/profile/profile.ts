@@ -61,6 +61,7 @@ export class Profile implements OnInit {
     console.log(this.editable);
 
   }
+
   // hook en angular que se ejecuta en el momento antes de que el componente se destruya
   ngOnDestroy() {
     this.destroy$.next(); 
