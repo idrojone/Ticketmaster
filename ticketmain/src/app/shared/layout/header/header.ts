@@ -31,6 +31,9 @@ export class Header implements OnInit {
 
 
   ngOnInit() {
+    
+    this._loadcurrentUser();
+
     this.userService.currentUser.subscribe(
       (userData) => {
         if (userData && Object.keys(userData).length > 0) {
@@ -55,6 +58,15 @@ export class Header implements OnInit {
       text: 'Has cerrado sesión correctamente.',
       confirmButtonText: 'Continuar'
     });
+  }
+
+  private _loadcurrentUser() {
+    if(this.userService.currentUser){
+      this.userService.currentUser.subscribe(user => {
+        this.userService.populate();
+        // this.userService.setAuth(user);
+      });
+    }
   }
 
 }
