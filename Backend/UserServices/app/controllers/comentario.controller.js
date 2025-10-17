@@ -56,7 +56,35 @@ const obtenerComentariosConcierto = async (req, res) => {
     }
 }
 
+const borrarComentarioConcierto = async (req, res) => {
+    const userId = req.id;
+    const user = await User.findById(userId).exec();
+
+    if(!user) return res.status(401).json({message: "Usuario no encontrado"});
+
+    const { slug, id } = req.params;
+
+    // console.log("Slug:", slug);
+
+    const concierto = await Concierto.findOne({slug}).exec();
+
+    if(!concierto) return res.status(404).json({message: "Concierto no encontrado"});
+
+    const comentario = await Comentario.findById(id).exec();
+
+    if(!comentario) return res.status(404).json({message: "Comentario no encontrado"});
+
+    if(comentario.autor.toString() !== userId.toString()) {
+        return res.status(403).json({message: "No autorizado para borrar este comentario"});
+    } else {
+        await concierto.borrarComentario(id);
+        await Comentario.findByIdAndDelete(id).exec();
+        return res.status(200).json({message: "Comentario borrado correctamente"});
+    }
+}
+
 module.exports = {
     anadirComentarioConcierto,
-    obtenerComentariosConcierto
+    obtenerComentariosConcierto,
+    borrarComentarioConcierto
 };

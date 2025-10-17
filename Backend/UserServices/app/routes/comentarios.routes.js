@@ -8,5 +8,5 @@ module.exports = (app) => {
 
     app.get('/:slug/comentarios', verifyJWTOpcional, comentarios.obtenerComentariosConcierto);
 
-    // app.delete('/:slug/comentarios/:id', verifyJWT, comentarios.borrarComentarioConcierto);
+    app.delete('/:slug/comentarios/:id', verifyJWT, comentarios.borrarComentarioConcierto);
 };

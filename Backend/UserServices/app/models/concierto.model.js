@@ -124,4 +124,9 @@ ConciertoSchema.methods.anadirComentario = async function(comentarioId) {
     await this.save();
 }
 
+ConciertoSchema.methods.borrarComentario = async function(comentarioId) {  
+    this.comentarios = this.comentarios.filter(id => id.toString() !== comentarioId.toString());
+    await this.save();
+}
+
 module.exports = mongoose.model('Concierto', ConciertoSchema);
