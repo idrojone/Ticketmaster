@@ -41,6 +41,8 @@ require('../routes/concierto.routes.js')(app);
 require('../routes/genero.routes.js')(app);
 require('../routes/carousel.routes.js')(app);
 require('../routes/auth.routes.js')(app);
+require('../routes/comentarios.routes.js')(app);
+require('../routes/profile.routes.js')(app);
 ////////////////////////
 
 app.listen(process.env.PORT, () => {

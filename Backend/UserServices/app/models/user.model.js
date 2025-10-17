@@ -95,4 +95,11 @@ userSchema.methods.toUserDetails = function() {
     }
 };
 
+userSchema.methods.follow = async function(userId) {
+    if (!this.followingUsers.includes(userId)) {
+        this.followingUsers.push(userId);
+        await this.save();
+    }
+};
+
 module.exports = mongoose.model('User', userSchema);
