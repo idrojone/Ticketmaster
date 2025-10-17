@@ -4,6 +4,7 @@ const verifyJWT = (req, res, next) => {
 
     //Obtenemos el token del header
     const authHeader = req.headers.authorization || req.headers.Authorization;
+    console.log("Authorization Header:", authHeader);
 
     //Comprobamos que empieza por Bearer
     if(!authHeader?.startsWith('Bearer ')){
@@ -12,6 +13,7 @@ const verifyJWT = (req, res, next) => {
 
     //Obtenemos el token
     const token = authHeader.split(' ')[1];
+    console.log("Token:", token);
 
     //Verificamos el token
     jwt.verify(
@@ -28,6 +30,8 @@ const verifyJWT = (req, res, next) => {
             req.public_id = decoded.public_id;
             req.email = decoded.email;
             req.username = decoded.username;
+
+            console.log("Decoded JWT:", decoded);
 
             next();
         }

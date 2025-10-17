@@ -63,8 +63,12 @@ const ConciertoSchema = new mongoose.Schema({
     id_genero: {
         type: String,
         // required: true
-    }
-});
+    },
+    comentarios: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comentario'
+    }]
+}, { timestamps: true });
 
 ConciertoSchema.plugin(uniqueValidator, { message: 'ya esta en uso' });
 
@@ -113,5 +117,11 @@ ConciertoSchema.methods.toConciertoDetailsResponse = async function () {
         imagenesShow: this.imagenesShow
     }
 };
+
+ConciertoSchema.methods.anadirComentario = async function(comentarioId) {  
+    // Mirar como mejorarlo
+    this.comentarios.push(comentarioId);
+    await this.save();
+}
 
 module.exports = mongoose.model('Concierto', ConciertoSchema);
