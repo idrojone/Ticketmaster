@@ -5,5 +5,6 @@ module.exports = (app) => {
 
     app.get('/:username', verifyJWTOpcional, profileController.getProfile);
     app.post('/:username/follow', verifyJWT, profileController.followUser);
+    app.delete('/:username/unfollow', verifyJWT, profileController.unfollowUser);
 
 };

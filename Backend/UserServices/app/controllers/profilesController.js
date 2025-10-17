@@ -24,19 +24,36 @@ const getProfile = asyncHandler(async (req, res) => {
 
 const followUser = asyncHandler(async (req, res) => {
     const { username } = req.params;
+    const { id } = req;
+    console.log(req, id);
+    console.log(`follow user: ${username}`);
     
     const user = await User.findOne({ username }).exec();
 
     if (!user) return res.status(404).json({ message: "User Not Found" });
 
-    await user.follow(req.username);
-    
+    await user.follow(req.id);
+
     return res.status(200).json({
         profile: user.toUserDetails(true),
+    });
+});
+
+const unfollowUser = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+
+    const user = await User.findOne({ username }).exec();
+
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    await user.unfollow(req.id);
+
+    return res.status(200).json({
+        profile: user.toUserDetails(false),
     });
 });
 
 module.exports = {
     getProfile,
     followUser,
+    unfollowUser
 };

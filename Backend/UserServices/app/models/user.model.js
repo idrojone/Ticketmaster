@@ -102,4 +102,11 @@ userSchema.methods.follow = async function(userId) {
     }
 };
 
+userSchema.methods.unfollow = async function(userId) {
+    this.followingUsers = this.followingUsers.filter(
+        (followedId) => !followedId.equals(userId)
+    );
+    await this.save();
+};
+
 module.exports = mongoose.model('User', userSchema);
