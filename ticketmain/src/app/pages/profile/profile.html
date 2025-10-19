@@ -1,28 +1,169 @@
-@if(noEncutraUsuario) {
-    <div class="flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-8 mt-6">
-        <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-4"></i>
-        <p class="text-red-600 text-center text-xl font-semibold">Usuario no encontrado</p>
-        <p class="text-gray-500 text-center mt-2">Por favor verifica el nombre de usuario o intenta nuevamente.</p>
-    </div>
-} @else {
-    <div class="flex flex-col items-center bg-white rounded-lg shadow-md p-8 mt-6">
-        <img 
-            src="https://static.productionready.io/images/smiley-cyrus.jpg" 
-            alt="Foto de perfil de idrojone" 
-            class="w-32 h-32 rounded-full mb-4 border-4 border-blue-500 object-cover"
-        />
-        <h1 class="text-2xl font-bold text-gray-800 mb-2">Bienvenido, <span class="text-blue-600">{{ datosProfile?.username }}</span></h1>
-        <p class="text-gray-600 mb-2">Esta es tu página de perfil donde puedes ver y editar tu información personal.</p>
-        <p class="text-gray-700 mb-2">Correo electrónico: <span class="font-medium">{{ datosProfile?.email }}</span></p>
-        <p class="text-gray-500 italic mb-2">Bio: <span>{{ datosProfile?.bio || "Sin biografía disponible." }}</span></p>
-        @if(this.editable === true) {
-            <button 
-                z-button 
-                [routerLink]="['/settings']" 
-                class="self-start ml-0 mt-4 px-4 py- text-white rounded"
-            >
-                Editar Perfil
-            </button>
-        }
-    </div>
-}
+<div class="profile-container">
+    @if(encontrarUsuario()) {
+        <!-- Estado: Usuario no encontrado -->
+        <div class="error-container">
+            <div class="error-card">
+                <i class="fas fa-exclamation-circle error-icon"></i>
+                <h2 class="error-title">Usuario no encontrado</h2>
+                <p class="error-message">
+                    Por favor verifica el nombre de usuario o intenta nuevamente.
+                </p>
+                <button z-button [routerLink]="['/']" class="mt-6">
+                    Volver al inicio
+                </button>
+            </div>
+        </div>
+    } @else if(isLoading()) {
+        <!-- Estado: Cargando -->
+        <div class="error-container">
+            <div class="error-card">
+                <i class="fas fa-spinner fa-spin error-icon"></i>
+                <h2 class="error-title">Cargando perfil...</h2>
+                <p class="error-message">
+                    Por favor espera un momento.
+                </p>
+            </div>
+        </div>
+    } @else {
+        <!-- Header del Perfil -->
+        <div class="profile-header">
+            <!-- Banner de fondo (preparado para futuro) -->
+            <div class="profile-banner"></div>
+            
+            <!-- Información principal del usuario -->
+            <div class="profile-info-container">
+                <div class="profile-info-wrapper">
+                    <!-- Avatar -->
+                    <div class="profile-avatar-wrapper">
+                        <img 
+                            [src]="usuario()?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'" 
+                            [alt]="'Foto de perfil de ' + usuario()?.username" 
+                            class="profile-avatar"
+                        />
+                        @if(editable()) {
+                            <div class="avatar-edit-badge">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        }
+
+                    </div>
+
+                    <!-- Información del usuario -->
+                    <div class="profile-details">
+                        <div class="profile-name-section">
+                            <h1 class="profile-username">{{ usuario()?.username }}</h1>
+                            @if(editable()) {
+                                <button 
+                                    z-button 
+                                    [routerLink]="['/settings']" 
+                                    class="btn-edit-profile"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                    Editar Perfil
+                                </button>
+                            } @else {
+                                <button z-button class="btn-follow">
+                                    <i class="fas fa-user-plus"></i>
+                                    Seguir
+                                </button>
+                            }
+                        </div>
+
+                        <div class="profile-meta">
+                            <div class="profile-email">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ usuario()?.email }}</span>
+                            </div>
+                            @if(usuario()?.bio) {
+                                <div class="profile-bio">
+                                    <i class="fas fa-quote-left"></i>
+                                    <span>{{ usuario()?.bio }}</span>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Stats (preparado para futuro) -->
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">0</span>
+                                <span class="stat-label">Favoritos</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-item">
+                                <span class="stat-value">0</span>
+                                <span class="stat-label">Reseñas</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-item">
+                                <span class="stat-value">0</span>
+                                <span class="stat-label">Tickets</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-container">
+            <div class="tabs-wrapper">
+                <nav class="tabs-nav">
+                    <button 
+                        class="tab-item" 
+                        [class.active]="activeTab() === 'favorites'"
+                        (click)="changeTab('favorites')">
+                        <i class="fas fa-star"></i>
+                        <span>Favoritos</span>
+                    </button>
+                    <button 
+                        class="tab-item"
+                        [class.active]="activeTab() === 'history'"
+                        (click)="changeTab('history')">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Historial</span>
+                    </button>
+                    <button 
+                        class="tab-item"
+                        [class.active]="activeTab() === 'reviews'"
+                        (click)="changeTab('reviews')">
+                        <i class="fas fa-comment"></i>
+                        <span>Reseñas</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Contenido de los Tabs -->
+        <div class="tabs-content">
+            @if (activeTab() === 'favorites') {
+                <div class="content-placeholder">
+                    <i class="fas fa-star content-placeholder-icon"></i>
+                    <h3 class="content-placeholder-title">Favoritos</h3>
+                    <p class="content-placeholder-text">
+                        Aquí verás tus conciertos favoritos. Esta funcionalidad estará disponible pronto.
+                    </p>
+                </div>
+            }
+            
+            @if (activeTab() === 'history') {
+                <div class="content-placeholder">
+                    <i class="fas fa-ticket-alt content-placeholder-icon"></i>
+                    <h3 class="content-placeholder-title">Historial de Compras</h3>
+                    <p class="content-placeholder-text">
+                        Aquí verás el historial de tus tickets comprados. Esta funcionalidad estará disponible pronto.
+                    </p>
+                </div>
+            }
+            
+            @if (activeTab() === 'reviews') {
+                <div class="content-placeholder">
+                    <i class="fas fa-comment content-placeholder-icon"></i>
+                    <h3 class="content-placeholder-title">Reseñas</h3>
+                    <p class="content-placeholder-text">
+                        Aquí verás tus reseñas de conciertos. Esta funcionalidad estará disponible pronto.
+                    </p>
+                </div>
+            }
+        </div>
+    }
+</div>

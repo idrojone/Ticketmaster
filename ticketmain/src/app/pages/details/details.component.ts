@@ -8,6 +8,8 @@ import { Concierto } from "src/app/core/models/conciertos.model";
 import { ConciertosService } from "src/app/core/services/conciertos.service";
 import { ZardCalendarComponent } from "@shared/components/calendar/calendar.component";
 import * as L from 'leaflet';
+import { Comment } from "src/app/core/models/comment.model";
+import { ArticleComments } from "@shared/article-comments/article-comments";
 
 
 @Component({
@@ -15,7 +17,10 @@ import * as L from 'leaflet';
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css'],
     standalone: true,
-    imports: [CommonModule, Carousel, ZardCalendarComponent]
+    imports: [CommonModule, 
+              Carousel, 
+              ZardCalendarComponent,
+              ArticleComments]
 })
 
 export class DetailsComponent {
@@ -25,6 +30,10 @@ export class DetailsComponent {
         const concierto = this.concierto();
         return concierto?.fecha ? new Date(concierto.fecha) : null;
     });
+
+    public loadingComentarios = signal(true);
+    public comentarios = signal<Comment | null>(null);
+    public hayComentarios = signal(false);
         
     slug: string | null = null;
     private map?: L.Map;
@@ -35,6 +44,7 @@ export class DetailsComponent {
     constructor() {
         this.slug = this.route.snapshot.paramMap.get('slug');
         this._loadConcierto();
+        // this._loadComments();
     }
 
     private _loadConcierto():void {
@@ -86,6 +96,7 @@ export class DetailsComponent {
                     .bindPopup(concierto.nombre || 'Concierto')
                     .openPopup();
             }
-        }, 10);
+        }, 100);
     }
+
 }

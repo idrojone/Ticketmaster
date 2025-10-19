@@ -16,3 +16,111 @@
     width: 100% !important;
     z-index: 1;
 }
+
+/* ============================================
+   COMMENTS SECTION
+   ============================================ */
+
+.comments-section {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 3rem;
+}
+
+/* Formulario de comentarios */
+.add-comment-form {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.add-comment-form textarea {
+    transition: all 0.3s ease;
+}
+
+.add-comment-form textarea:focus {
+    outline: none;
+}
+
+/* Card de comentario */
+.comment-card {
+    animation: slideUp 0.4s ease-out;
+    transition: all 0.3s ease;
+}
+
+.comment-card:hover {
+    transform: translateY(-2px);
+}
+
+.comment-header img {
+    transition: transform 0.3s ease;
+}
+
+.comment-header img:hover {
+    transform: scale(1.1);
+}
+
+/* Estado sin comentarios */
+.no-comments {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+.no-comments i {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .comments-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+    }
+
+    .add-comment-form {
+        padding: 1rem;
+    }
+
+    .comment-card {
+        padding: 1rem;
+    }
+
+    .comment-header img {
+        width: 40px;
+        height: 40px;
+    }
+}
