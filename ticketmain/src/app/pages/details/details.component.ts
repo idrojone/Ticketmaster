@@ -51,7 +51,7 @@ export class DetailsComponent {
     constructor() {
         this.slug = this.route.snapshot.paramMap.get('slug');
         this._loadConcierto();
-        // this._loadComments();
+
     }
 
     private _loadConcierto():void {
@@ -68,6 +68,7 @@ export class DetailsComponent {
             }
         });
     }
+    
     
 
     private _loadMap(concierto: Concierto): void {
@@ -128,14 +129,8 @@ export class DetailsComponent {
             return;
         }
 
-        // this.profileService.toggleFavorite(this.slug!).subscribe({
-        //     next: (isFav) => {
-        //         this.isFavorite.set(isFav);
-        //     },
-        //     error: (error) => {
-        //         console.error('Error toggling favorite:', error);
-        //     }
-        // });
+        // Llamar al servicio para alternar favorito
+
 
         Swal.fire({
             icon: 'success',
