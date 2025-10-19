@@ -1,8 +1,9 @@
 const User = require('../models/user.model.js');
 const Concierto = require('../models/concierto.model.js');
 const Comentario = require('../models/comentario.model.js');
+const asyncHandler = require('express-async-handler');
 
-const anadirComentarioConcierto = async (req, res) =>  {
+const anadirComentarioConcierto = asyncHandler(async (req, res) =>  {
     const userId = req.id;
     const user = await User.findById(userId).exec();
     const { slug } = req.params;
@@ -22,9 +23,9 @@ const anadirComentarioConcierto = async (req, res) =>  {
     await concierto.anadirComentario(nuevoComentario._id);
     return res.status(201).json({ comentario: await nuevoComentario.toComentarioResponse() });
 
-}
+});
 
-const obtenerComentariosConcierto = async (req, res) => {
+const obtenerComentariosConcierto = asyncHandler(async (req, res) => {
     const { slug } = req.params;
     const concierto = await Concierto.findOne({slug}).exec();
 
@@ -54,9 +55,9 @@ const obtenerComentariosConcierto = async (req, res) => {
             )
         });
     }
-}
+});
 
-const borrarComentarioConcierto = async (req, res) => {
+const borrarComentarioConcierto = asyncHandler(async (req, res) => {
     const userId = req.id;
     const user = await User.findById(userId).exec();
 
@@ -81,7 +82,7 @@ const borrarComentarioConcierto = async (req, res) => {
         await Comentario.findByIdAndDelete(id).exec();
         return res.status(200).json({message: "Comentario borrado correctamente"});
     }
-}
+});
 
 module.exports = {
     anadirComentarioConcierto,

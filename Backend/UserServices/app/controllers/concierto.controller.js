@@ -3,6 +3,7 @@ const SpotifyAPI = require('../utils/SpotifyAPI.js');
 const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
 const GeneroModel = require('../models/genero.model.js');
+const User = require('../models/user.model.js');
 
 async function findAllConciertos(req, res) {
     console.log(req.query, "query");
@@ -349,6 +350,44 @@ async function findAllCiudades(_req, res) {
     }
 }
 
+const likeConcierto = asyncHandler(async (req, res) => {
+    const userId = req.id;
+    const { slug } = req.params;
+
+    const loginUser = await User.findById(userId).exec();
+
+    if (!loginUser) return res.status(401).json({ message: "Usuario no encontrado" });
+
+    const concierto = await Concierto.findOne({ slug }).exec();
+
+    if (!concierto) return res.status(404).json({ message: "Concierto no encontrado" });
+
+    await loginUser.likeConcierto(concierto._id);
+
+    const likeCount = await concierto.updateLikes();
+
+    return res.status(200).json({ message: "Like añadido", likeCount: likeCount });
+});
+
+const unlikeConcierto = asyncHandler(async (req, res) => {
+    const userId = req.id;
+    
+    const { slug } = req.params;
+    
+    const loginUser = await User.findById(userId).exec();
+
+    if (!loginUser) return res.status(401).json({ message: "Usuario no encontrado" });
+
+    const concierto = await Concierto.findOne({ slug }).exec();
+    
+    if (!concierto) return res.status(404).json({ message: "Concierto no encontrado" });
+    
+    await loginUser.unlikeConcierto(concierto._id);
+    await concierto.updateLikes(userId);
+
+    return res.status(200).json({ message: "Like eliminado" });
+});
+
 
 const concierto_controller = {
     findAllConciertos: findAllConciertos,
@@ -360,6 +399,8 @@ const concierto_controller = {
     findConciertosByGenero: findConciertosByGenero,
     findAllConciertosQuery: findAllConciertosQuery,
     findAllCiudades: findAllCiudades,
+    likeConcierto: likeConcierto,
+    unlikeConcierto: unlikeConcierto,
     // findAllQuery: findAllQuery
 };
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const uniqueValidator = require('mongoose-unique-validator');
+const User = require('./user.model.js');
 
 const ConciertoSchema = new mongoose.Schema({
     slug: { 
@@ -63,6 +64,10 @@ const ConciertoSchema = new mongoose.Schema({
     id_genero: {
         type: String,
         // required: true
+    },
+    likes: {
+        type: Number,
+        default: 0
     },
     comentarios: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -128,5 +133,15 @@ ConciertoSchema.methods.borrarComentario = async function(comentarioId) {
     this.comentarios = this.comentarios.filter(id => id.toString() !== comentarioId.toString());
     await this.save();
 }
+
+ConciertoSchema.methods.updateLikes = async function() {  
+    const likeCount = await User.countDocuments({
+        favouriteConciertos: this._id
+    });
+    this.likes = likeCount;
+    await this.save();
+    return likeCount;
+}
+
 
 module.exports = mongoose.model('Concierto', ConciertoSchema);
