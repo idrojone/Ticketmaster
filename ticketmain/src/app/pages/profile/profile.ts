@@ -3,10 +3,11 @@ import { User } from 'src/app/core/models/user.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { Subject } from 'rxjs';
 import { AuthRoutingModule } from "../auth/auth-routing.module";
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { ZardButtonComponent } from '@shared/components/button/button.component';
 import {  } from 'src/app/core/models/profile.model';
 import { ProfileService } from 'src/app/core/services/profile.service';
+import Swal from 'sweetalert2';
 
 // Tipo para las tabs disponibles
 type TabType = 'favorites' | 'history' | 'reviews';
@@ -40,6 +41,7 @@ export class Profile implements OnInit, OnDestroy {
   private userService = inject(UserService);
   private activatedRoute = inject(ActivatedRoute);
   private profileService = inject(ProfileService);
+  private router = inject(Router);
 
   //pendiente ver el destroy
   private destroy$ = new Subject<void>();
@@ -98,26 +100,21 @@ export class Profile implements OnInit, OnDestroy {
   _checkFollowingStatus(): void {
     const currentUser = this.userService.getCurrentUser();
     
-    if (!this.usuario() || !currentUser) {
+    const profileUser = this.usuario();
+
+    console.log(currentUser, 'usuario actual');
+    console.log(profileUser, 'usuario del perfil');
+
+    if (profileUser?.followingUsers?.includes(currentUser?._id || '')) {
+      console.log('Siguiendo a este usuario');
+      this.following.set(true);
+    }else {
+      console.log('No siguiendo a este usuario');
       this.following.set(false);
-      return;
     }
-
-    this.profileService.getProfile(this.username()!).subscribe({
-      next: (profileData) => {
-        console.log('🔍 Datos del perfil obtenidos para comprobar following:', profileData)
-
-      },
-      error: (error) => {
-        console.error('❌ Error al obtener datos del perfil para comprobar following:', error);
-      }
-    });
-
+    
   }
 
-  /**
-   * Cambia el tab activo (preparado para implementación futura)
-   */
   changeTab(tab: TabType): void {
     this.activeTab.set(tab);
     console.log(`📑 Tab changed to: ${tab}`);
@@ -129,30 +126,42 @@ export class Profile implements OnInit, OnDestroy {
       return;
     }
 
-    const username = this.usuario()!.username;
+    if (!this.userService.getCurrentUser().username) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Acción no permitida',
+        text: 'Debes estar logueado para seguir a un usuario',
+      }).then(() => {
+        const returnUrl = this.router.url;
+        this.router.navigate(['/auth/login'], { 
+          queryParams: { returnUrl: returnUrl } 
+        });
+
+
+      });
+    }
+
+    const usuario = this.usuario()!;
 
     if (this.following()) {
-      // Dejar de seguir al usuario
-      this.profileService.unfollowUser(username).subscribe({
-        next: (profile) => {
-          console.log(`Has dejado de seguir a ${username}`);
-          // Recargar el estado de following
-          this._checkFollowingStatus();
+      // Dejar de seguir
+      this.profileService.unfollowUser(usuario.username).subscribe({
+        next: () => {
+          console.log(`Has dejado de seguir a ${usuario.username}`);
+          this.following.set(false);
         },
         error: (error) => {
-          console.error('Error al dejar de seguir al usuario:', error);
+          console.error('Error al dejar de seguir:', error);
         }
       });
     } else {
-      // Seguir al usuario
-      this.profileService.followUser(username).subscribe({
-        next: (profile) => {
-          console.log(`Ahora sigues a ${username}`);
-          // Recargar el estado de following
-          this._checkFollowingStatus();
+      this.profileService.followUser(usuario.username).subscribe({
+        next: () => {
+          console.log(`Has seguido a ${usuario.username}`);
+          this.following.set(true);
         },
         error: (error) => {
-          console.error('Error al seguir al usuario:', error);
+          console.error('Error al seguir:', error);
         }
       });
     }

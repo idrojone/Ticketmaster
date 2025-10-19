@@ -1,4 +1,5 @@
 export interface Concierto {
+    _id: string;
     slug: string;
     nombre: string;
     fecha: string;

@@ -76,6 +76,7 @@ userSchema.methods.generateAccessToken = function() {
 
 userSchema.methods.toUserResponse = function() {
     return {
+        _id: this._id,
         public_id: this.public_id,
         username: this.username,
         email: this.email,
@@ -89,6 +90,7 @@ userSchema.methods.toUserResponse = function() {
 
 userSchema.methods.toUserDetails = function() {
     return {
+        _id: this._id,
         public_id: this.public_id,
         username: this.username,
         email: this.email,

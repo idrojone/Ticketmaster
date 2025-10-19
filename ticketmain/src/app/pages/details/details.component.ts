@@ -61,6 +61,7 @@ export class DetailsComponent {
                 this.concierto.set(concierto);
                 this.isLoading.set(false);
                 this._loadMap(concierto);
+                this._loadLikeStatus();
             },
             error: (error) => {
                 console.error('Error loading concierto:', error);
@@ -69,7 +70,25 @@ export class DetailsComponent {
         });
     }
     
-    
+    private _loadLikeStatus() {
+        const currentUser = this.userService.getCurrentUser();
+        const currentConcierto = this.concierto();
+
+        console.log("Concierto ID: " + currentConcierto?._id);
+        console.log('Usuario actual:', currentUser);
+        console.log('Concierto actual:', currentConcierto);
+
+        // Verificar que el usuario exista, no esté vacío y tenga el array de favoritos
+        if (currentUser && 
+            Object.keys(currentUser).length > 0 && 
+            currentUser.username &&
+            currentConcierto && 
+            currentUser.favouriteConciertos?.includes(currentConcierto._id || '')) {
+            this.isFavorite.set(true);
+        } else {
+            this.isFavorite.set(false);
+        }
+    }
 
     private _loadMap(concierto: Concierto): void {
         console.log('Cargando mapa...');
@@ -109,8 +128,11 @@ export class DetailsComponent {
 
     toggleFavorite(): void {
         const currentUser = this.userService.getCurrentUser();
-        
-        if (!currentUser) {
+
+        console.log('Usuario actual al togglear favorito:', currentUser);
+
+        // Verificar si el usuario no existe, es null, undefined o está vacío
+        if (!currentUser || Object.keys(currentUser).length === 0 || !currentUser.username) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Debes iniciar sesión',
@@ -129,8 +151,25 @@ export class DetailsComponent {
             return;
         }
 
-        // Llamar al servicio para alternar favorito
-
+        if (this.isFavorite()) {
+            this.conciertoService.unlikeConcierto(this.slug!).subscribe({
+                next: () => {
+                    this.isFavorite.set(false);
+                },
+                error: (error) => {
+                    console.error('Error toggling favorite status:', error);
+                }
+            });
+        } else {
+            this.conciertoService.likeConcierto(this.slug!).subscribe({
+                next: () => {
+                    this.isFavorite.set(true);
+                },
+                error: (error) => {
+                    console.error('Error toggling favorite status:', error);
+                }
+            });
+        }
 
         Swal.fire({
             icon: 'success',

@@ -25,4 +25,6 @@ export class ProfileService {
             .pipe(map(data => data.profile));
     }
 
+    
+
 }

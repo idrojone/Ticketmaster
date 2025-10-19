@@ -62,17 +62,17 @@
                                     Editar Perfil
                                 </button>
                             } @else {
-                                <button z-button class="btn-follow">
-                                    <!-- <i class="fas fa-user-plus" (click)="toggleFollowUser()"></i>
-                                    Seguir -->
-                                    @if(following()) {
-                                        <i class="fas fa-user-minus" (click)="toggleFollowUser()"></i>
+                                @if(following()) {
+                                    <button z-button class="btn-follow" (click)="toggleFollowUser()">
+                                        <i class="fas fa-user-minus"></i>
                                         Dejar de Seguir
-                                    } @else {
-                                        <i class="fas fa-user-plus" (click)="toggleFollowUser()"></i>
+                                    </button>
+                                } @else {
+                                    <button z-button class="btn-follow" (click)="toggleFollowUser()">
+                                        <i class="fas fa-user-plus"></i>
                                         Seguir
-                                    }
-                                </button>
+                                    </button>
+                                }
                             }
                         </div>
 

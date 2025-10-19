@@ -37,4 +37,26 @@ export class ConciertosService {
         );
     }
 
+    // Métodos para gestionar likes
+    likeConcierto(slug: string): Observable<any> {
+        return this.apiService.post(`/api/conciertos/like/${slug}`).pipe(
+            tap((data) => console.log('Like añadido:', data)),
+            map((response: any) => response)
+        );
+    }
+
+    unlikeConcierto(slug: string): Observable<any> {
+        return this.apiService.delete(`/api/conciertos/unlike/${slug}`).pipe(
+            tap((data) => console.log('Like eliminado:', data)),
+            map((response: any) => response)
+        );
+    }
+
+    // getLikesConcierto(slug: string): Observable<{ slug: string, likes: number, hasLiked: boolean }> {
+    //     return this.apiService.get(`/api/conciertos/likes/${slug}`).pipe(
+    //         tap((data) => console.log('Likes del concierto:', data)),
+    //         map((response: any) => response as { slug: string, likes: number, hasLiked: boolean })
+    //     );
+    // }
+
 }

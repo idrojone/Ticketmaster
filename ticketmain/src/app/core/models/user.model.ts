@@ -1,4 +1,5 @@
 export interface User {
+    _id?: string;
     public_id?: string;
     email: string;
     token: string;
@@ -7,5 +8,5 @@ export interface User {
     bio: string;
     image: string;
     favouriteConciertos?: string[];
-    followeredUsers?: string[];
+    followingUsers?: string[];
 }
