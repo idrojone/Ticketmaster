@@ -81,6 +81,8 @@ userSchema.methods.toUserResponse = function() {
         email: this.email,
         bio: this.bio,
         image: this.image,
+        favouriteConciertos: this.favouriteConciertos,
+        followingUsers: this.followingUsers,
         token: this.generateAccessToken()
     }
 };
@@ -91,7 +93,9 @@ userSchema.methods.toUserDetails = function() {
         username: this.username,
         email: this.email,
         bio: this.bio,
-        image: this.image
+        image: this.image,
+        favouriteConciertos: this.favouriteConciertos,
+        followingUsers: this.followingUsers
     }
 };
 
