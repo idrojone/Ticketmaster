@@ -109,4 +109,18 @@ userSchema.methods.unfollow = async function(userId) {
     await this.save();
 };
 
+userSchema.methods.likeConcierto = async function(conciertoId) {  
+    if (!this.favouriteConciertos.includes(conciertoId)) {
+        this.favouriteConciertos.push(conciertoId);
+        await this.save();
+    }
+};
+
+userSchema.methods.unlikeConcierto = async function(conciertoId) {
+    this.favouriteConciertos = this.favouriteConciertos.filter(
+        (id) => !id.equals(conciertoId)
+    );
+    await this.save();
+};
+
 module.exports = mongoose.model('User', userSchema);
