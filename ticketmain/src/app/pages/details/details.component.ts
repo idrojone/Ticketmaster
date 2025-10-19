@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, importProvidersFrom, inject, signal, computed } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
@@ -10,6 +10,9 @@ import { ZardCalendarComponent } from "@shared/components/calendar/calendar.comp
 import * as L from 'leaflet';
 import { Comment } from "src/app/core/models/comment.model";
 import { ArticleComments } from "@shared/article-comments/article-comments";
+import { UserService } from "src/app/core/services/user.service";
+import { ProfileService } from "src/app/core/services/profile.service";
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -34,17 +37,21 @@ export class DetailsComponent {
     public loadingComentarios = signal(true);
     public comentarios = signal<Comment | null>(null);
     public hayComentarios = signal(false);
+    public isFavorite = signal(false);
         
     slug: string | null = null;
     private map?: L.Map;
 
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
     private conciertoService = inject(ConciertosService);
+    private userService = inject(UserService);
+    private profileService = inject(ProfileService);
 
     constructor() {
         this.slug = this.route.snapshot.paramMap.get('slug');
         this._loadConcierto();
-        // this._loadComments();
+
     }
 
     private _loadConcierto():void {
@@ -61,6 +68,7 @@ export class DetailsComponent {
             }
         });
     }
+    
     
 
     private _loadMap(concierto: Concierto): void {
@@ -97,6 +105,41 @@ export class DetailsComponent {
                     .openPopup();
             }
         }, 100);
+    }
+
+    toggleFavorite(): void {
+        const currentUser = this.userService.getCurrentUser();
+        
+        if (!currentUser) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Debes iniciar sesión',
+                text: 'Para añadir conciertos a tus favoritos, primero debes iniciar sesión',
+                confirmButtonText: 'Ir a login',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const returnUrl = this.router.url;
+                    this.router.navigate(['/auth/login'], { 
+                        queryParams: { returnUrl: returnUrl } 
+                    });
+                }
+            });
+            return;
+        }
+
+        // Llamar al servicio para alternar favorito
+
+
+        Swal.fire({
+            icon: 'success',
+            title: this.isFavorite() ? '¡Añadido a favoritos!' : 'Eliminado de favoritos',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000
+        });
     }
 
 }

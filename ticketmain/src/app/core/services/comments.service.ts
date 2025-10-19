@@ -5,11 +5,11 @@ import { Comment } from "../models/comment.model";
 
 // Interfaces para tipar las respuestas de la API
 interface CommentResponse {
-    comment: Comment;
+    comentario: Comment;
 }
 
 interface CommentsResponse {
-    comments: Comment[];
+    comentarios: Comment[];
 }
 
 @Injectable({
@@ -19,36 +19,24 @@ export class CommentsService {
 
     apiService = inject(ApiService);
 
-    /**
-     * Añade un comentario a un concierto
-     * POST /:slug/comentarios
-     */
     addComment(slug: string, payload: string): Observable<Comment> {
         return this.apiService.post(
             `/${slug}/comentarios`,
-            { comment: { body: payload } }
+            { contenido: payload }
         ).pipe(
-            map((response: CommentResponse) => response.comment)
+            map((response: CommentResponse) => response.comentario)
         );
     }
 
-    /**
-     * Obtiene todos los comentarios de un concierto
-     * GET /:slug/comentarios
-     */
     getAllComments(slug: string): Observable<Comment[]> {
         return this.apiService.get(
             `/${slug}/comentarios`
         ).pipe(
-            map((response: CommentsResponse) => response.comments)
+            map((response: CommentsResponse) => response.comentarios)
         );
     }
-
-    /**
-     * Elimina un comentario de un concierto
-     * DELETE /:slug/comentarios/:id
-     */
-    deleteComment(slug: string, id: number): Observable<void> {
+    
+    deleteComment(slug: string, id: string): Observable<void> {
         return this.apiService.delete(
             `/${slug}/comentarios/${id}`
         );
