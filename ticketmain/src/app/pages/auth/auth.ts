@@ -18,6 +18,7 @@ export class Auth implements OnInit {
   authForm!: FormGroup;
   enviando = false;
   errors: any = {};
+  returnUrl: string = '/';
   
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -26,6 +27,8 @@ export class Auth implements OnInit {
 
   ngOnInit() {
     this.modoLogin = this.router.url.includes('/login');
+    // Capturar el parámetro returnUrl si existe
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.buildForm();
   }
 
@@ -84,7 +87,8 @@ export class Auth implements OnInit {
         this.enviando = false;
         
         // Redirigir al usuario después del login/registro exitoso
-        this.router.navigate(['/']);
+        // Si hay returnUrl, usar esa; si no, ir a home
+        this.router.navigateByUrl(this.returnUrl);
         
         // Mostrar mensaje de éxito con SweetAlert2
         Swal.fire({

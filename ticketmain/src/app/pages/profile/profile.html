@@ -63,8 +63,15 @@
                                 </button>
                             } @else {
                                 <button z-button class="btn-follow">
-                                    <i class="fas fa-user-plus"></i>
-                                    Seguir
+                                    <!-- <i class="fas fa-user-plus" (click)="toggleFollowUser()"></i>
+                                    Seguir -->
+                                    @if(following()) {
+                                        <i class="fas fa-user-minus" (click)="toggleFollowUser()"></i>
+                                        Dejar de Seguir
+                                    } @else {
+                                        <i class="fas fa-user-plus" (click)="toggleFollowUser()"></i>
+                                        Seguir
+                                    }
                                 </button>
                             }
                         </div>
