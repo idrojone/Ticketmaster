@@ -19,8 +19,9 @@ const anadirComentarioConcierto = asyncHandler(async (req, res) =>  {
         autor: user._id,
         conciertoSlug: slug
     });
-
+    
     await concierto.anadirComentario(nuevoComentario._id);
+    // console.log("comentario : ", nuevoComentario.toComentarioResponse());
     return res.status(201).json({ comentario: await nuevoComentario.toComentarioResponse() });
 
 });

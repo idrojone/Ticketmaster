@@ -26,7 +26,7 @@ ComentarioSchema.methods.toComentarioResponse = async function() {
     return {
         id: this._id,
         contenido: this.contenido,
-        autor: autor.toUserDetails(),
+        autor: await autor.toUserDetails(),
     }
 };
 

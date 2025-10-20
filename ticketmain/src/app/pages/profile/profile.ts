@@ -37,6 +37,8 @@ export class Profile implements OnInit, OnDestroy {
   public isLoading= signal(true);
   public encontrarUsuario= signal<boolean>(false);
 
+  public followersCount= signal<number>(0);
+
 
   private userService = inject(UserService);
   private activatedRoute = inject(ActivatedRoute);
@@ -88,6 +90,7 @@ export class Profile implements OnInit, OnDestroy {
           this.isLoading.set(false);
           console.log('✅ Usuario cargado:', user);
           this._checkFollowingStatus();
+          this.followersCount.set(user.followingUsers?.length || 0);
         },
         error: (error) => {
           console.error('❌ Error al cargar el perfil:', error);
@@ -117,7 +120,7 @@ export class Profile implements OnInit, OnDestroy {
 
   changeTab(tab: TabType): void {
     this.activeTab.set(tab);
-    console.log(`📑 Tab changed to: ${tab}`);
+    // console.log(`📑 Tab changed to: ${tab}`);
   }
 
   toggleFollowUser(): void {
@@ -151,6 +154,8 @@ export class Profile implements OnInit, OnDestroy {
           next: () => {
             console.log(`Has dejado de seguir a ${usuario.username}`);
             this.following.set(false);
+            // Decrementar el contador de seguidores
+            this.followersCount.set(this.followersCount() - 1);
           },
           error: (error) => {
             console.error('Error al dejar de seguir:', error);
@@ -163,6 +168,8 @@ export class Profile implements OnInit, OnDestroy {
           next: () => {
             console.log(`Has seguido a ${usuario.username}`);
             this.following.set(true);
+            // Incrementar el contador de seguidores
+            this.followersCount.set(this.followersCount() + 1);
           },
           error: (error) => {
             console.error('Error al seguir:', error);
