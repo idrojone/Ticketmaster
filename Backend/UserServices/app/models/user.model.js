@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-// load Concierto via mongoose.model('Concierto') inside methods to avoid circular require
+const { json } = require('body-parser');
 
 const userSchema = new mongoose.Schema({
     public_id: {
@@ -87,6 +87,7 @@ userSchema.methods.toUserResponse = async function() {
         })
         .filter(id => mongoose.Types.ObjectId.isValid(id));
 
+
     // Obtener slugs en una sola consulta
     let favSlugs = [];
     if (favIds.length) {
@@ -143,7 +144,6 @@ userSchema.methods.toUserResponse = async function() {
 
 userSchema.methods.toUserDetails = async function() {
 
-
     // sacar slug del Concierto a raiz del _id
     const favIds = this.favouriteConciertos
         .map((c) => {
@@ -164,15 +164,11 @@ userSchema.methods.toUserDetails = async function() {
     let favSlugs = [];
     if (favIds.length) {
         const Concierto = mongoose.model("Concierto");
-        const conciertos = await Concierto.find({ _id: { $in: favIds } })
-            .select("slug")
-            .lean();
-
+        const conciertos = await Concierto.find({ _id: { $in: favIds } }).select("slug").lean();
         const slugMap = new Map(
             conciertos.map((c) => [c._id.toString(), c.slug])
         );
 
-        // Mantener el orden original de favouriteConciertos, devolviendo null si no existe
         favSlugs = this.favouriteConciertos.map((c) => {
             const id = c && c._id ? c._id.toString() : c ? c.toString() : null;
             return id && slugMap.has(id) ? slugMap.get(id) : null;
@@ -205,7 +201,6 @@ userSchema.methods.toUserDetails = async function() {
         });
     }
 
-
     return {
         _id: this._id,
         public_id: this.public_id,
@@ -214,9 +209,21 @@ userSchema.methods.toUserDetails = async function() {
         bio: this.bio,
         image: this.image,
         favouriteConciertos: favSlugs.filter(Boolean),
-        followingUsers: followingUsernames.filter(Boolean)
+        followingUsers: followingUsernames.filter(Boolean),
     };
 };
+
+userSchema.methods.UserLikes = async function (_id) {
+   const userId = _id;
+   
+   if (!mongoose.Types.ObjectId.isValid(String(userId))) return [];
+
+   let Comentario = mongoose.model("Comentario");
+
+   const comentarios = await Comentario.find({ autor: _id }).lean();
+
+   return comentarios;
+}
 
 userSchema.methods.follow = async function(userId) {
     if (!this.followingUsers.includes(userId)) {

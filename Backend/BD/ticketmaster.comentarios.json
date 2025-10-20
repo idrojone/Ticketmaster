@@ -1,0 +1,68 @@
+[{
+  "_id": {
+    "$oid": "68f245213e7e038741928a43"
+  },
+  "contenido": "WOW, que caca de concierto no me ha gustado",
+  "autor": {
+    "$oid": "68f2448cf6b7d0eecd24c21f"
+  },
+  "conciertoSlug": "metallica-world-tour-2025-bf21k6",
+  "createdAt": {
+    "$date": "2025-10-17T13:31:13.734Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-17T13:31:13.734Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68f663ef6fc08811715d6e30"
+  },
+  "contenido": "wow",
+  "autor": {
+    "$oid": "68f2448cf6b7d0eecd24c21f"
+  },
+  "conciertoSlug": "metallica-world-tour-2025-bf21k6",
+  "createdAt": {
+    "$date": "2025-10-20T16:31:43.104Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-20T16:31:43.104Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68f6646e71f7ec3cf2dbe8e9"
+  },
+  "contenido": "test ",
+  "autor": {
+    "$oid": "68f2448cf6b7d0eecd24c21f"
+  },
+  "conciertoSlug": "metallica-world-tour-2025-bf21k6",
+  "createdAt": {
+    "$date": "2025-10-20T16:33:51.004Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-20T16:33:51.004Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68f66661b1ff1c8bb6b0db93"
+  },
+  "contenido": "pepe",
+  "autor": {
+    "$oid": "68f2448cf6b7d0eecd24c21f"
+  },
+  "conciertoSlug": "metallica-world-tour-2025-bf21k6",
+  "createdAt": {
+    "$date": "2025-10-20T16:42:09.736Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-20T16:42:09.736Z"
+  },
+  "__v": 0
+}]

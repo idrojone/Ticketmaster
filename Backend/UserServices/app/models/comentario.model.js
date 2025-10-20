@@ -23,10 +23,11 @@ ComentarioSchema.methods.toComentarioResponse = async function() {
     console.log("Contenido:", this.contenido);
     console.log("Comentario ID:", this._id);
     const autor = await User.findById(this.autor).exec();
+    
     return {
         id: this._id,
         contenido: this.contenido,
-        autor: autor.toUserDetails(),
+        autor: await autor.toUserDetails(),
     }
 };
 

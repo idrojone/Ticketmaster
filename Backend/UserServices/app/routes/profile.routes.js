@@ -4,6 +4,7 @@ module.exports = (app) => {
     const profileController = require("../controllers/profilesController.js");
 
     app.get('/:username', verifyJWTOpcional, profileController.getProfile);
+    app.get('/:username/likes', verifyJWTOpcional, profileController.getUserLikes);
     app.post('/:username/follow', verifyJWT, profileController.followUser);
     app.delete('/:username/unfollow', verifyJWT, profileController.unfollowUser);
 
