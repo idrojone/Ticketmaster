@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, signal } from '@angular/core';
 import { User } from 'src/app/core/models/user.model';
 import { UserService } from 'src/app/core/services/user.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthRoutingModule } from "../auth/auth-routing.module";
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { ZardButtonComponent } from '@shared/components/button/button.component';
@@ -53,8 +53,6 @@ export class Profile implements OnInit, OnDestroy {
 
   constructor() {
     this._loadUser();
-    // this._checkFollowingStatus();
-
   }
 
   ngOnInit() {
@@ -82,19 +80,21 @@ export class Profile implements OnInit, OnDestroy {
 
 
     //Cargamos el perfil del usuario desde la ruta
-    this.userService.getUserProfile(this.username()).subscribe({
-      next: (user) => {
-        this.usuario.set(user);
-        this.isLoading.set(false);
-        console.log('✅ Usuario cargado:', user);
-        this._checkFollowingStatus();
-      },
-      error: (error) => {
-        console.error('❌ Error al cargar el perfil:', error);
-        this.encontrarUsuario.set(true);
-        this.isLoading.set(false);
-      }
-    });
+    this.userService.getUserProfile(this.username())
+      .pipe(takeUntil(this.destroy$))  // ← EVITA MEMORY LEAKS
+      .subscribe({
+        next: (user) => {
+          this.usuario.set(user);
+          this.isLoading.set(false);
+          console.log('✅ Usuario cargado:', user);
+          this._checkFollowingStatus();
+        },
+        error: (error) => {
+          console.error('❌ Error al cargar el perfil:', error);
+          this.encontrarUsuario.set(true);
+          this.isLoading.set(false);
+        }
+      });
   }
 
   _checkFollowingStatus(): void {
@@ -145,32 +145,36 @@ export class Profile implements OnInit, OnDestroy {
 
     if (this.following()) {
       // Dejar de seguir
-      this.profileService.unfollowUser(usuario.username).subscribe({
-        next: () => {
-          console.log(`Has dejado de seguir a ${usuario.username}`);
-          this.following.set(false);
-        },
-        error: (error) => {
-          console.error('Error al dejar de seguir:', error);
-        }
-      });
+      this.profileService.unfollowUser(usuario.username)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            console.log(`Has dejado de seguir a ${usuario.username}`);
+            this.following.set(false);
+          },
+          error: (error) => {
+            console.error('Error al dejar de seguir:', error);
+          }
+        });
     } else {
-      this.profileService.followUser(usuario.username).subscribe({
-        next: () => {
-          console.log(`Has seguido a ${usuario.username}`);
-          this.following.set(true);
-        },
-        error: (error) => {
-          console.error('Error al seguir:', error);
-        }
-      });
+      this.profileService.followUser(usuario.username)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            console.log(`Has seguido a ${usuario.username}`);
+            this.following.set(true);
+          },
+          error: (error) => {
+            console.error('Error al seguir:', error);
+          }
+        });
     }
   }
 
   // hook en angular que se ejecuta en el momento antes de que el componente se destruya
   ngOnDestroy() {
-    // this.destroy$.next(); 
-    // this.destroy$.complete();
+    this.destroy$.next(); 
+    this.destroy$.complete();
   }
 
 }
