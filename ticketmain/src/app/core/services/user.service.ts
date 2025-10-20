@@ -18,21 +18,39 @@ export class UserService {
     private apiService = inject(ApiService);
     private jwtService = inject(JwtService);
 
+    // Flag para evitar múltiples llamadas a populate
+    private isPopulating = false;
    
   // Verify JWT in localstorage with server & load user's info.
   // This runs once on application startup.
   populate() {
+    // Evitar llamadas múltiples mientras se está procesando
+    if (this.isPopulating) {
+      console.log('⚠️ populate() ya está en ejecución, ignorando llamada duplicada');
+      return;
+    }
+
     // If JWT detected, attempt to get & store user's info
     const token = this.jwtService.getToken();
     if (token) {
-      this.apiService.get("/api/user").subscribe(
-        (data) => {
-          return this.setAuth({ ...data.user, token });
+      this.isPopulating = true;
+      console.log('🔄 Verificando token JWT...');
+      
+      this.apiService.get("/api/user").subscribe({
+        next: (data) => {
+          console.log('✅ Usuario autenticado:', data.user.username);
+          this.setAuth({ ...data.user, token });
+          this.isPopulating = false;
         },
-        (err) => this.purgeAuth()
-      );
+        error: (err) => {
+          console.log('❌ Token inválido o expirado');
+          this.purgeAuth();
+          this.isPopulating = false;
+        }
+      });
     } else {
       // Remove any potential remnants of previous auth states
+      console.log('ℹ️ No hay token JWT, limpiando auth');
       this.purgeAuth();
     }
   }
