@@ -39,7 +39,7 @@ const registerUser= asyncHandler( async (req,res) => {
 
     if(crearUsuario){
         return res.status(201).json({
-            user: crearUsuario.toUserResponse(),
+            user: await crearUsuario.toUserResponse(),
         });
     }else {
         return res.status(400).json({message: "Error al crear el usuario"});
@@ -72,7 +72,7 @@ const loginUser= asyncHandler( async (req,res) => {
 
     //Si todo ha ido correcto
     res.status(200).json({
-        user: encontrarUsuario.toUserResponse()
+        user: await encontrarUsuario.toUserResponse()
     });
 
 });
@@ -90,7 +90,7 @@ const getUserData= asyncHandler( async (req,res) => {
     }
 
     res.status(200).json({
-        user: encontrarUsuario.toUserResponse()
+        user: await encontrarUsuario.toUserResponse()
     });
 
 });
@@ -147,7 +147,7 @@ const updateUser= asyncHandler( async (req,res) => {
     await encontrarUsuario.save();
 
     res.status(200).json({
-        user: encontrarUsuario.toUserResponse()
+        user: await encontrarUsuario.toUserResponse()
     });
 });
 
@@ -165,7 +165,7 @@ const getDetailsUser= asyncHandler( async (req,res) => {
     }
 
     res.status(200).json({
-        user: encontrarUsuario.toUserDetails()
+        user: await encontrarUsuario.toUserDetails()
     });
 });
 

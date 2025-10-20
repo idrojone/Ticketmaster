@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const Concierto = require('./concierto.model');
 
 const userSchema = new mongoose.Schema({
     public_id: {
@@ -35,6 +36,7 @@ const userSchema = new mongoose.Schema({
     favouriteConciertos:[
         {
             type: mongoose.Schema.Types.ObjectId,
+            // type: String,
             ref: 'Concierto'
         }
     ],
@@ -74,7 +76,22 @@ userSchema.methods.generateAccessToken = function() {
     return accessToken;
 };
 
-userSchema.methods.toUserResponse = function() {
+userSchema.methods.toUserResponse = async function() {
+    console.log('User Model - toUserResponse called');
+  
+    const favSlugs = await Promise.all(
+        (this.favouriteConciertos || []).map(async (concierto) => {
+            try {
+                const c = await Concierto.findById(concierto).select('slug').lean();
+                return c ? c.slug : null;
+            } catch (err) {
+                return null;
+            }
+        })
+    );
+
+    console.log('Slug Concierto', favSlugs);
+
     return {
         _id: this._id,
         public_id: this.public_id,
@@ -82,13 +99,30 @@ userSchema.methods.toUserResponse = function() {
         email: this.email,
         bio: this.bio,
         image: this.image,
-        favouriteConciertos: this.favouriteConciertos,
+        favouriteConciertos: favSlugs.filter(Boolean),
         followingUsers: this.followingUsers,
         token: this.generateAccessToken()
     }
 };
 
-userSchema.methods.toUserDetails = function() {
+userSchema.methods.toUserDetails = async function() {
+
+    console.log("User Model - toUserDetails called");
+
+    const favSlugs = await Promise.all(
+        this.favouriteConciertos.map( async (concierto) => {
+            try {
+                console.log("Fetching slug for concierto ID:", concierto);
+                const c = await Concierto.findById(concierto).select('slug').lean();
+                return c ? c.slug : null;
+            } catch (err) {
+                return null;
+            }   
+        })
+    );
+
+    console.log("Slug Concierto", favSlugs);
+
     return {
         _id: this._id,
         public_id: this.public_id,
@@ -96,7 +130,7 @@ userSchema.methods.toUserDetails = function() {
         email: this.email,
         bio: this.bio,
         image: this.image,
-        favouriteConciertos: this.favouriteConciertos,
+        favouriteConciertos: favSlugs.filter(Boolean),
         followingUsers: this.followingUsers
     }
 };

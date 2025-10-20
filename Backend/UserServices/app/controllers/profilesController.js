@@ -12,12 +12,12 @@ const getProfile = asyncHandler(async (req, res) => {
 
     if (!loggedin) {
         return res.status(200).json({
-           profile: user.toUserDetails(false),
+           profile: await user.toUserDetails(false),
         });
     } else {
         const loginUser = await User.findOne({ email: req.userEmail }).exec();
         return res.status(200).json({
-            profile: user.toUserDetails(loginUser),
+            profile: await user.toUserDetails(loginUser),
         });
     }
 });
@@ -35,7 +35,7 @@ const followUser = asyncHandler(async (req, res) => {
     await user.follow(req.id);
 
     return res.status(200).json({
-        profile: user.toUserDetails(true),
+        profile: await user.toUserDetails(true),
     });
 });
 
@@ -48,7 +48,7 @@ const unfollowUser = asyncHandler(async (req, res) => {
     await user.unfollow(req.id);
 
     return res.status(200).json({
-        profile: user.toUserDetails(false),
+        profile:  await user.toUserDetails(false),
     });
 });
 
