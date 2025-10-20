@@ -5,6 +5,7 @@ module.exports = (app) => {
 
     app.get('/:username', verifyJWTOpcional, profileController.getProfile);
     app.get('/:username/user/comentarios', verifyJWTOpcional, profileController.getUserComentarios);
+    app.get('/:username/user/likes', verifyJWTOpcional, profileController.getUserLikes)
     app.post('/:username/user/follow', verifyJWT, profileController.followUser);
     app.delete('/:username/user/unfollow', verifyJWT, profileController.unfollowUser);
 
