@@ -150,11 +150,22 @@
         <div class="tabs-content">
             @if (activeTab() === 'favorites') {
                 <div class="content-placeholder">
-                    <i class="fas fa-star content-placeholder-icon"></i>
-                    <h3 class="content-placeholder-title">Favoritos</h3>
-                    <p class="content-placeholder-text">
-                        Aquí verás tus conciertos favoritos. Esta funcionalidad estará disponible pronto.
-                    </p>
+                    @if (likesUsuario() == null || likesUsuario().length === 0) {
+                        <p>No hay favoritos disponibles.</p>
+                    } @else {
+                        @for (item of likesUsuario(); track $index) {
+                            <!-- <p>Hola</p> -->
+                            <div class="comment-card p-4 border rounded bg-white mb-4">
+                                <div class="flex items-start">
+                                    <img [src]="item.imagenArtista || 'https://static.productionready.io/images/smiley-cyrus.jpg'" alt="Imagen del concierto" class="w-16 h-16 rounded-full mr-4">
+                                    <div>
+                                        <h4 class="font-semibold" (click)="verDetallesConcierto(item.slug)">{{ item.nombre }}</h4>
+                                        <p>{{ item.lugar }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             }
             
@@ -170,11 +181,21 @@
             
             @if (activeTab() === 'reviews') {
                 <div class="content-placeholder">
-                    <i class="fas fa-comment content-placeholder-icon"></i>
-                    <h3 class="content-placeholder-title">Reseñas</h3>
-                    <p class="content-placeholder-text">
-                        Aquí verás tus reseñas de conciertos. Esta funcionalidad estará disponible pronto.
-                    </p>
+                    @if (comentariosUsuario() == null || comentariosUsuario().length === 0) {
+                        <p>No hay comentarios disponibles.</p>
+                    } @else {
+                        @for (item of comentariosUsuario(); track $index) {
+                            <div class="comment-card p-4 border rounded bg-white mb-4">
+                                <div class="flex items-start">
+                                    <img [src]="usuario()?.image" alt="Avatar" class="w-10 h-10 rounded-full mr-4">
+                                    <div>
+                                        <h4 class="font-semibold">{{ usuario()?.username }}</h4>
+                                        <p>{{ item.contenido }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             }
         </div>

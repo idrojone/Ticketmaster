@@ -10,3 +10,7 @@ export interface Comment {
         image: string;
     };
 }
+
+export interface CommentArray {
+    comentarios: Comment[];
+}

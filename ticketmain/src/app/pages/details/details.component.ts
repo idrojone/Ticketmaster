@@ -83,7 +83,7 @@ export class DetailsComponent {
             Object.keys(currentUser).length > 0 && 
             currentUser.username &&
             currentConcierto && 
-            currentUser.favouriteConciertos?.includes(currentConcierto._id || '')) {
+            currentUser.favouriteConciertos?.includes(currentConcierto.slug || '')) {
             this.isFavorite.set(true);
         } else {
             this.isFavorite.set(false);

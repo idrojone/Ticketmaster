@@ -25,6 +25,27 @@ export class ProfileService {
             .pipe(map(data => data.profile));
     }
 
-    
+    getComentariosUsuario(username: string): Observable<any> {
+        return this.apiService.get(`/${username}/user/comentarios`)
+            .pipe(map(
+                data => {
+                    const comentariosArray: Comment[] = [];
+                    data.profile.forEach((comentario: Comment) => {
+                        comentariosArray.push(comentario);
+                    });
+                    return { comentarios: comentariosArray };
+                }
+            ));
+    }
+
+    getLikesUsuario(username: string): Observable<any> {
+        return this.apiService.get(`/${username}/user/likes`)
+            .pipe(map(
+                data => {
+                    console.log('Datos de likes recibidos:', data);
+                    return data;
+                }
+            ));
+    }
 
 }

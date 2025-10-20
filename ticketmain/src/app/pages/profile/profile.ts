@@ -39,6 +39,8 @@ export class Profile implements OnInit, OnDestroy {
 
   public followersCount= signal<number>(0);
 
+  public comentariosUsuario= signal<Array<any>>([]);
+  public likesUsuario= signal<Array<any>>([]);
 
   private userService = inject(UserService);
   private activatedRoute = inject(ActivatedRoute);
@@ -58,7 +60,7 @@ export class Profile implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
+    this.loadLikesUsuario();
   }
 
   private _loadUser(): void {
@@ -118,9 +120,51 @@ export class Profile implements OnInit, OnDestroy {
     
   }
 
+  loadComentariosUsuario(): void {
+    if (this.userService.getCurrentUser().username === null) {
+      return;
+    }
+
+    this.profileService.getComentariosUsuario(this.slug)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (comentarios) => {
+          console.log('Comentarios del usuario:', comentarios);
+          this.comentariosUsuario.set(comentarios.comentarios);
+
+        },
+        error: (error) => {
+          console.error('Error al cargar los comentarios del usuario:', error);
+        }
+      });
+
+  }
+
+  loadLikesUsuario(): void {
+    this.profileService.getLikesUsuario(this.slug)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (likes) => {
+          console.log('Likes del usuario:', likes);
+          // Aquí puedes manejar los likes como necesites
+          this.likesUsuario.set(likes.likes);
+          console.log(this.likesUsuario(), 'likes signal');       
+        },
+        error: (error) => {
+          console.error('Error al cargar los likes del usuario:', error);
+        }
+      });
+  }
+
   changeTab(tab: TabType): void {
+    this.loadLikesUsuario();
     this.activeTab.set(tab);
     // console.log(`📑 Tab changed to: ${tab}`);
+    if (tab === 'reviews') {
+      this.loadComentariosUsuario();
+    }else if (tab === 'favorites') {
+      this.loadLikesUsuario();
+    }
   }
 
   toggleFollowUser(): void {
@@ -176,6 +220,10 @@ export class Profile implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  verDetallesConcierto(conciertoId: string): void {
+    this.router.navigate(['/details/concierto/', conciertoId]);
   }
 
   // hook en angular que se ejecuta en el momento antes de que el componente se destruya
