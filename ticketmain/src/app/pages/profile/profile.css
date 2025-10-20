@@ -4,7 +4,7 @@
 .profile-container {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f5f5f5;
     padding-bottom: 2rem;
 }
 
@@ -31,7 +31,7 @@
 
 .error-icon {
     font-size: 4rem;
-    color: #ef4444;
+    color: #000000;
     margin-bottom: 1.5rem;
     animation: shake 0.5s ease-in-out;
 }
@@ -39,12 +39,12 @@
 .error-title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #1f2937;
+    color: #000000;
     margin-bottom: 1rem;
 }
 
 .error-message {
-    color: #6b7280;
+    color: #4b5563;
     font-size: 1rem;
     line-height: 1.6;
 }
@@ -62,7 +62,7 @@
 .profile-banner {
     width: 100%;
     height: 200px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
     position: relative;
 }
 
@@ -106,7 +106,7 @@
     right: 10px;
     width: 40px;
     height: 40px;
-    background: #667eea;
+    background: #000000;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -118,7 +118,7 @@
 }
 
 .avatar-edit-badge:hover {
-    background: #5568d3;
+    background: #333333;
     transform: scale(1.1);
 }
 
@@ -144,12 +144,8 @@
 .profile-username {
     font-size: 2rem;
     font-weight: 700;
-    color: #1f2937;
+    color: #000000;
     margin: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .btn-edit-profile,
@@ -166,23 +162,23 @@
 }
 
 .btn-edit-profile {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #000000;
     color: white;
 }
 
 .btn-edit-profile:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .btn-follow {
     background: white;
-    color: #667eea;
-    border: 2px solid #667eea;
+    color: #000000;
+    border: 2px solid #000000;
 }
 
 .btn-follow:hover {
-    background: #667eea;
+    background: #000000;
     color: white;
 }
 
@@ -200,13 +196,13 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: #6b7280;
+    color: #4b5563;
     font-size: 0.95rem;
 }
 
 .profile-email i,
 .profile-bio i {
-    color: #667eea;
+    color: #000000;
     font-size: 1rem;
 }
 
@@ -242,16 +238,12 @@
 .stat-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1f2937;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #000000;
 }
 
 .stat-label {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: #4b5563;
     font-weight: 500;
 }
 
@@ -302,13 +294,13 @@
 }
 
 .tab-item:hover {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.05);
+    color: #000000;
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .tab-item.active {
-    color: #667eea;
-    border-bottom-color: #667eea;
+    color: #000000;
+    border-bottom-color: #000000;
 }
 
 .tab-item i {
@@ -335,7 +327,7 @@
 
 .content-placeholder-icon {
     font-size: 4rem;
-    color: #667eea;
+    color: #000000;
     margin-bottom: 1.5rem;
     animation: float 3s ease-in-out infinite;
 }
@@ -343,12 +335,12 @@
 .content-placeholder-title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #1f2937;
+    color: #000000;
     margin-bottom: 1rem;
 }
 
 .content-placeholder-text {
-    color: #6b7280;
+    color: #4b5563;
     font-size: 1rem;
     line-height: 1.6;
     max-width: 500px;
