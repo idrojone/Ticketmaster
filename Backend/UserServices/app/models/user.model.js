@@ -213,17 +213,17 @@ userSchema.methods.toUserDetails = async function() {
     };
 };
 
-userSchema.methods.UserLikes = async function (_id) {
-   const userId = _id;
-   
-   if (!mongoose.Types.ObjectId.isValid(String(userId))) return [];
+userSchema.methods.UserComentarios = async function (_id) {
+    const userId = _id;
 
-   let Comentario = mongoose.model("Comentario");
+    if (!mongoose.Types.ObjectId.isValid(String(userId))) return [];
 
-   const comentarios = await Comentario.find({ autor: _id }).lean();
+    let Comentario = mongoose.model("Comentario");
 
-   return comentarios;
-}
+    const comentarios = await Comentario.find({ autor: _id }).lean();
+
+    return comentarios;
+};
 
 userSchema.methods.follow = async function(userId) {
     if (!this.followingUsers.includes(userId)) {

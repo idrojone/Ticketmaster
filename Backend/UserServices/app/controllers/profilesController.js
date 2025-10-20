@@ -52,7 +52,7 @@ const unfollowUser = asyncHandler(async (req, res) => {
     });
 });
 
-const getUserLikes = asyncHandler(async (req, res) => {
+const getUserComentarios = asyncHandler(async (req, res) => {
     const { username } = req.params;
     const loggedin = req.loggedIn;
 
@@ -62,19 +62,18 @@ const getUserLikes = asyncHandler(async (req, res) => {
 
     if (!loggedin) {
         return res.status(200).json({
-            profile: await user.UserLikes(user._id),
+            profile: await user.UserComentarios(user._id),
         });
     } else {
         return res.status(200).json({
-            profile: await user.UserLikes(user._id),
+            profile: await user.UserComentarios(user._id),
         });
     }
-    
 });
 
 module.exports = {
     getProfile,
     followUser,
     unfollowUser,
-    getUserLikes
+    getUserComentarios,
 };
