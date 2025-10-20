@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Output, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Comment } from 'src/app/core/models/comment.model';
@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from 'src/app/core/services/user.service';
 import { User } from 'src/app/core/models/user.model';
 import Swal from 'sweetalert2';
+import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -16,7 +17,7 @@ import Swal from 'sweetalert2';
   templateUrl: './article-comments.html',
   styleUrls: ['./article-comments.css']
 })
-export class ArticleComments {
+export class ArticleComments implements OnDestroy {
   public isLoading = signal(true);
   public comments = signal<Comment[]>([]);  // Debe ser array de Comment, no Comment | null
   public newComment = signal('');
@@ -26,6 +27,7 @@ export class ArticleComments {
   private commentService = inject(CommentsService);
   private userService = inject(UserService);
   private router = inject(Router);
+  private destroy$ = new Subject<void>();
 
   slug: string | null = null;
 
@@ -67,17 +69,31 @@ export class ArticleComments {
         return;
       }
       this.isLoading.set(true);
-      this.commentService.addComment(slug, payload).subscribe({
-        next: (c) => {
-          // Recargar comentarios
-          this._loadComments();
-          this.newComment.set('');
-        },
-        error: (err) => {
-          console.error('Error adding comment', err);
-          this.isLoading.set(false);
-        }
-      });
+      this.commentService.addComment(slug, this.newComment())
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (c) => {
+            console.log('✅ Comentario añadido:', c);
+            // Recargar comentarios
+            this._loadComments();
+            this.newComment.set('');
+            Swal.fire({
+              icon: 'success',
+              title: 'Comentario publicado',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          },
+          error: (err) => {
+            console.error('❌ Error adding comment', err);
+            this.isLoading.set(false);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al publicar comentario',
+              text: err.message || 'Inténtalo de nuevo'
+            });
+          }
+        });
     }
 
   }
@@ -95,16 +111,30 @@ export class ArticleComments {
         const slug = this.slug;
         if (!slug) return;
         this.isLoading.set(true);
-        this.commentService.deleteComment(slug, comment.id).subscribe({
-          next: () => {
-            // Recargar comentarios
-            this._loadComments();
-          },
-          error: (err) => {
-            console.error('Error deleting comment', err);
-            this.isLoading.set(false);
-          }
-        });
+        this.commentService.deleteComment(slug, comment.id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              console.log('✅ Comentario eliminado');
+              // Recargar comentarios
+              this._loadComments();
+              Swal.fire({
+                icon: 'success',
+                title: 'Comentario eliminado',
+                showConfirmButton: false,
+                timer: 1500
+              });
+            },
+            error: (err) => {
+              console.error('❌ Error deleting comment', err);
+              this.isLoading.set(false);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error al eliminar comentario',
+                text: err.message || 'Inténtalo de nuevo'
+              });
+            }
+          });
       }else{
 
       }
@@ -122,24 +152,31 @@ export class ArticleComments {
       return;
     }
 
-    this.commentService.getAllComments(this.slug).subscribe({
-      next: (comments) => {
-        console.log('Comments loaded:', comments);
-        this.comments.set(comments);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading comments:', error);
-        this.comments.set([]);  // Array vacío en caso de error
-        this.isLoading.set(false);
-      }
-    });
+    this.commentService.getAllComments(this.slug)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (comments) => {
+          console.log('✅ Comments loaded:', comments);
+          this.comments.set(comments);
+          this.isLoading.set(false);
+        },
+        error: (error) => {
+          console.error('❌ Error loading comments:', error);
+          this.comments.set([]);  // Array vacío en caso de error
+          this.isLoading.set(false);
+        }
+      });
   }
 
   private _getCurrentUser() {
     // console.log('Cargando usuario actual...' + this.userService.getCurrentUser());
     this.currentUser.set(this.userService.getCurrentUser());
     
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }
