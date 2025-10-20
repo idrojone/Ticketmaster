@@ -91,8 +91,14 @@
 
                         <!-- Stats (preparado para futuro) -->
                         <div class="profile-stats">
+                            <div class="stat-divider"></div>
                             <div class="stat-item">
-                                <span class="stat-value">0</span>
+                                <span class="stat-value">{{ followersCount() }}</span>
+                                <span class="stat-label">Seguidores</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-item">
+                                <span class="stat-value">{{ usuario()?.favouriteConciertos?.length || 0 }}</span>
                                 <span class="stat-label">Favoritos</span>
                             </div>
                             <div class="stat-divider"></div>
