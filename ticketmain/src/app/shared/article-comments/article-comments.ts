@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Comment } from 'src/app/core/models/comment.model';
 import { CommentsService } from 'src/app/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { UserService } from 'src/app/core/services/user.service';
+import { UserService } from 'src/app/core/services/user.service'
 import { User } from 'src/app/core/models/user.model';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
@@ -43,7 +43,7 @@ export class ArticleComments implements OnDestroy {
 
     console.log('Usuario actual:', this.currentUser()?.username);
 
-    if (!this.currentUser()?.username == undefined || !this.currentUser()?.token) {
+    if (!this.currentUser()?.username == undefined || !this.currentUser()?.accessToken) {
       Swal.fire({
         icon: 'warning',
         title: 'Debes iniciar sesión para agregar un comentario',
