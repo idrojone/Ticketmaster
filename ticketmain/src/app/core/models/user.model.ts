@@ -2,7 +2,7 @@ export interface User {
     _id?: string;
     public_id?: string;
     email: string;
-    token: string;
+    accessToken: string;
     username: string;
     password?: string;
     bio: string;
