@@ -18,93 +18,79 @@ export class UserService {
     private apiService = inject(ApiService);
     private jwtService = inject(JwtService);
 
-    // Flag para evitar múltiples llamadas a populate
     private isPopulating = false;
    
-  // Verify JWT in localstorage with server & load user's info.
-  // This runs once on application startup.
-  populate() {
-    // Evitar llamadas múltiples mientras se está procesando
-    if (this.isPopulating) {
-      console.log('⚠️ populate() ya está en ejecución, ignorando llamada duplicada');
-      return;
-    }
-
-    // If JWT detected, attempt to get & store user's info
-    const token = this.jwtService.getToken();
-    if (token) {
-      this.isPopulating = true;
-      console.log('🔄 Verificando token JWT...');
-      
-      this.apiService.get("/api/user").subscribe({
-        next: (data) => {
-          console.log('✅ Usuario autenticado:', data.user.username);
-          this.setAuth({ ...data.user, token });
-          this.isPopulating = false;
-        },
-        error: (err) => {
-          console.log('❌ Token inválido o expirado');
-          this.purgeAuth();
-          this.isPopulating = false;
+    populate() {
+     
+        if (this.isPopulating) {
+            console.log('⚠️ populate() ya está en ejecución, ignorando llamada duplicada');
+            return;
         }
-      });
-    } else {
-      // Remove any potential remnants of previous auth states
-      console.log('ℹ️ No hay token JWT, limpiando auth');
-      this.purgeAuth();
+
+        const accessToken = this.jwtService.getAccessToken();
+        if (accessToken) {
+            
+            this.isPopulating = true;
+            this.apiService.get("/api/user").subscribe({
+                next: (data) => {
+                    console.log('✅ Usuario autenticado:', data.user.username);
+                    this.setAuth({ ...data.user, accessToken: accessToken });
+                    this.isPopulating = false;
+                },
+                error: (err) => {
+                    console.log('❌ Access Token inválido o expirado');
+                    this.purgeAuth();
+                    this.isPopulating = false;
+                }
+            });
+        } else {
+            this.purgeAuth();
+        }
     }
-  }
 
-  setAuth(user: User) {
-    // Save JWT sent from server in localstorage
-    this.jwtService.saveToken(user.token);
-    // Set current user data into observable
-    this.currentUserSubject.next(user);
-    // Set isAuthenticated to true
-    this.isAuthenticatedSubject.next(true);
-  }
+    setAuth(user: User) {
+        console.log('Estableciendo autenticación para el usuario:', user);
+        this.jwtService.saveAccessToken(user.accessToken);
+        this.currentUserSubject.next(user);
+        this.isAuthenticatedSubject.next(true);
+    }
 
-  purgeAuth() {
-    // Remove JWT from localstorage
-    this.jwtService.destroyToken();
-    // Set current user to an empty object
-    this.currentUserSubject.next({} as User);
-    // Set auth status to false
-    this.isAuthenticatedSubject.next(false);
-  }
+    purgeAuth() {
 
-  attemptAuth(type: string, credentials: any): Observable<User> {
-    // console.log('Attempting auth with credentials:', credentials);
-    const userCredentials = { user: credentials };
-    const route = (type === 'login') ? '/login' : '/register';
-    return this.apiService.post(`/api${route}`, {user: credentials})
-      .pipe(map(
-      data => {
-        this.setAuth(data.user);
-        return data;
-      }
-    ));
-  }
+        this.jwtService.destroyAccessToken();
+        this.currentUserSubject.next({} as User);
+        this.isAuthenticatedSubject.next(false);
+    }
 
-  getUserProfile(username: string | null): Observable<User> {
-    return this.apiService.get(`/api/user/${username}`)
-      .pipe(map(data => {
-        return data.user;
-      }));
-  }
+    attemptAuth(type: string, credentials: any): Observable<User> {
+        const route = (type === 'login') ? '/login' : '/register';
+        console.log(`Intentando autenticación (${type}) con credenciales:`, credentials);
+        return this.apiService.post(`/api${route}`, { user: credentials })
+        .pipe(map(
+            data => {
+                this.setAuth(data.user);
+                return data;
+            }
+        ));
+    }
 
-  getCurrentUser(): User {
-    return this.currentUserSubject.value;
-  }
+    getUserProfile(username: string | null): Observable<User> {
+        return this.apiService.get(`/api/user/${username}`)
+            .pipe(map(data => {
+                return data.user;
+            }));
+    }
 
-  // Update the user on the server (email, pass, etc)
-  update(user: User): Observable<User> {
-    return this.apiService
-    .put('/api/user', { user })
-    .pipe(map(data => {
-      // Update the currentUser observable
-      this.currentUserSubject.next(data.user);
-      return data.user;
-    }));
-  }
+    getCurrentUser(): User {
+        return this.currentUserSubject.value;
+    }
+
+    update(user: User): Observable<User> {
+        return this.apiService
+            .put('/api/user', { user })
+            .pipe(map(data => {
+                this.currentUserSubject.next(data.user);
+                return data.user;
+            }));
+    }
 }

@@ -12,7 +12,9 @@ export class ApiService {
     http = inject(HttpClient);
 
     private formatErrors(errors: any) {
-        return throwError(errors.error);
+        // Normalizar el error para que nunca sea `undefined` al suscribirse
+        const normalized = errors?.error ?? errors ?? { message: 'Unknown error' };
+        return throwError(() => normalized);
     }
 
     get(path: string, params: HttpParams = new HttpParams()): Observable<any>{
@@ -27,9 +29,9 @@ export class ApiService {
         ).pipe(catchError(this.formatErrors));
     }
 
-    post(path: string, body: any = {}): Observable<any> {
+    post(path: string, body: any = {}, credentialsRequired: boolean = false): Observable<any> {
         console.log(body);
-        return this.http.post(`${environment.api_url}${path}`, body).pipe(catchError(this.formatErrors));
+        return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
     }
 
     delete(path: any): Observable<any> {
