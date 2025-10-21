@@ -38,6 +38,7 @@ export class Profile implements OnInit, OnDestroy {
   public encontrarUsuario= signal<boolean>(false);
 
   public followersCount= signal<number>(0);
+  public commentsCount= signal<number>(0);
 
   public comentariosUsuario= signal<Array<any>>([]);
   public likesUsuario= signal<Array<any>>([]);
@@ -89,10 +90,11 @@ export class Profile implements OnInit, OnDestroy {
       .subscribe({
         next: (user) => {
           this.usuario.set(user);
-          this.isLoading.set(false);
+          this.isLoading.set(false);doc
           console.log('✅ Usuario cargado:', user);
           this._checkFollowingStatus();
           this.followersCount.set(user.followingUsers?.length || 0);
+              // this.commentsCount.set(this.comentariosUsuario().length);
         },
         error: (error) => {
           console.error('❌ Error al cargar el perfil:', error);
