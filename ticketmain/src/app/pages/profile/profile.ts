@@ -90,7 +90,7 @@ export class Profile implements OnInit, OnDestroy {
       .subscribe({
         next: (user) => {
           this.usuario.set(user);
-          this.isLoading.set(false);doc
+          this.isLoading.set(false);
           console.log('✅ Usuario cargado:', user);
           this._checkFollowingStatus();
           this.followersCount.set(user.followingUsers?.length || 0);
