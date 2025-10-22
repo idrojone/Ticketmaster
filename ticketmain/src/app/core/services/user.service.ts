@@ -23,7 +23,7 @@ export class UserService {
     populate() {
      
         if (this.isPopulating) {
-            console.log('⚠️ populate() ya está en ejecución, ignorando llamada duplicada');
+            // console.log('⚠️ populate() ya está en ejecución, ignorando llamada duplicada');
             return;
         }
 
@@ -49,7 +49,7 @@ export class UserService {
     }
 
     setAuth(user: User) {
-        console.log('Estableciendo autenticación para el usuario:', user);
+        // console.log('Estableciendo autenticación para el usuario:', user);
         this.jwtService.saveAccessToken(user.accessToken);
         this.currentUserSubject.next(user);
         this.isAuthenticatedSubject.next(true);
@@ -68,6 +68,7 @@ export class UserService {
         return this.apiService.post(`/api${route}`, { user: credentials })
         .pipe(map(
             data => {
+                // console.log('Autenticación exitosa. Datos del usuario recibidos:', data.user);
                 this.setAuth(data.user);
                 return data;
             }

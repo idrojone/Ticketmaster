@@ -97,8 +97,8 @@ const loginUser= asyncHandler( async (req,res) => {
 
     //Si todo ha ido correcto
     res.status(200).json({
-        user: await encontrarUsuario.toUserResponse(),
-        accessToken: accessToken
+        user: await encontrarUsuario.toUserResponse(accessToken),
+        // accessToken: accessToken
     });
 
 });

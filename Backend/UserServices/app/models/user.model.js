@@ -76,7 +76,7 @@ userSchema.methods.generateAccessToken = function() {
     return accessToken;
 };
 
-userSchema.methods.toUserResponse = async function() {
+userSchema.methods.toUserResponse = async function(accessToken) {
     console.log('User Model - toUserResponse called');
     const favSlugs = await this.getFavouriteSlugs();
 
@@ -92,7 +92,8 @@ userSchema.methods.toUserResponse = async function() {
         image: this.image,
         favouriteConciertos: favSlugs,
         followingUsers: followingUsernames,
-        accessToken: this.generateAccessToken(),
+        accessToken: accessToken
+        // accessToken: this.generateAccessToken(),
     };
 };
 

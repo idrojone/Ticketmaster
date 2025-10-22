@@ -125,7 +125,7 @@ export class ListConciertos implements OnInit {
                 filters.ciudad
             );
         }
-        console.log("filters recibidos en list conciertos: " , filters);
+        // console.log("filters recibidos en list conciertos: " , filters);
 
         this.conciertosService.get_all_conciertos(filters).subscribe(
             (data: any) => {

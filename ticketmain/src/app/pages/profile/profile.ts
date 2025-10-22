@@ -91,7 +91,7 @@ export class Profile implements OnInit, OnDestroy {
         next: (user) => {
           this.usuario.set(user);
           this.isLoading.set(false);
-          console.log('✅ Usuario cargado:', user);
+          // console.log('✅ Usuario cargado:', user);
           this._checkFollowingStatus();
           this.followersCount.set(user.followingUsers?.length || 0);
               // this.commentsCount.set(this.comentariosUsuario().length);
@@ -109,14 +109,14 @@ export class Profile implements OnInit, OnDestroy {
     
     const profileUser = this.usuario();
 
-    console.log(currentUser, 'usuario actual');
-    console.log(profileUser, 'usuario del perfil');
+    // console.log(currentUser, 'usuario actual');
+    // console.log(profileUser, 'usuario del perfil');
 
     if (profileUser?.followingUsers?.includes(currentUser?._id || '')) {
-      console.log('Siguiendo a este usuario');
+      // console.log('Siguiendo a este usuario');
       this.following.set(true);
     }else {
-      console.log('No siguiendo a este usuario');
+      // console.log('No siguiendo a este usuario');
       this.following.set(false);
     }
     
@@ -131,7 +131,7 @@ export class Profile implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (comentarios) => {
-          console.log('Comentarios del usuario:', comentarios);
+          // console.log('Comentarios del usuario:', comentarios);
           this.comentariosUsuario.set(comentarios.comentarios);
 
         },
@@ -147,10 +147,10 @@ export class Profile implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (likes) => {
-          console.log('Likes del usuario:', likes);
+          // console.log('Likes del usuario:', likes);
           // Aquí puedes manejar los likes como necesites
           this.likesUsuario.set(likes.likes);
-          console.log(this.likesUsuario(), 'likes signal');       
+          // console.log(this.likesUsuario(), 'likes signal');       
         },
         error: (error) => {
           console.error('Error al cargar los likes del usuario:', error);
@@ -171,7 +171,7 @@ export class Profile implements OnInit, OnDestroy {
 
   toggleFollowUser(): void {
     if (!this.usuario()) {
-      console.log('No hay usuario cargado');
+      // console.log('No hay usuario cargado');
       return;
     }
 
@@ -198,7 +198,7 @@ export class Profile implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            console.log(`Has dejado de seguir a ${usuario.username}`);
+            // console.log(`Has dejado de seguir a ${usuario.username}`);
             this.following.set(false);
             // Decrementar el contador de seguidores
             this.followersCount.set(this.followersCount() - 1);
@@ -212,7 +212,7 @@ export class Profile implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            console.log(`Has seguido a ${usuario.username}`);
+            // console.log(`Has seguido a ${usuario.username}`);
             this.following.set(true);
             // Incrementar el contador de seguidores
             this.followersCount.set(this.followersCount() + 1);
