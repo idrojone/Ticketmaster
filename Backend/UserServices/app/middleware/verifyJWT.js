@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const BlackListToken = require('../models/blackListToken');
 
-const verifyJWT = (req, res, next) => {
+const verifyJWT = async (req, res, next) => {
 
     //Obtenemos el token del header
     const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -15,14 +16,47 @@ const verifyJWT = (req, res, next) => {
     const token = authHeader.split(' ')[1];
     // console.log("Token:", token);
 
+
+    //Ver si mi token esta en la blacklist
+    const blacklistedToken = await BlackListToken.findOne({ token: token });
     //Verificamos el token
     jwt.verify(
         token,
         process.env.JWT_SECRET,
-        (err, decoded) => {
-            //Si da error al decodificar
-            if(err){
+        { ignoreExpiration: true }, // Permite verificar tokens expirados
+        async (err, decoded) => {
+            //Si da error al decodificar (firma inválida, formato incorrecto)
+            if(err && err.name !== 'TokenExpiredError'){
                 return res.status(403).json({message: "Token no valido", error: err.message});
+            }
+
+            // Si el token está expirado, añadir a blacklist
+            if(err && err.name === 'TokenExpiredError'){
+                const decodedExpired = jwt.decode(token);
+                
+                await BlackListToken.create({
+                    id: decodedExpired.id,
+                    token: token
+                });
+
+                return res.status(403).json({ message: "Access token expirado y agregado a blacklist", error: "jwt expired" });
+            }
+
+            // Verificación adicional de expiración manual
+            const isExpired = Date.now() >= decoded.exp * 1000;
+            if (isExpired) {
+                await BlackListToken.create({
+                    id: decoded.id,
+                    token: token
+                });
+
+                return res.status(403).json({ message: "Access token expirado y agregado a blacklist", error: "jwt expired" });
+            }
+
+            if(blacklistedToken){  //Si esta en la blacklist
+                req.blacklisted = true;
+            }else{
+                req.blacklisted = false;
             }
 
             //Si es valido

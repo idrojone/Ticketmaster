@@ -1,7 +1,11 @@
 const User=require('../models/user.model');
+const refreshTokenStore= require('../models/refreshTokenStore.model');
 const asyncHandler=require('express-async-handler');
 // const bcrypt=require('bcrypt');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
+const BlackListToken = require('../models/blackListToken');
+
 
 const registerUser= asyncHandler( async (req,res) => {
 
@@ -70,18 +74,63 @@ const loginUser= asyncHandler( async (req,res) => {
         return res.status(401).json({message: "Contraseña incorrecta"});
     }
 
-    //Si todo ha ido correcto
-    res.status(200).json({
-        user: await encontrarUsuario.toUserResponse()
+    //Generamos los tokens
+    const accessToken = await generateAccessToken(encontrarUsuario);
+    const refreshToken = await generateRefreshToken(encontrarUsuario);
+
+    //Borramos los refresh tokens antiguos de este usuario
+    await refreshTokenStore.deleteMany({ id: encontrarUsuario._id });
+
+    //Almacenamos el refresh token en el servidor
+    refreshTokenStore.create({
+        id: encontrarUsuario._id,
+        refreshToken: refreshToken
     });
 
+    //Enviamos los tokens al cliente
+     res.cookie('refreshToken', refreshToken, {
+         httpOnly: true,
+         secure: false, // Cambiar a true en producción con HTTPS
+         sameSite: 'lax', // lax permite cookies en navegación cross-site
+         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días en milisegundos
+     });
+
+    //Si todo ha ido correcto
+    res.status(200).json({
+        user: await encontrarUsuario.toUserResponse(),
+        accessToken: accessToken
+    });
+
+});
+
+const logoutUser= asyncHandler( async (req,res) => {
+    //Se lo pasamos por las cookies
+    const { refreshToken } = req.cookies;
+    if(!refreshToken){
+        return res.status(400).json({message: "No se ha recibido el refresh token"});
+    }
+
+    //Eliminamos el refresh token de la base de datos
+    await refreshTokenStore.deleteOne({ refreshToken });
+
+    //Eliminamos el refresh token de las cookies
+    res.clearCookie("refreshToken", {
+        path: '/',
+    });
+
+    res.status(200).json({message: "Logout exitoso"});
 });
 
 //Acciones una vez autenticado --> Pasar por el middleware de autenticación
 
 const getUserData= asyncHandler( async (req,res) => {
+
+    if(req.blacklisted == true){
+        return res.status(403).json({ message: "Token en la blacklist" });
+    }
+
     // Recibimos el email y lo buscamos
-    const email =req.email;
+    const email = req.email;
 
     const encontrarUsuario= await User.findOne( {email} ).exec();
 
@@ -96,6 +145,11 @@ const getUserData= asyncHandler( async (req,res) => {
 });
 
 const updateUser= asyncHandler( async (req,res) => {
+
+    if(req.blacklisted == true){
+        return res.status(403).json({ message: "Token en la blacklist" });
+    }
+
     //Confirmar que tenemos un objeto para actualizar valido
     const { username,email,password,image,bio }=req.body.user;
 
@@ -152,6 +206,11 @@ const updateUser= asyncHandler( async (req,res) => {
 });
 
 const getDetailsUser= asyncHandler( async (req,res) => {
+
+    if(req.blacklisted == true){
+        return res.status(403).json({ message: "Token en la blacklist" });
+    }
+
     const username=req.params.username;
 
     if(!username){
@@ -169,11 +228,126 @@ const getDetailsUser= asyncHandler( async (req,res) => {
     });
 });
 
+//Acciones JWT
+
+//Verificar Refresh Token
+const verifyRefreshToken= asyncHandler( async (req, res) => {
+    //Se lo pasamos por las cookies
+    const { refreshToken } = req.cookies;
+    
+    if(!refreshToken){
+        return res.status(401).json({message: "No autorizado, no hay refresh token"});
+    }
+
+    //Comprobamos si el refresh token existe en la base de datos
+    const storedToken = await refreshTokenStore.findOne({ refreshToken });
+
+    //Comprobamos si el refresh esta en la black list
+    const isBlacklisted = await BlackListToken.findOne({ token: refreshToken });
+    if (isBlacklisted) {
+        return res.status(403).json({ message: "Refresh token en la blacklist" });
+    }
+
+    if(!storedToken){
+        return res.status(403).json({message: "Refresh token no valido"});
+    }
+
+    //Verificamos el token
+    jwt.verify(
+        refreshToken,
+        process.env.JWT_SECRET,
+        { ignoreExpiration: true },  // ← Permite verificar tokens expirados
+    async (err, decoded) => {
+        // Si hay error de firma/formato (no expiración)
+        if(err && err.name !== 'TokenExpiredError'){
+            return res.status(403).json({message: "Refresh token no valido", error: err.message});
+        }
+
+
+        // Si el token está expirado, añadir a blacklist
+        if(err && err.name === 'TokenExpiredError'){
+            // Decodificar para obtener el id del usuario
+            const decodedExpired = jwt.decode(refreshToken);
+            
+            const blackListToken = new BlackListToken({
+                id: decodedExpired.id,
+                token: refreshToken
+            });
+
+            await blackListToken.save();
+            await refreshTokenStore.deleteOne({ refreshToken });
+
+            return res.status(403).json({ message: "Refresh token caducado y agregado a blacklist" });
+        }
+
+        // Verificación adicional de expiración (por si ignoreExpiration está activo)
+        const isExpired = Date.now() >= decoded.exp * 1000;
+        if (isExpired) {
+            const blackListToken = new BlackListToken({
+                id: decoded.id,
+                token: refreshToken
+            });
+
+            await blackListToken.save();
+            await refreshTokenStore.deleteOne({ refreshToken });
+
+            return res.status(403).json({ message: "Refresh token caducado y agregado a blacklist" });
+        }
+        //Si es valido, comprobamos que el usuario existe
+        const userId = decoded.id;
+        const user = await User.findById(userId);
+
+        if(!user){
+            refreshTokenStore.deleteOne({ refreshToken });
+            return res.status(403).json({message: "Usuario no valido para este refresh token"});
+        }
+
+        //Si el token es valido, generamos un nuevo access token
+        const newAccessToken = await generateAccessToken(user);
+        // const newRefreshToken = await generateRefreshToken(user);
+
+        res.status(200).json({ accessToken: newAccessToken });
+    });
+});
+
+//Access 1h
+const generateAccessToken= asyncHandler( async (user) => {
+    //Definimos la estructura del payload
+    const payload = {
+        id: user._id,
+        public_id: user.public_id,
+        email: user.email,
+        username: user.username
+    };
+
+    //Generamos el token, recordar añadir ACCESS_TOKEN_EXPIRATION a .env
+    const accessToken = await jwt.sign(payload, process.env.JWT_SECRET, 
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+
+    return accessToken;
+});
+
+//Refresh 7d
+const generateRefreshToken= asyncHandler( async (user) => {
+    //Definimos la estructura del payload
+    const payload = {
+        id: user._id,
+    };
+
+    //Generamos el token, recordar añadir REFRESH_TOKEN_EXPIRATION a .env
+    const refreshToken = await jwt.sign(payload, process.env.JWT_SECRET, 
+        { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
+
+    return refreshToken;
+});
+
 /////////////////////////////////////////////////////////77
 
 const auth_controller = {
     registerUser: registerUser,
     loginUser: loginUser,
+    logoutUser: logoutUser,
+    verifyRefreshToken: verifyRefreshToken,
     getUserData: getUserData,
     updateUser: updateUser,
     getDetailsUser: getDetailsUser

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
 
 
 //Create express app
@@ -11,6 +12,7 @@ dotenv.config();
 //Habilita CORS para todas las rutas
 const corsOptions = {
     origin:process.env.CORS_URL,
+    credentials:true,
     optionsSuccessStatus:200
 };
 
@@ -19,6 +21,7 @@ app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser()); // Middleware para parsear cookies
 
 //configuring the database
 const dbConfig = require('../config/database.config.js');
