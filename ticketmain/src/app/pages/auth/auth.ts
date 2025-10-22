@@ -82,7 +82,7 @@ export class Auth implements OnInit {
     console.log(`Enviando ${authType}:`, credentials);
 
     this.userService.attemptAuth(authType, credentials).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log(`${authType} exitoso:`, response);
         this.enviando = false;
         
@@ -99,10 +99,11 @@ export class Auth implements OnInit {
         });
 
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error(`Error en ${authType}:`, error);
         this.enviando = false;
-        this.errors = {general: error.message || 'Error desconocido'};
+        const message = (error && (error.message || error.error || error.msg)) || 'Error desconocido';
+        this.errors = { general: message };
       }
     });
   }

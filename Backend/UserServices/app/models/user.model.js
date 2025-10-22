@@ -92,7 +92,7 @@ userSchema.methods.toUserResponse = async function() {
         image: this.image,
         favouriteConciertos: favSlugs,
         followingUsers: followingUsernames,
-        token: this.generateAccessToken(),
+        accessToken: this.generateAccessToken(),
     };
 };
 
