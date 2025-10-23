@@ -43,7 +43,7 @@ export class ListConciertos implements OnInit {
     filters=new Filters();
     conciertos: Concierto[] = [];
     listGeneros: Genero[] = [];
-    skeletonArray = Array(20); 
+    skeletonArray = Array.from({ length: 20 }, (_, i) => i); 
     slug_genero!: string | null;
     numeroConciertos!: number;
 
