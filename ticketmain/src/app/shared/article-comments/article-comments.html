@@ -1,9 +1,9 @@
 <div class="comments-widget">
-	<div *ngIf="isLoading()" class="loading">
+	@if(isLoading()) {
 		<p>Cargando comentarios...</p>
-	</div>
+    }
 
-	<div *ngIf="!isLoading()">
+	@if (isLoading() === false) {
 		<div class="add-comment">
 			<textarea [(ngModel)]="newComment" rows="4" placeholder="Comparte tu opinión sobre este concierto..." class="w-full p-3 border rounded"></textarea>
 			<div class="flex justify-end mt-2">
@@ -16,13 +16,13 @@
                 @for (c of comments(); track c) {
                     <div class="comment-card p-4 border rounded bg-white">
                         <div class="flex items-start gap-3">
-                            <img [src]="c.autor?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'" class="w-10 h-10 rounded-full"/>
+                            <img [src]="c.autor.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'" class="w-10 h-10 rounded-full"/>
                             <div class="flex-1">
-                                <div class="text-sm font-semibold">{{ c.autor?.username }}</div>
+                                <div class="text-sm font-semibold">{{ c.autor.username }}</div>
                                 <!-- <div class="text-xs text-gray-500">{{ c.createdAt }}</div> -->
                                 <div class="mt-2 text-gray-800">{{ c.contenido }}</div>
-                                
-                                @if (currentUser()?.username === c.autor?.username) {
+
+                                @if (currentUser()?.username === c.autor.username ) {
                                     <div class="mt-2">
                                         <button (click)="deleteComment(c)" class="text-red-600 hover:underline text-sm">Eliminar</button>
                                     </div>
@@ -37,6 +37,6 @@
                 <p>No hay comentarios aún.</p>
             </div>
         }
-	</div>
+	}
 </div>
 
