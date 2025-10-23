@@ -46,12 +46,10 @@ export class DetailsComponent {
     private router = inject(Router);
     private conciertoService = inject(ConciertosService);
     private userService = inject(UserService);
-    private profileService = inject(ProfileService);
 
     constructor() {
         this.slug = this.route.snapshot.paramMap.get('slug');
         this._loadConcierto();
-
     }
 
     private _loadConcierto():void {

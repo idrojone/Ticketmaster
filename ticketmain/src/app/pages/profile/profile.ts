@@ -34,6 +34,7 @@ export class Profile implements OnInit, OnDestroy {
   public following= signal<boolean>(false);
 
   public editable= signal<boolean>(false);
+  
   public isLoading= signal(true);
   public encontrarUsuario= signal<boolean>(false);
 
