@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-
+const PORT = process.env.PORT || 3000;
+const BIND_HOST = process.env.BIND_HOST || "127.0.0.1";
 
 //Create express app
 const app = express();
@@ -11,7 +12,7 @@ dotenv.config();
 
 //Habilita CORS para todas las rutas
 const corsOptions = {
-    origin:process.env.CORS_URL,
+    origin: ['http://localhost:3000', 'http://localhost:4200'],
     credentials:true,
     optionsSuccessStatus:200
 };
@@ -48,6 +49,6 @@ require('../routes/comentarios.routes.js')(app);
 require('../routes/profile.routes.js')(app);
 ////////////////////////
 
-app.listen(process.env.PORT, () => {
-    console.log(`Servidor Express en el puerto ${process.env.PORT}`);
+app.listen(PORT, BIND_HOST, () => {
+     console.log(`Servidor Express escuchando en http://${BIND_HOST}:${PORT}`);
 });
