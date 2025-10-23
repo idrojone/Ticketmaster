@@ -171,7 +171,7 @@ export class DetailsComponent {
 
         Swal.fire({
             icon: 'success',
-            title: this.isFavorite() ? '¡Añadido a favoritos!' : 'Eliminado de favoritos',
+            title: this.isFavorite() ? '¡Elimimado de favoritos!' : 'Añadido a favoritos',
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
