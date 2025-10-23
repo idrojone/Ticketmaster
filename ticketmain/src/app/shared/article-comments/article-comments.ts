@@ -19,8 +19,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class ArticleComments implements OnDestroy {
   public isLoading = signal(true);
-  public comments = signal<Comment[]>([]);  // Debe ser array de Comment, no Comment | null
-  public newComment = signal('');
+  public comments = signal<Comment[]>([]);
   public currentUser = signal<User | null>(null);
 
   private route = inject(ActivatedRoute);
@@ -30,6 +29,7 @@ export class ArticleComments implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   slug: string | null = null;
+  newComment = ''
 
   // @Output() comentarios = new EventEmitter<Array<Comment>>();
 
@@ -58,9 +58,9 @@ export class ArticleComments implements OnDestroy {
       return;
     }else {
       const slug = this.slug;
-      const payload = this.newComment();
+      const payload = this.newComment;
 
-      if (!slug || !payload || this.newComment().trim().length === 0) {
+      if (!slug || !payload || this.newComment.trim().length === 0) {
         Swal.fire({
           icon: 'error',
           title: 'El comentario no puede estar vacío',
@@ -69,14 +69,15 @@ export class ArticleComments implements OnDestroy {
         return;
       }
       this.isLoading.set(true);
-      this.commentService.addComment(slug, this.newComment())
+      this.commentService.addComment(slug, this.newComment)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (c) => {
             console.log('✅ Comentario añadido:', c);
             // Recargar comentarios
             this._loadComments();
-            this.newComment.set('');
+            this.newComment = '';
+            this.isLoading.set(false)
             Swal.fire({
               icon: 'success',
               title: 'Comentario publicado',
