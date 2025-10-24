@@ -85,12 +85,9 @@ export class Auth implements OnInit {
       next: (response: any) => {
         console.log(`${authType} exitoso:`, response);
         this.enviando = false;
-        
-        // Redirigir al usuario después del login/registro exitoso
-        // Si hay returnUrl, usar esa; si no, ir a home
+   
         this.router.navigateByUrl(this.returnUrl);
         
-        // Mostrar mensaje de éxito con SweetAlert2
         Swal.fire({
           icon: 'success',
           title: this.modoLogin ? '¡Login exitoso!' : '¡Registro exitoso!',
@@ -102,7 +99,7 @@ export class Auth implements OnInit {
       error: (error: any) => {
         console.error(`Error en ${authType}:`, error);
         this.enviando = false;
-        const message = (error && (error.message || error.error || error.msg)) || 'Error desconocido';
+        const message = (error && (error.message || error.error || error.msg)) || (error) || 'Error desconocido';
         this.errors = { general: message };
       }
     });

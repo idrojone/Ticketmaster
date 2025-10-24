@@ -64,16 +64,6 @@ const getUserComentarios = asyncHandler(async (req, res) => {
     return res.status(200).json({
         profile: await user.UserComentarios(user._id),
     });
-
-    // if (!loggedin) {
-    //     return res.status(200).json({
-    //         profile: await user.UserComentarios(user._id),
-    //     });
-    // } else {
-    //     return res.status(200).json({
-    //         profile: await user.UserComentarios(user._id),
-    //     });
-    // }
 });
 
 const getUserLikes = asyncHandler(async (req, res) => {

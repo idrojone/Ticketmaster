@@ -30,7 +30,9 @@ export const HttpTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, n
     const requestWithToken = addAuthHeader(req, accessToken);
     return (next(requestWithToken) as Observable<HttpEvent<any>>).pipe(
         catchError((err: any) => {
-            if (err instanceof HttpErrorResponse && err.status === 401) {
+            console.log('Error HTTP interceptado:', err);
+            if (err instanceof HttpErrorResponse && err.status === 401 && req.url.endsWith('/api/auth/refresh')) {
+
                 console.log('🔄 Intentando refrescar el token de acceso...');
                 return handle401Error(req, next, jwtService, apiService, userService);
             }
