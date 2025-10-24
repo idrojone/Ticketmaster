@@ -1,12 +1,34 @@
-<div class="list-conciertos">
-    @if(conciertos.length === 0) {
-        <p>No hay conciertos disponibles.</p>
+@if (page === 'shop') {
+    <div class="flex justify-between items-center">
+        <app-search (searchEvent)="getConciertos($event)"></app-search>
+        <app-filters (eventofiltros)="getConciertos($event)" [listGeneros]="listGeneros"></app-filters>
+    </div>
+    <div class="list-conciertos">
+    @for (concierto of conciertos; track concierto.slug) {
+            <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
     }
+    </div>
+    <z-pagination [zPageIndex]="1" [zTotal]="numeroConciertos" [(ngModel)]="filters.offset" (zPageIndexChange)="setPageTo($event)"/>
+}@else {
+    <div class="concerts-section">
+        <h2 class="concerts-title">Los mejores Conciertos</h2>
+        <div class="concerts-subtitle">Descubre los mejores conciertos</div>
+    </div>
 
+    <div
+    infinite-scroll
+    [infiniteScrollDistance]="1"
+    [infiniteScrollThrottle]="1500"
+    (scrolled)="Scroll()"
+    class="list-conciertos">
     @for(concierto of conciertos; track concierto.slug) {
-        <!-- <p>si que hay!</p> -->
          <app-card-conciertos [concierto]="concierto"></app-card-conciertos>
     } @empty {
-        <p>No hay conciertos disponibles.</p>
+        @for(skeleton of skeletonArray; track skeleton) {
+            <div class="animate-pulse bg-white shadow-lg rounded-lg overflow-hidden m-4" style="min-width: 400px; height: 400px;"></div>
+        }
     }
-</div>
+    </div>  
+}
+
+<!-- <app-filters (eventofiltros)="get_list_filtered($event)" [listGeneros]="listGeneros"></app-filters> -->

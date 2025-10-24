@@ -20,7 +20,7 @@ export class ListGeneros implements OnInit {
   }
 
   get_generos() {
-    this.generoService.get_generos().subscribe(
+    this.generoService.get_all_generos().subscribe(
       (data: Genero[]) => {
         console.log('Generos recibidos:', data);
         this.generos = data;

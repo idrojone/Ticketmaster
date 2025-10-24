@@ -17,14 +17,6 @@ const create = asyncHandler(async (req, res) => {
         });
     }
 
-    if(typeof precio === 'string' && precio.trim().length === 0) { 
-        return res.status(400).json({
-            success: false,
-            message: "El campo precio no puede estar vacío",
-            status: 400
-        });
-    }
-
     const exsisteGenero = await Genero.findOne({ id_genero });
     if (exsisteGenero) {
         return res.status(409).json({

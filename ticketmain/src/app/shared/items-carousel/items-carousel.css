@@ -1,0 +1,546 @@
+/* Importar fuentes minimalistas y modernas */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.embla {
+  overflow: hidden;
+  width: 100%;
+  /* Cambiado de 100vw a 100% */
+  height: 60vh;
+  /* Aumentado de 40vh a 60vh para mayor altura */
+  margin: 0;
+  /* Removido el margin negativo que causaba overflow */
+  position: relative;
+  max-width: 100%;
+  /* Asegura que no exceda el contenedor padre */
+}
+
+.embla__container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  /* Removemos gap y padding para que las cards sean completamente full-width */
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  /* Cada slide ocupa el 100% del contenedor */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* border-radius: 1rem; */
+  padding: 0;
+  /* Removido padding para que la imagen ocupe todo */
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  /* Para que la imagen no se salga del border-radius */
+}
+
+/* .embla__slide:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 1);
+} */
+
+.genre-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  /* Centrado en el medio de la slide */
+  position: relative;
+  padding: 2rem;
+  /* Padding interno para el texto */
+}
+
+/* Overlay minimalista */
+.genre-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  /* Overlay muy sutil */
+  /* border-radius: 1rem;  */
+  z-index: 1;
+}
+
+/* hola */
+
+.genre-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* border-radius: 1rem; */
+  /* Mismo radio que el slide */
+  transition: transform 0.3s ease;
+  z-index: 1;
+  /* Debajo del texto */
+}
+
+/* .embla__slide:hover .genre-image {
+  transform: scale(1.05);
+} */
+
+.genre-name {
+  font-family: 'Inter', 'Poppins', 'Montserrat', sans-serif;
+  /* Fuentes modernas y ultra minimalistas */
+  font-size: 2.2rem;
+  /* Tamaño impactante */
+  font-weight: 600;
+  /* Peso medio para equilibrio */
+  color: white;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* Sombra sutil para legibilidad */
+  z-index: 2;
+  position: relative;
+  letter-spacing: 6px;
+  /* Espaciado generoso */
+  text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .embla {
+    height: 45vh;
+    /* Aumentado de 35vh a 45vh en tablet */
+  }
+
+  .embla__slide {
+    padding: 0;
+    /* Sin padding para que la imagen ocupe todo */
+  }
+
+  .genre-card {
+    max-width: 400px;
+  }
+
+  .genre-image {
+    width: 250px;
+    height: 130px;
+    /* Mayor altura en tablet */
+  }
+
+  .genre-name {
+    font-size: 1.8rem;
+    /* Tamaño apropiado para tablet */
+    letter-spacing: 4px;
+    /* Espaciado ajustado para tablet */
+  }
+}
+
+@media (max-width: 485px) {
+  .embla {
+    height: 40vh;
+    /* Incrementamos también en móvil */
+  }
+
+  .embla__slide {
+    padding: 0;
+    /* Sin padding para que la imagen ocupe todo */
+  }
+
+  .genre-card {
+    max-width: 300px;
+  }
+
+  .genre-image {
+    width: 200px;
+    height: 100px;
+    /* Mayor altura en móvil */
+  }
+
+  .genre-name {
+    font-size: 1.4rem;
+    /* Tamaño apropiado para móvil */
+    letter-spacing: 3px;
+    /* Espaciado ajustado para móvil */
+  }
+}
+
+/* ========== ESTILOS ESPECÍFICOS PARA CONCIERTOS ========== */
+
+/* Sección de título de conciertos */
+.concerts-section {
+  text-align: center;
+  margin: 4rem 0 2rem 0;
+  padding: 0 2rem;
+}
+
+.concerts-title {
+  font-family: 'Inter', 'Poppins', 'Montserrat', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+
+.concerts-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.concerts-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #666;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+  opacity: 0.8;
+}
+
+/* Carrusel de conciertos - contenedor principal */
+.embla-conciertos {
+  height: 30vh;
+  /* Altura más pequeña para conciertos */
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+/* Container de conciertos con gap entre slides */
+.embla__container-conciertos {
+  gap: 1rem;
+  /* Espacio entre cards */
+}
+
+/* Slide individual de concierto - muestra 4 cards */
+.embla__slide-conciertos {
+  flex: 0 0 calc(25% - 0.75rem);
+  /* 25% del ancho menos el gap */
+  width: calc(25% - 0.75rem);
+  height: 100%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  min-width: 0;
+  /* Permite que el contenido se contraiga */
+  box-sizing: border-box;
+}
+
+.embla__slide-conciertos:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 1);
+}
+
+/* Card de concierto */
+.concert-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Imagen de concierto */
+.concert-image {
+  width: 100%;
+  max-width: 100%;
+  height: 75%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+/* .embla__slide-conciertos:hover .concert-image {
+  transform: scale(1.05);
+} */
+
+/* Nombre de concierto */
+.concert-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* background: linear-gradient(90deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
+  background-clip: text;
+  word-wrap: break-word;
+  max-width: 100%;
+  line-height: 1.3;
+}
+
+/* Responsive para conciertos */
+@media (max-width: 1024px) {
+  .concerts-title {
+    font-size: 2.5rem;
+  }
+  
+  .concerts-subtitle {
+    font-size: 1rem;
+  }
+  
+  .embla__slide-conciertos {
+    flex: 0 0 calc(33.333% - 0.67rem);
+    /* 3 cards en tablet grande */
+    width: calc(33.333% - 0.67rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .concerts-section {
+    margin: 3rem 0 1.5rem 0;
+    padding: 0 1rem;
+  }
+  
+  .concerts-title {
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+  
+  .concerts-title::after {
+    width: 40px;
+    height: 2px;
+  }
+  
+  .concerts-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .embla-conciertos {
+    height: 25vh;
+    padding: 0.75rem;
+  }
+
+  .embla__slide-conciertos {
+    flex: 0 0 calc(50% - 0.5rem);
+    /* 2 cards en tablet */
+    width: calc(50% - 0.5rem);
+    padding: 0.75rem;
+  }
+
+  .concert-image {
+    max-width: 120px;
+    height: 80px;
+  }
+
+  .concert-name {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .concerts-section {
+    margin: 2rem 0 1rem 0;
+  }
+  
+  .concerts-title {
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .concerts-title::after {
+    width: 30px;
+    height: 2px;
+  }
+  
+  .concerts-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .embla-conciertos {
+    height: 22vh;
+    padding: 0.5rem;
+  }
+
+  .embla__slide-conciertos {
+    flex: 0 0 calc(100% - 0.5rem);
+    /* 1 card en móvil */
+    width: calc(100% - 0.5rem);
+    padding: 0.5rem;
+  }
+
+  .concert-image {
+    max-width: 100px;
+    height: 70px;
+  }
+
+  .concert-name {
+    font-size: 0.75rem;
+  }
+}
+
+
+
+/* ========== ESTILOS ESPECÍFICOS PARA CARRUSEL DE DETALLES ========== */
+
+/* Carrusel de detalles - contenedor principal */
+.embla-details {
+  height: 35vh;
+  /* background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); */
+  border-radius: 1.2rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Container de detalles con gap entre slides */
+.embla__container-details {
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Slide individual de detalle - muestra 3 cards */
+.embla__slide-details {
+  flex: 0 0 calc(33.333% - 1rem);
+  width: calc(33.333% - 1rem);
+  height: 100%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.embla__slide-details:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+/* Card de detalle */
+.details-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+  padding: 0;
+}
+
+/* Imagen de detalle */
+.details-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.embla__slide-details:hover .details-image {
+  transform: scale(1.03);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto de brillo en hover */
+.details-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  /* background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent); */
+  transform: rotate(45deg) translate(-100%, -100%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.embla__slide-details:hover .details-card::before {
+  transform: rotate(45deg) translate(100%, 100%);
+}
+
+/* Responsive para detalles */
+@media (max-width: 1024px) {
+  .embla-details {
+    height: 30vh;
+    padding: 1.2rem;
+  }
+
+  .embla__slide-details {
+    flex: 0 0 calc(50% - 0.75rem);
+    width: calc(50% - 0.75rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .embla-details {
+    height: 28vh;
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .embla__container-details {
+    gap: 1rem;
+  }
+
+  .embla__slide-details {
+    flex: 0 0 calc(50% - 0.5rem);
+    width: calc(50% - 0.5rem);
+  }
+
+  .details-image {
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .embla-details {
+    height: 25vh;
+    padding: 0.8rem;
+    margin: 1rem 0;
+    border-radius: 1rem;
+  }
+
+  .embla__container-details {
+    gap: 0.8rem;
+  }
+
+  .embla__slide-details {
+    flex: 0 0 calc(100% - 0.5rem);
+    width: calc(100% - 0.5rem);
+  }
+
+  .details-image {
+    border-radius: 1rem;
+  }
+}

@@ -5,6 +5,30 @@ export const routes: Routes = [
         path: '', loadComponent: () => import('./pages/home/home').then(m => m.Home)
     },
     {
-        path: 'shop', loadComponent: () => import('./pages/shop/shop').then(m => m.Shop)
+        path: 'shop', loadChildren: () => import('./pages/shop/shop.routes').then(m => m.routes)
+    },
+    {
+        path: 'shop/generos/:slug', 
+        loadComponent: () => import('./pages/shop/shop').then(m => m.Shop)
+    },
+    {
+        path: 'details/concierto/:slug', 
+        loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsComponent),
+        resolve: {
+            concierto: () => import('./pages/details/details-resolver.service').then(m => m.DetailsResolver)
+        }
+    },
+    {
+        path: 'auth',
+        loadChildren: () => import('./pages/auth/auth-routing.module').then(m => m.AuthRoutingModule)
+    },
+    {
+        path: 'profile',
+        loadChildren: () => import('./pages/profile/profile-routing.module').then(m => m.ProfileRoutingModule)
+    },
+    {
+        path: 'settings',
+        loadComponent: () => import('./shared/settings/settings').then(m => m.Settings)
     }
+  
 ];

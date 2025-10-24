@@ -1,0 +1,68 @@
+[{
+  "_id": {
+    "$oid": "68f24257de414234469d2f71"
+  },
+  "username": "test",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$RGuazm3f66boBs7hAb4hGw$D/Z0SYoxTVjeuXcBR3zSeG28kYUpUF8sivAfuxN/PUs",
+  "email": "test@test.com",
+  "bio": "",
+  "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+  "favouriteConciertos": [],
+  "followingUsers": [],
+  "createdAt": {
+    "$date": "2025-10-17T13:19:19.089Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-17T13:19:19.089Z"
+  },
+  "public_id": "d446e958-c8b5-4c27-8868-29dd5214ad5d",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68f2448cf6b7d0eecd24c21f"
+  },
+  "username": "idrojone",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$5i2fsDHnekkwwAWCJsBnAg$pPsVM4SlyAkTlu3tHFw3JUOzL9q23Dsiu5oaN4OXDUc",
+  "email": "jordivallspladaw@gmail.com",
+  "bio": "",
+  "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+  "favouriteConciertos": [
+    {
+      "$oid": "68dfd940d6645741a8f5addd"
+    }
+  ],
+  "followingUsers": [
+    {
+      "$oid": "68f24257de414234469d2f71"
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-10-17T13:28:44.771Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-20T16:20:36.765Z"
+  },
+  "public_id": "8c06e429-cd0f-47da-b5b0-fb6eeb84fa3c",
+  "__v": 2
+},
+{
+  "_id": {
+    "$oid": "68f25be0c30794192e6f9ac4"
+  },
+  "username": "jairo",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$rj6dvyOgdWfM3IvQhZZ2yg$8XYR0W7A8jZvRUnjEBW8xRcYQsIUSNOwNWYY6IgpW6I",
+  "email": "jairo@jairo.com",
+  "bio": "",
+  "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+  "favouriteConciertos": [],
+  "followingUsers": [],
+  "createdAt": {
+    "$date": "2025-10-17T15:08:16.875Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-17T15:24:11.867Z"
+  },
+  "public_id": "976d7bfa-138f-4764-a8a6-02af276705de",
+  "__v": 2
+}]

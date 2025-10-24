@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-
+const cookieParser = require('cookie-parser');
+const PORT = process.env.PORT || 3000;
+const BIND_HOST = process.env.BIND_HOST || "127.0.0.1";
 
 //Create express app
 const app = express();
@@ -10,7 +12,8 @@ dotenv.config();
 
 //Habilita CORS para todas las rutas
 const corsOptions = {
-    origin:process.env.CORS_URL,
+    origin: ['http://localhost:3000', 'http://localhost:4200'],
+    credentials:true,
     optionsSuccessStatus:200
 };
 
@@ -19,6 +22,7 @@ app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser()); // Middleware para parsear cookies
 
 //configuring the database
 const dbConfig = require('../config/database.config.js');
@@ -40,9 +44,11 @@ mongoose.connect(dbConfig.url, {
 require('../routes/concierto.routes.js')(app);
 require('../routes/genero.routes.js')(app);
 require('../routes/carousel.routes.js')(app);
-
+require('../routes/auth.routes.js')(app);
+require('../routes/comentarios.routes.js')(app);
+require('../routes/profile.routes.js')(app);
 ////////////////////////
 
-app.listen(process.env.PORT, () => {
-    console.log(`Servidor Express en el puerto ${process.env.PORT}`);
+app.listen(PORT, BIND_HOST, () => {
+     console.log(`Servidor Express escuchando en http://${BIND_HOST}:${PORT}`);
 });

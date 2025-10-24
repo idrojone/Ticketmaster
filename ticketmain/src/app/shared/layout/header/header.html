@@ -1,17 +1,17 @@
-<header class="bg-white shadow-md">
-    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+<header class="bg-white shadow-md mx-auto flex items-center justify-between px-4 py-2">
+    <!-- <div class="container mx-auto flex items-center justify-between py-4 px-6"> -->
         <!-- Menu Icon -->
         <div class="menu-icon">
-            <button class="menu-button flex flex-col justify-center items-center w-8 h-8 border rounded-full hover:bg-gray-100" aria-label="Toggle Menu">
+            <button class="menu-button flex flex-col justify-center items-center w-8 h-8  rounded-full hover:bg-gray-100" aria-label="Toggle Menu">
                 <div class="bar--top w-5 h-0.5 bg-black mb-1"></div>
                 <div class="bar--bottom w-5 h-0.5 bg-black mt-1"></div>
             </button>
         </div>
 
         <!-- Navigation -->
-        <nav class="main-nav flex items-center space-x-8">
+        <nav class="main-nav flex items-center justify-center mx-auto px-4 py-4 space-x-24 text-center translate-x-20">
             <ul class="flex items-center space-x-4">
-                <li><a href="#" class="text-black font-medium hover:underline">SHOP</a></li>
+                <li><a href="/shop" class="text-black font-medium hover:underline">CONCIERTOS</a></li>
             </ul>
             <ul class="flex items-center">
                 <li>
@@ -21,14 +21,40 @@
                 </li>
             </ul>
             <ul class="flex items-center space-x-4">
-                <li><a href="#" class="text-black font-medium hover:underline">EVENTS</a></li>
+                <li><a href="#" class="text-black font-medium hover:underline">FESTIVALES</a></li>
             </ul>
         </nav>
 
-        <!-- Auth Buttons -->
-        <div class="auth-buttons flex space-x-4">
-            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100">Sign Up</a>
-            <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100">Sign In</a>
-        </div>
-    </div>
+        @if(loggedIn) {
+            <div class="items-center">
+                <button z-dropdown [zDropdownMenu]="menu" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2">
+                    Bienvenido {{ currentUser?.username }}
+                </button>
+                <z-dropdown-menu-content #menu="zDropdownMenuContent" class="w-56">
+                    <z-dropdown-menu-label>Tu cuenta</z-dropdown-menu-label>
+                    <z-dropdown-menu-item [routerLink]="['/profile/me', currentUser?.username]">
+                       <i class="fas fa-user"></i>Perfil
+                    </z-dropdown-menu-item>
+                    <z-divider zSpacing="sm" class="-mx-1"></z-divider>
+                    <z-dropdown-menu-item (click)="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Log out
+                    </z-dropdown-menu-item>
+                </z-dropdown-menu-content>
+            </div>
+        } @else {
+            <!-- Auth Buttons -->
+            <div class="auth-buttons flex space-x-4">
+                <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2"
+                    [routerLink]="'/auth/register'">
+                    <i class="fas fa-user-plus w-4 h-4"></i>
+                    Sign Up
+                </a>
+                <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2"
+                    [routerLink]="'/auth/login'">
+                    <i class="fas fa-sign-in-alt w-4 h-4"></i>
+                    Sign In
+                </a>
+            </div>
+            <!-- </div> -->
+        }
 </header>

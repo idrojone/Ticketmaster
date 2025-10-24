@@ -1,0 +1,94 @@
+@if (generos && generos.length > 0) {
+    <div class="embla mt-1000" emblaCarousel [options]="carouselGenerosOptions">
+        <div class="embla__container">
+            @for (item of generos; track item.slug) {
+                <div class="embla__slide">
+                    <div class="genre-card">
+                        <img 
+                        [src]="item.img" 
+                        [alt]="item.nombre"
+                        class="genre-image"
+                        />
+                        <h3 class="genre-name text-center font-bold text-xl">{{ item.nombre }}</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (item_generos_secundario && item_generos_secundario.length > 0) {
+    <div class="concerts-section">
+        <h2 class="concerts-title">Los mejores Géneros</h2>
+        <div class="concerts-subtitle">Descubre los mejores eventos</div>
+    </div>
+    <div class="embla embla-conciertos" emblaCarousel [options]="carouselGenerosSecundarioOptions">
+        <div class="embla__container embla__container-conciertos">
+            @for (item of item_generos_secundario; track item.slug) {
+            <div class="embla__slide embla__slide-conciertos" [routerLink]="['/shop/generos', item.slug]">
+                <div class="concert-card">
+                <img [src]="item.img" [alt]="item.slug" class="concert-image" />
+                <h3 class="concert-name">{{ item.nombre }}</h3>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+}
+
+@if (imagenes && imagenes.length > 0) {
+    <div class="embla mt-1000" emblaCarousel [options]="carouselGenerosOptions">
+         <div class="embla__container">
+            @for (item of imagenes; track item.imagen) {
+            <div class="embla__slide">
+                <div class="genre-card">
+                    <img [src]="item.imagen" [alt]="item.imagen" class="genre-image" />
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+}
+   
+
+@if (conciertos && conciertos.length > 0) {
+    <div class="concerts-section">
+        <h2 class="concerts-title">Nuestros Conciertos</h2>
+        <div class="concerts-subtitle">Descubre los mejores eventos</div>
+    </div>
+    <div class="embla embla-conciertos" emblaCarousel [options]="carouselConciertosOptions" >
+        <div class="embla__container embla__container-conciertos">
+            @for (item of conciertos; track item.slug) {
+                <div class="embla__slide embla__slide-conciertos" [routerLink]="['/details/concierto', item.slug]">
+                    <div class="concert-card">
+                            <img 
+                            [src]="item.imagenArtista" 
+                            [alt]="item.slug"
+                            class="concert-image"
+                            />
+                        <h3 class="concert-name">{{ item.nombre }}</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (item_concierto_details && item_concierto_details.length > 0) {
+    
+    <div class="embla embla-details mt-8" emblaCarousel [options]="carouselConceritoDetailsOptions" >
+        <div class="embla__container embla__container-details">
+            @for (item of item_concierto_details; track item) {
+                <div class="embla__slide embla__slide-details">
+                    <div class="details-card">
+                            <img 
+                            [src]="item" 
+                            [alt]="item"
+                            class="details-image"
+                            />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
