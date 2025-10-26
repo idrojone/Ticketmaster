@@ -1,15 +1,13 @@
-version: '3.8'
-
 services:
-  mongo_db:
+  mongo_db_data:
     image: mongo:latest
-    container_name: mongo_db
+    container_name: mongo_db_data
     ports:
-      - "27018:27017"
+      - "27019:27017"
     volumes:
-      - mongo_db:/data/db
+      - mongo_db_data:/data/db
     restart: always
-    hostname: mongo_db
+    hostname: mongo_db_data
 
 volumes:
-  mongo_db:
+  mongo_db_data:

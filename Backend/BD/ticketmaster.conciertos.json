@@ -29,7 +29,12 @@
   ],
   "id_genero": "GEN001",
   "slug": "metallica-world-tour-2025-bf21k6",
-  "__v": 0
+  "__v": 10,
+  "comentarios": [],
+  "updatedAt": {
+    "$date": "2025-10-20T10:15:54.261Z"
+  },
+  "likes": 0
 },
 {
   "_id": {
@@ -62,7 +67,12 @@
   ],
   "id_genero": "GEN001",
   "slug": "acdc-thunder-tour--fs9css",
-  "__v": 0
+  "__v": 1,
+  "comentarios": [],
+  "likes": 0,
+  "updatedAt": {
+    "$date": "2025-10-20T10:15:36.222Z"
+  }
 },
 {
   "_id": {
@@ -95,7 +105,12 @@
   ],
   "id_genero": "GEN002",
   "slug": "taylor-swift-eras-tour-g3zfs6",
-  "__v": 0
+  "__v": 2,
+  "comentarios": [],
+  "likes": 0,
+  "updatedAt": {
+    "$date": "2025-10-20T10:16:12.139Z"
+  }
 },
 {
   "_id": {
@@ -278,7 +293,7 @@
   "aforo": 57000,
   "duracion": 165,
   "imagenArtista": "https://i.scdn.co/image/ab6761610000517481f47f44084e0a09b5f0fa13",
- "imagenesShow": [
+  "imagenesShow": [
     "/assets/img/show.jpg",
     "/assets/img/show1.jpg",
     "/assets/img/show2.jpg",
