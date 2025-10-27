@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model blacklisttokens {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model comentarios {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int      @map("__v")
+  autor         String   @db.ObjectId
+  conciertoSlug String
+  contenido     String
+  createdAt     DateTime @db.Date
+  updatedAt     DateTime @db.Date
+}
+
+model conciertos {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int       @map("__v")
+  aforo         Int
+  artista       String
+  ciudad        String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  comentarios   Json?
+  descripcion   String
+  duracion      Int
+  fecha         String
+  id_genero     String
+  imagenArtista String?
+  imagenesShow  String[]
+  is_active     Boolean
+  latitud       Float
+  likes         Int?
+  longitud      Float
+  lugar         String
+  nombre        String
+  precio        Int
+  slug          String    @unique(map: "slug_1")
+  state         String
+  updatedAt     DateTime? @db.Date
+}
+
+model generos {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  conciertos  String[]
+  descripcion String
+  id_genero   String
+  img         String
+  is_active   Boolean
+  nombre      String
+  slug        String   @unique(map: "slug_1")
+  state       String
+}
+
+model refreshtokens {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model users {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  v                   Int      @map("__v")
+  bio                 String
+  createdAt           DateTime @db.Date
+  email               String   @unique(map: "email_1")
+  favouriteConciertos String[]
+  followingUsers      String[]
+  image               String
+  password            String
+  public_id           String?  @unique(map: "public_id_1")
+  updatedAt           DateTime @db.Date
+  username            String   @unique(map: "username_1")
+}
