@@ -44,7 +44,7 @@
     ],
     "slug": "pop-gppnz4",
     "__v": 3,
-    "state": "inactive",
+    "state": "completed",
     "is_active": true
   },
   {
@@ -65,7 +65,7 @@
     ],
     "slug": "hip-hop-z22v1j",
     "__v": 2,
-    "state": "inactive",
+    "state": "pending",
     "is_active": true
   },
   {
@@ -110,7 +110,7 @@
     ],
     "slug": "reggaeton-tow0w0",
     "__v": 3,
-    "state": "active",
+    "state": "pending",
     "is_active": true
   },
   {
@@ -155,7 +155,7 @@
     ],
     "slug": "blues-54yovc",
     "__v": 2,
-    "state": "active",
+    "state": "inactive",
     "is_active": true
   },
   {
@@ -176,7 +176,7 @@
     ],
     "slug": "country-fws32v",
     "__v": 2,
-    "state": "active",
+    "state": "pending",
     "is_active": true
   },
   {
@@ -197,7 +197,7 @@
     ],
     "slug": "classical-hku59n",
     "__v": 2,
-    "state": "active",
+    "state": "completed",
     "is_active": true
   },
   {
@@ -218,7 +218,7 @@
     ],
     "slug": "reggae-esqje9",
     "__v": 2,
-    "state": "cancelled",
+    "state": "pending",
     "is_active": true
   },
   {
@@ -239,7 +239,7 @@
     ],
     "slug": "alternativa-qlz551",
     "__v": 2,
-    "state": "active",
+    "state": "completed",
     "is_active": true
   },
   {
@@ -260,8 +260,8 @@
     ],
     "slug": "flamenco-ixo0hq",
     "__v": 2,
-    "state": "inactive",
-    "is_active": false
+    "state": "cancelled",
+    "is_active": true
   },
   {
     "_id": {
@@ -281,7 +281,7 @@
     ],
     "slug": "folk-i3lf01",
     "__v": 2,
-    "state": "inactive",
+    "state": "completed",
     "is_active": true
   },
   {
@@ -302,7 +302,7 @@
     ],
     "slug": "randb-uuw877",
     "__v": 2,
-    "state": "completed",
+    "state": "pending",
     "is_active": true
   },
   {
@@ -344,7 +344,7 @@
     ],
     "slug": "trap-9jamf6",
     "__v": 2,
-    "state": "completed",
+    "state": "cancelled",
     "is_active": true
   }
 ]

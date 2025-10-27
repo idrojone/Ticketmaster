@@ -3,7 +3,7 @@ services:
     image: mongo:latest
     container_name: mongo_db_data
     ports:
-      - "27019:27017"
+      - "27020:27017"
     volumes:
       - mongo_db_data:/data/db
     restart: always

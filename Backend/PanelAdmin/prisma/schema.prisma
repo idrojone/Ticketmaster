@@ -1,80 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
-model blacklisttokens {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+// User model
+model User{
+    id        String @id @map("_id") @default(auto()) @db.ObjectId
+    status    UserStatus @default(ACCPTED)
+    is_active Boolean @default(true)
+    role      UserRole @default(USER)
+    public_id String @unique
+    username  String @unique
+    password  String
+    email     String @unique
+    bio       String?
+    image     String?
+    followers     String[] @db.ObjectId
+    followingUsers String[] @db.ObjectId
+    favoriteConciertos String[] @db.ObjectId
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
-model comentarios {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  v             Int      @map("__v")
-  autor         String   @db.ObjectId
-  conciertoSlug String
-  contenido     String
-  createdAt     DateTime @db.Date
-  updatedAt     DateTime @db.Date
+enum UserRole {
+    ADMIN
+    EMPRESA
+    USER
 }
 
-model conciertos {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  v             Int       @map("__v")
-  aforo         Int
-  artista       String
-  ciudad        String
-  /// Could not determine type: the field only had null or empty values in the sample set.
-  comentarios   Json?
-  descripcion   String
-  duracion      Int
-  fecha         String
-  id_genero     String
-  imagenArtista String?
-  imagenesShow  String[]
-  is_active     Boolean
-  latitud       Float
-  likes         Int?
-  longitud      Float
-  lugar         String
-  nombre        String
-  precio        Int
-  slug          String    @unique(map: "slug_1")
-  state         String
-  updatedAt     DateTime? @db.Date
+enum UserStatus {
+    ACCPTED
+    INACTIVE
+    PENDING
+    BANNED
+}  
+
+// Generos model
+model Genero {
+    id        String @id @map("_id") @default(auto()) @db.ObjectId
+    slug      String @unique
+    nombre    String @unique
+    img       String?
+    descripcion String?
+    id_genero String @unique
+    status    GeneroStatus @default(ACTIVE)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    conciertos Concierto[] @relation("GeneroConciertos")
 }
 
-model generos {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  v           Int      @map("__v")
-  conciertos  String[]
-  descripcion String
-  id_genero   String
-  img         String
-  is_active   Boolean
-  nombre      String
-  slug        String   @unique(map: "slug_1")
-  state       String
+enum GeneroStatus {
+    ACTIVE
+    PENDING
+    INACTIVE
 }
 
-model refreshtokens {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+// Concierto model
+model Concierto {
+    id          String @id @map("_id") @default(auto()) @db.ObjectId
+    slug        String @unique
+    nombre      String @unique
+    fecha       DateTime
+    artista     String
+    lugar       String
+    ciudad      String
+    descripcion String?
+    latitud     Float?
+    longitud    Float?
+    precio      Float
+    aforo       Int
+    duracion    Int // duración en minutos
+    imgArtista  String?
+    imagenesShow String[]
+    id_genero   String @db.ObjectId
+    genero      Genero @relation("GeneroConciertos", fields: [id_genero], references: [id])
+    likes       Int @default(0)
+    comentarios String[] @db.ObjectId
+    vendidos    Int @default(0)
+    status      ConciertoStatus @default(PENDING)
+    active      Boolean @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 }
 
-model users {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-  v                   Int      @map("__v")
-  bio                 String
-  createdAt           DateTime @db.Date
-  email               String   @unique(map: "email_1")
-  favouriteConciertos String[]
-  followingUsers      String[]
-  image               String
-  password            String
-  public_id           String?  @unique(map: "public_id_1")
-  updatedAt           DateTime @db.Date
-  username            String   @unique(map: "username_1")
+
+enum ConciertoStatus {
+    ACCEPTED
+    PENDING
+    CANCELLED
+    SOLD_OUT
 }
