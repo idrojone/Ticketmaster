@@ -1,0 +1,221 @@
+[{
+  "_id": {
+    "$oid": "69010b38981e124f0a3a2052"
+  },
+  "slug": "rock-7uxfru",
+  "nombre": "Rock",
+  "img": "assets/img/rock.jpg",
+  "descripcion": "Género musical caracterizado por el uso de guitarras eléctricas, bajo y batería.",
+  "id_genero": "rock",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:28:08.242Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:28:08.242Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010b5b981e124f0a3a2053"
+  },
+  "slug": "pop-7rj20g",
+  "nombre": "Pop",
+  "img": "assets/img/pop.jpg",
+  "descripcion": "Música popular contemporánea con melodías pegadizas y comerciales",
+  "id_genero": "pop",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:28:43.041Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:28:43.041Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010b65981e124f0a3a2054"
+  },
+  "slug": "hip-hop-j4kdlq",
+  "nombre": "Hip Hop",
+  "img": "assets/img/hiphop.jpg",
+  "descripcion": "Música urbana con rap, beats y cultura hip hop",
+  "id_genero": "hip-hop",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:28:53.866Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:28:53.866Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010b92981e124f0a3a2055"
+  },
+  "slug": "electronic-xuot1y",
+  "nombre": "Electronic",
+  "img": "assets/img/electronic.jpg",
+  "descripcion": "Música electrónica, EDM y sonidos sintetizados",
+  "id_genero": "electronic",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:29:38.111Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:29:38.111Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010c08981e124f0a3a2056"
+  },
+  "slug": "country-4ociy6",
+  "nombre": "Country",
+  "img": "assets/img/country.jpg",
+  "descripcion": "Música country americana y folk",
+  "id_genero": "country",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:31:36.842Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:31:36.842Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010c2e981e124f0a3a2057"
+  },
+  "slug": "blues-8zurru",
+  "nombre": "Blues",
+  "img": "assets/img/blues.jpg",
+  "descripcion": "Blues tradicional con guitarra y armónica",
+  "id_genero": "blues",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:32:14.301Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:32:14.301Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010c41981e124f0a3a2058"
+  },
+  "slug": "classical-siss2f",
+  "nombre": "Classical",
+  "img": "assets/img/classical.jpg",
+  "descripcion": "Música clásica, orquestal y de cámara",
+  "id_genero": "classical",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:32:33.176Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:32:33.176Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010c54981e124f0a3a2059"
+  },
+  "slug": "reggae-vanywv",
+  "nombre": "Reggae",
+  "img": "assets/img/reggae.jpg",
+  "descripcion": "Reggae jamaicano con ritmos relajados",
+  "id_genero": "reggae",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:32:52.383Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:32:52.383Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010ca3981e124f0a3a205a"
+  },
+  "slug": "alternativa-k1a58l",
+  "nombre": "Alternativa",
+  "img": "assets/img/alternative.jpg",
+  "descripcion": "Rock alternativo e indie con sonidos experimentales y letras introspectivas",
+  "id_genero": "alternativa",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:34:11.985Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:34:11.985Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010cbd981e124f0a3a205b"
+  },
+  "slug": "flamenco-xd6hch",
+  "nombre": "Flamenco",
+  "img": "assets/img/flamenco.jpg",
+  "descripcion": "Arte flamenco andaluz con guitarra, cante y baile tradicional español",
+  "id_genero": "flamenco",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:34:37.710Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:34:37.710Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010cca981e124f0a3a205c"
+  },
+  "slug": "folk-xdx0sd",
+  "nombre": "Folk",
+  "img": "assets/img/folk.jpg",
+  "descripcion": "Música folk y tradicional con instrumentos acústicos y narrativas populares",
+  "id_genero": "folk",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:34:50.591Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:34:50.591Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010cdc981e124f0a3a205d"
+  },
+  "slug": "randb-wwaxpo",
+  "nombre": "R&B",
+  "img": "assets/img/rnb.jpg",
+  "descripcion": "Rhythm and Blues con voces melódicas, grooves suaves y producción moderna",
+  "id_genero": "R&B",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:35:08.714Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:35:08.714Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010cea981e124f0a3a205e"
+  },
+  "slug": "soul-qlovx",
+  "nombre": "Soul",
+  "img": "assets/img/soul.jpg",
+  "descripcion": "Soul clásico y neo-soul con voces poderosas y arreglos emotivos",
+  "id_genero": "soul",
+  "status": "ACTIVE",
+  "createdAt": {
+    "$date": "2025-10-28T18:35:22.923Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:35:22.923Z"
+  }
+}]

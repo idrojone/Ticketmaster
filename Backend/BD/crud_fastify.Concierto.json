@@ -1,0 +1,108 @@
+[{
+  "_id": {
+    "$oid": "69010eafbb21a18251ce4f02"
+  },
+  "slug": "metallica-world-tour-2025-jbysxv",
+  "nombre": "Metallica World Tour 2025",
+  "fecha": {
+    "$date": "2025-11-15T20:00:00.000Z"
+  },
+  "artista": "Metallica",
+  "lugar": "Wanda Metropolitano, Madrid",
+  "ciudad": "Madrid",
+  "descripcion": "El Wanda Metropolitano es el estadio oficial del Club Atlético de Madrid desde 2017. Con una capacidad de 68,456 espectadores, es uno de los recintos deportivos más modernos de Europa. Su diseño vanguardista y su excelente acústica lo convierten en el escenario perfecto para los grandes eventos musicales.",
+  "latitud": 40.43611,
+  "longitud": -3.599722,
+  "precio": 85,
+  "aforo": {
+    "$numberLong": "68000"
+  },
+  "duracion": {
+    "$numberLong": "180"
+  },
+  "imgArtista": "https://i.scdn.co/image/ab6761610000517469ca98dd3083f1082d740e44",
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
+  "id_genero": {
+    "$oid": "69010b38981e124f0a3a2052"
+  },
+  "likes": {
+    "$numberLong": "0"
+  },
+  "vendidos": {
+    "$numberLong": "0"
+  },
+  "status": "PENDING",
+  "active": true,
+  "createdAt": {
+    "$date": "2025-10-28T18:42:55.299Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:42:55.299Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69010f2cbb21a18251ce4f03"
+  },
+  "slug": "acdc-thunder-tour-d48b18",
+  "nombre": "AC/DC Thunder Tour",
+  "fecha": {
+    "$date": "2025-12-20T21:00:00.000Z"
+  },
+  "artista": "AC/DC",
+  "lugar": "Estadio Santiago Bernabéu, Madrid",
+  "ciudad": "Madrid",
+  "descripcion": "AC/DC regresa con su legendario show lleno de energía. Thunderstruck y todos sus hits en vivo.",
+  "latitud": 40.453054,
+  "longitud": -3.688344,
+  "precio": 95,
+  "aforo": {
+    "$numberLong": "81000"
+  },
+  "duracion": {
+    "$numberLong": "165"
+  },
+  "imgArtista": "https://i.scdn.co/image/ab67616100005174c4c77549095c86acb4e77b37",
+  "imagenesShow": [
+    "/assets/img/show.jpg",
+    "/assets/img/show1.jpg",
+    "/assets/img/show2.jpg",
+    "/assets/img/show3.jpg",
+    "/assets/img/show4.jpg",
+    "/assets/img/show5.jpg",
+    "/assets/img/show6.jpg",
+    "/assets/img/show7.jpg",
+    "/assets/img/show8.jpg",
+    "/assets/img/show9.jpg",
+    "/assets/img/show10.jpg"
+  ],
+  "id_genero": {
+    "$oid": "69010b38981e124f0a3a2052"
+  },
+  "likes": {
+    "$numberLong": "0"
+  },
+  "vendidos": {
+    "$numberLong": "0"
+  },
+  "status": "PENDING",
+  "active": true,
+  "createdAt": {
+    "$date": "2025-10-28T18:45:00.686Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-28T18:45:00.686Z"
+  }
+}]
