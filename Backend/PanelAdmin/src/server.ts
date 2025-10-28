@@ -3,6 +3,10 @@ import fp from 'fastify-plugin'
 import autoLoad from '@fastify/autoload'
 import cors from '@fastify/cors'
 import { FastifyInstance } from 'fastify'
+import { fastifyEnv } from '@fastify/env'
+
+// https://github.com/fastify/fastify-env
+
 
 /**
  * Configure and starts Fastify server with all required plugins and routes
@@ -14,20 +18,28 @@ import { FastifyInstance } from 'fastify'
  * @returns {Fastify.Server} started Fastify server instance
  */
 
-async function plugin (server: FastifyInstance, config: Record<string, any>) {
-  server
+async function plugin (server: FastifyInstance, configuracion: Record<string, any>) {
+  const { optionsEnv, config } = configuracion;
+  await server
     .register(cors, {})
     // Enable all CORS requests
+
+    .register(fastifyEnv, optionsEnv)
+    await server.after()
+    // Load environment variables
+
     .register(autoLoad, {
       dir: path.join(__dirname, 'plugins'),
       options: config
     })
     // Load all plugins
+
     .register(autoLoad, {
       dir: path.join(__dirname, 'services'),
       options: config
     })
     // Load all services
+
     .register(autoLoad, {
       dir: path.join(__dirname, 'routes'),
       options: config,
