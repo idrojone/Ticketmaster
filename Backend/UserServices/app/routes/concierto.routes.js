@@ -7,10 +7,10 @@ module.exports = (app) => {
 
     app.get('/api/conciertos/:slug', conciertos.findOneConcierto);
     
-    app.post('/api/conciertos', conciertos.createConcierto);
-    app.put('/api/conciertos/:slug', conciertos.updateConcierto);
-    app.delete('/api/conciertos/:slug', conciertos.deleteConcierto);
-    app.delete('/api/conciertos', conciertos.deleteAllConciertos);
+    // app.post('/api/conciertos', conciertos.createConcierto);
+    // app.put('/api/conciertos/:slug', conciertos.updateConcierto);
+    // app.delete('/api/conciertos/:slug', conciertos.deleteConcierto);
+    // app.delete('/api/conciertos', conciertos.deleteAllConciertos);
 
     app.get('/api/conciertos/genero/:slug', conciertos.findConciertosByGenero);
     app.get('/api/ciudades/', conciertos.findAllCiudades);

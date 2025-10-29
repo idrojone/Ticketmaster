@@ -10,24 +10,41 @@ const genero_schema = mongoose.Schema({
     },
     nombre: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     img: {
         type: String,
-        required: true
+        required: false,
+        default: null
     },
     descripcion: {
         type: String,
-        required: true
+        required: false,
+        default: null
     },
     id_genero: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
-    conciertos: [{type: mongoose.Schema.Types.ObjectId ,ref: "Concierto" }]
+    conciertos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Concierto' }],
+    status: {
+        type: String,
+        enum: ['ACCEPTED', 'PENDING', 'REJECTED'],
+        default: 'ACCEPTED'
+    },
+    is_active: {
+        type: Boolean,
+        default: true
+    }
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
-genero_schema.plugin(uniqueValidator, { msg: "already taken" });
+genero_schema.plugin(uniqueValidator, { msg: 'already taken' });
 
 genero_schema.pre('validate', function (next) {
     if (!this.slug) {
@@ -48,7 +65,11 @@ genero_schema.methods.toGeneroResponse = function() {
         nombre: this.nombre,
         img: this.img,
         descripcion: this.descripcion,
-        id_genero: this.id_genero
+        id_genero: this.id_genero,
+        status: this.status,
+        is_active: this.is_active,
+        createdAt: this.createdAt,
+        updatedAt: this.updatedAt
     };
 }
 
@@ -78,4 +99,13 @@ genero_schema.methods.removeConcierto = function(concierto_id) {
     return this.save();
 }
 
-module.exports = mongoose.model('Genero', genero_schema);
+genero_schema.set('toJSON', {
+    transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+    }
+});
+
+module.exports = mongoose.model("Genero", genero_schema);

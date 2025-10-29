@@ -3,50 +3,122 @@ const uniqueValidator = require('mongoose-unique-validator');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { json } = require('body-parser');
+const { PassThrough } = require('stream');
+const { type } = require('os');
+
+const STATUS = ['ACCEPTED', 'PENDING', 'REJECTED'];
+
 
 const userSchema = new mongoose.Schema({
-    public_id: {
+    status: {
         type: String,
-        unique: true,
+        enum: STATUS,
+        default: "ACCEPTED",
     },
-    username:{
+
+    is_active: {
+        type: Boolean,
+        default: true,
+    },
+
+    role: {
+        type: String,
+        default: "USER",
+    },
+
+    username: {
         type: String,
         required: true,
         unique: true,
         lowercase: true,
+        index: true,
     },
-    password:{
-        type: String,
-        required: true,
-    },email:{
+
+    email: {
         type: String,
         required: true,
         unique: true,
-        match: [/\S+@\S+\.\S+/, 'is invalid'],
-        index: true
+        lowercase: true,
+        match: [/\S+@\S+\.\S+/, "is invalid"],
+        index: true,
     },
+
+    password: {
+        type: String,
+        required: true,
+    },
+
     bio: {
         type: String,
-        default: ''
+        default: "",
     },
+
     image: {
-        type:String,
-        default:''
+        type: String,
+        default: "",
     },
-    favouriteConciertos:[
+
+    // Relación uno-a-uno con RefreshTokenStore (almacena un ObjectId)
+    refreshTokenStore: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "RefreshTokenStore",
+        unique: true,
+        sparse: true,
+    },
+
+    // Relación muchos-a-muchos con BlackListToken
+    BlackListToken: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            // type: String,
-            ref: 'Concierto'
-        }
+            ref: "BlackListToken",
+        },
     ],
-    followingUsers:[
+
+    // Relaciones de follow (slef-relation many-to-many)
+    followedBy: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ]
-},{timestamps:true});
+            ref: "User",
+        },
+    ],
+
+    follows: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+
+    // Relacion de Likes
+    likedConciertos: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Concierto",
+        },
+    ],
+
+    // Entradas y Comentarios (relaciones one-to-many)
+
+    entradas: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Entrada",
+        },
+    ],
+
+    comentarios: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comentario",
+        },
+    ],
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },   
+});
+
+userSchema.plugin(uniqueValidator, { message: "Ya está en uso." });
 
 userSchema.pre('save', function(next){
     // Generar public_id automáticamente si no existe
@@ -200,5 +272,48 @@ userSchema.methods.getFavouriteSlugs = async function() {
         return id && slugMap.has(id) ? slugMap.get(id) : null;
     }).filter(Boolean);
 };
+// const userSchema = new mongoose.Schema({
+//     public_id: {
+//         type: String,
+//         unique: true,
+//     },
+//     username:{
+//         type: String,
+//         required: true,
+//         unique: true,
+//         lowercase: true,
+//     },
+//     password:{
+//         type: String,
+//         required: true,
+//     },email:{
+//         type: String,
+//         required: true,
+//         unique: true,
+//         match: [/\S+@\S+\.\S+/, 'is invalid'],
+//         index: true
+//     },
+//     bio: {
+//         type: String,
+//         default: ''
+//     },
+//     image: {
+//         type:String,
+//         default:''
+//     },
+//     favouriteConciertos:[
+//         {
+//             type: mongoose.Schema.Types.ObjectId,
+//             // type: String,
+//             ref: 'Concierto'
+//         }
+//     ],
+//     followingUsers:[
+//         {
+//             type: mongoose.Schema.Types.ObjectId,
+//             ref: 'User'
+//         }
+//     ]
+// },{timestamps:true});
 
 module.exports = mongoose.model('User', userSchema);

@@ -9,21 +9,21 @@ datasource db {
 
 /** 
     FALTA !!!!!!
-    - Añadimos modelo de Artista?
-    - Añadimos modelo de Lugar?
-
-    - Relaciones Entradas con Usuario y Concierto
-    - Relaciones Comentarios con Usuario y Concierto
-
+    - ? Añadimos modelo de Artista
+    - ? Añadimos modelo de Lugar
 
     HECHO !!!!!
     - Relaciones de Likes entre Usuario y Concierto
     - Relaciones de Seguidores entre Usuarios (self relation)
     - Modelo de RefreshTokenStore
     - Modelo de BlackListToken
+    - Relaciones Entradas con Usuario y Concierto
+    - Relaciones Comentarios con Usuario y Concierto
 */
 
-
+/**
+*   Status Enum para todas las tablas
+*/ 
 enum Status {
     PENDING
     ACCEPTED
@@ -59,8 +59,16 @@ model User {
     likedConciertos Concierto[] @relation("UserLikes", fields: [likedConciertosIDs], references: [id])
     likedConciertosIDs String[] @db.ObjectId
 
+    /* Relación con entradas */
+    entradas Entrada[]
+
+    /* Relación con Comentarios */
+    comentarios Comentario[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("users")
 }
 
 enum UserRole {
@@ -123,8 +131,11 @@ model Genero {
     Conciertos Concierto[]
 
     status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("generos")
 }
 
 /** 
@@ -152,15 +163,22 @@ model Concierto {
     id_genero String
     genero Genero @relation(fields: [id_genero], references: [id_genero])
 
-    /* Relación de conciertos Many To Many */
+    /* Relación de likes con usuarios Many To Many */
     likedBy User[] @relation("UserLikes", fields: [likedByIDs], references: [id])
     likedByIDs String[] @db.ObjectId
 
-    comentarios Int @default(0)
+    /* Relación de entradas One To Many */
+    entradas Entrada[]
+
+    /* Relación con Comentarios */
+    comentarios Comentario[]
+
     status Status @default(ACCEPTED)
     is_active Boolean @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("conciertos")
 }
 
 /** 
@@ -175,10 +193,14 @@ enum TipoEntrada {
 
 model Entrada {
     id String @id @map("_id") @default(auto()) @db.ObjectId
-    id_concierto String
-    // concierto Concierto @relation(fields: [id_concierto], references: [id])
-    id_usuario String
-    // usuario User @relation(fields: [id_usuario], references: [id])
+    /* Relacion con Usuario */
+    userId String @db.ObjectId
+    user User @relation(fields: [userId], references: [id])
+
+    /* Relacion con Concierto */
+    conciertoId String @db.ObjectId
+    concierto Concierto @relation(fields: [conciertoId], references: [id])
+
     tipo TipoEntrada @default(GENERAL)
     cantidad Int @default(1)
     precio_compra Float
@@ -187,6 +209,8 @@ model Entrada {
     is_active Boolean @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("entradas")
 }
 
 /** 
@@ -195,11 +219,22 @@ model Entrada {
 
 model Comentario {
     id String @id @map("_id") @default(auto()) @db.ObjectId
-    conciertoId String
-    usuarioId String
+
+    /* Relacion con Usuarios*/
+    userId String @db.ObjectId
+    user User @relation(fields: [userId], references: [id])
+
+    /* Relacion con Conciertos */
+    conciertoId String @db.ObjectId
+    concierto Concierto @relation(fields: [conciertoId], references: [id])
+
     contenido String
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("comentarios")
 }
 
 /** 
@@ -211,8 +246,12 @@ model RefreshTokenStore {
     user User @relation(fields: [userId], references: [id])
     userId String @unique @db.ObjectId
     refreshToken String
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("refresh_token_stores")
 }
 
 /** 
@@ -223,6 +262,9 @@ model BlackListToken {
     userId String @db.ObjectId
     user User @relation(fields: [userId], references: [id])
     token String
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    @@map("blacklist_tokens")
 }
