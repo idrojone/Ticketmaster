@@ -1,0 +1,228 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+/** 
+    FALTA !!!!!!
+    - Añadimos modelo de Artista?
+    - Añadimos modelo de Lugar?
+
+    - Relaciones Entradas con Usuario y Concierto
+    - Relaciones Comentarios con Usuario y Concierto
+
+
+    HECHO !!!!!
+    - Relaciones de Likes entre Usuario y Concierto
+    - Relaciones de Seguidores entre Usuarios (self relation)
+    - Modelo de RefreshTokenStore
+    - Modelo de BlackListToken
+*/
+
+
+enum Status {
+    PENDING
+    ACCEPTED
+    REJECTED
+}
+
+
+/** 
+*   User Model
+*/
+model User {
+    id  String @id @map("_id") @default(auto()) @db.ObjectId
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    role String @default("USER")
+    username String @unique
+    email String @unique
+    password String
+    bio String?
+    image String?
+
+    /* Relacion de tokens */
+    refreshToken RefreshTokenStore? // Relación uno a uno con RefreshTokenStore
+    blackListTokens BlackListToken[] // Relación uno a muchos con BlackListToken
+
+    /* Relaciones de seguimiento (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/self-relations) Many-to-many self relations */
+    followedBy User[] @relation("UserFollows", fields: [followedByIDs], references: [id])
+    followedByIDs String[] @db.ObjectId
+    follows User[] @relation("UserFollows", fields: [followsIDs], references: [id])
+    followsIDs String[] @db.ObjectId
+
+    /* Relacion de likes */
+    likedConciertos Concierto[] @relation("UserLikes", fields: [likedConciertosIDs], references: [id])
+    likedConciertosIDs String[] @db.ObjectId
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+    ADMIN
+    USER
+    EMPRESA
+}
+
+/** 
+*   Artistas  Model
+*/
+
+/**
+    Ponemos artistas?
+
+    Ejemplo de referencia de tabla SQL:
+
+    CREATE TABLE artists (
+       id CHAR(36) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        genre VARCHAR(50),
+        country VARCHAR(50),
+        description TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+*/
+
+/** 
+*   Lugares Model
+*/
+
+/**
+   
+    Ejemplo de referencia de tabla SQL:
+
+    CREATE TABLE venues (
+        id CHAR(36) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        city VARCHAR(100),
+        country VARCHAR(100),
+        capacity INT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+*/
+
+
+/** 
+*   Generos Model
+*/
+
+model Genero {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    slug String @unique
+    name String @unique
+    img String?
+    description String?
+    id_genero String @unique
+
+    /* Relaciones de conciertos (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/one-to-many-relations) One-to-many relations self relations */
+    Conciertos Concierto[]
+
+    status Status @default(ACCEPTED)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+/** 
+*   Concierto Model
+*/
+
+model Concierto {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    slug String @unique
+    nombre String
+    fecha DateTime
+    artista String
+    lugar String
+    ciudad String
+    descripcion String?
+    latitud Float?
+    longitud Float?
+    precio Float
+    aforo Int
+    duracion Int? /** Duración en minutos */
+    imagenArtista String?
+    imagenesShow String[] @default([])
+
+    /* Relaciones de conciertos (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/one-to-many-relations) One-to-many relations self relations */
+    id_genero String
+    genero Genero @relation(fields: [id_genero], references: [id_genero])
+
+    /* Relación de conciertos Many To Many */
+    likedBy User[] @relation("UserLikes", fields: [likedByIDs], references: [id])
+    likedByIDs String[] @db.ObjectId
+
+    comentarios Int @default(0)
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+/** 
+*   Entradas Model
+*/
+
+enum TipoEntrada {
+    GENERAL
+    VIP
+    PREMIUM
+}
+
+model Entrada {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    id_concierto String
+    // concierto Concierto @relation(fields: [id_concierto], references: [id])
+    id_usuario String
+    // usuario User @relation(fields: [id_usuario], references: [id])
+    tipo TipoEntrada @default(GENERAL)
+    cantidad Int @default(1)
+    precio_compra Float
+    fecha_compra DateTime @default(now())
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+/** 
+*   Comentarios Model
+*/
+
+model Comentario {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    conciertoId String
+    usuarioId String
+    contenido String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+/** 
+*   RefreshTokenStore Model
+*/
+
+model RefreshTokenStore {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    user User @relation(fields: [userId], references: [id])
+    userId String @unique @db.ObjectId
+    refreshToken String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+/** 
+*   BlackListToken Model
+*/
+model BlackListToken {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    userId String @db.ObjectId
+    user User @relation(fields: [userId], references: [id])
+    token String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
