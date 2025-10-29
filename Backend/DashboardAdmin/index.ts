@@ -1,8 +1,6 @@
-import { request } from "http";
-
-const config = require('./src/config.ts');
-const startServer = require('./src/server.ts');
-const fastify = require('fastify');
+import config from './src/config';
+import startServer from './src/server';
+import fastify from 'fastify';
 
 const main = async () => {
     //Control de errores no manejados
@@ -18,8 +16,8 @@ const main = async () => {
         const server = fastify();
         await server.register(startServer, configuracion);
 
-        const port= server.config.API_PORT;
-        const host= server.config.API_HOST;
+        const port= (server as any).config.API_PORT;
+        const host= (server as any).config.API_HOST;
 
         //Log de la dirección del servidor
         const address = await server.listen({port, host});

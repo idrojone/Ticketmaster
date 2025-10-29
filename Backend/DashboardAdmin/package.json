@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch index.ts",
     "dev:nodemon": "nodemon --watch \"src/**/*.ts\" --exec \"tsx\" src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
@@ -12,9 +12,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
+    "@fastify/autoload": "^6.3.1",
     "@fastify/cors": "11.1.0",
+    "@fastify/env": "^5.0.3",
     "@fastify/helmet": "13.0.2",
     "@fastify/swagger": "^9.5.2",
     "@fastify/swagger-ui": "^5.2.3",
@@ -30,7 +32,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
-    "@types/node": "^20.0.0",
+    "@types/node": "^20.19.24",
     "nodemon": "3.1.10",
     "prisma": "6.18.0",
     "ts-node-dev": "2.0.0",
