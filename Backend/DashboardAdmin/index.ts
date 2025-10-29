@@ -1,6 +1,10 @@
-import config from './src/config';
-import startServer from './src/server';
+// import config from './src/config';
+// import startServer from './src/server';
+// import fastify from 'fastify';
+
 import fastify from 'fastify';
+const startServer = require('./src/server').default;
+const config = require('./src/config').default;
 
 const main = async () => {
     //Control de errores no manejados
@@ -24,6 +28,14 @@ const main = async () => {
 
         console.log(`[INFO]  Server started on `+host+':'+port);
         
+        // console.log("Rutas del servidor registradas" + server.printRoutes());
+
+       server.ready(err => {
+        if (err) throw err;
+        console.log(server.printRoutes());
+       });
+
+        // console.log(typeof FastifyInstance);
     }catch (err) {
         console.error('Error starting server:', err);
         process.exit(1);

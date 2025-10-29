@@ -22,17 +22,26 @@ import swaggerUI from "@fastify/swagger-ui";
 
 async function plugin (server: FastifyInstance, configuracion: Record<string, any>) {
   const { optionsEnv, config } = configuracion;
+  // console.log("Iniciando servidor con configuración:", configuracion);
   await server
     .register(cors, {})
+    .after(err => {
+      if (err) console.error('Error al registrar CORS:', err);
+    })
     // Enable all CORS requests
 
     .register(fastifyEnv, optionsEnv)
-    await server.after()
+    .after(err => {
+      if (err) console.error('Error al cargar variables de entorno:', err);
+    })
     // Load environment variables
 
     .register(autoLoad, {
       dir: path.join(__dirname, 'plugins'),
       options: config
+    })
+    .after(err => {
+      if (err) console.error('Error al cargar plugins:', err);
     })
     // Load all plugins
 
@@ -40,12 +49,18 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
       dir: path.join(__dirname, 'services'),
       options: config
     })
+    .after(err => {
+      if (err) console.error('Error al cargar servicios:', err);
+    })
     // Load all services
 
     .register(autoLoad, {
       dir: path.join(__dirname, 'routes'),
       options: config,
       dirNameRoutePrefix: false
+    })
+    .after(err => {
+      if (err) console.error('Error al cargar rutas:', err);
     })
     // Load all routes
 
@@ -61,6 +76,9 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
             }]
         }
     })
+    .after(err => {
+      if (err) console.error('Error al registrar Swagger:', err);
+    })
     // Register swagger plugin
 
     .register(swaggerUI, {
@@ -71,6 +89,9 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
         },
         staticCSP: true,
         transformStaticCSP: (header: any) => header
+    })
+    .after(err => {
+      if (err) console.error('Error al registrar Swagger UI:', err);
     })
     // Register swagger UI plugin
 

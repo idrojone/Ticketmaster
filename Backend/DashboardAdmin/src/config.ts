@@ -1,3 +1,6 @@
+const env = require('dotenv');
+env.config(); // Carga las variables de entorno desde el archivo .env
+
 async function getConfig() {
     
     // Schema de validación
