@@ -14,11 +14,4 @@ const generoSchema = S.object()
   .prop('createdAt', S.string().format('date-time').default(new Date().toISOString()))
   .prop('updatedAt', S.string().format('date-time').default(new Date().toISOString()));
 
-const generoSchemaCreate = S.object()
-  .prop('name', S.string().required())
-  .prop('img', S.string())
-  .prop('description', S.string())
-  .prop('id_genero', S.string())
-  .prop('status', S.string().enum(['ACCEPTED', 'REJECTED', 'PENDING']).default('PENDING'));
-
-export { generoSchema, generoSchemaCreate };
+export { generoSchema };
