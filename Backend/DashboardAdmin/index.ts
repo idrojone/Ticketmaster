@@ -4,6 +4,7 @@
 
 import fastify from 'fastify';
 const startServer = require('./src/server').default;
+// import startServer from './src/server';
 const config = require('./src/config').default;
 
 const main = async () => {
@@ -20,8 +21,8 @@ const main = async () => {
         const server = fastify();
         await server.register(startServer, configuracion);
 
-        const port= (server as any).config.API_PORT;
-        const host= (server as any).config.API_HOST;
+        const port= (server as any).optionsEnv.API_PORT;
+        const host= (server as any).optionsEnv.API_HOST;
 
         //Log de la dirección del servidor
         const address = await server.listen({port, host});

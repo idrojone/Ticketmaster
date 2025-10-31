@@ -7,7 +7,14 @@ class ModelGeneros {
     }
 
     async getAllGeneros(){
-        return await prisma.genero.findMany();
+        try {
+            const generos = await prisma.genero.findMany();
+            // console.log('Generos fetched:', generos);
+            return generos;
+        } catch (error) {
+            console.error('Error fetching generos:', error);
+            throw error;
+        }
     }
 
 }

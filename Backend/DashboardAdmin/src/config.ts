@@ -16,7 +16,7 @@ async function getConfig() {
 
     // Opciones de fastify-env
     const optionsEnv = {
-        confKey: 'config',
+        confKey: 'optionsEnv', // clave para acceder a las variables de entorno
         dotenv: true,
         data: process.env,
         schema: schema, 

@@ -120,22 +120,22 @@ enum UserRole {
 */
 
 model Genero {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    slug String @unique
-    name String @unique
-    img String?
-    description String?
-    id_genero String @unique
+  id          String      @id @map("_id") @default(auto()) @db.ObjectId
+  slug        String      @unique
+  name        String      @unique
+  img         String?
+  description String?
+  id_genero   String?     @unique
 
-    /* Relaciones de conciertos (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/one-to-many-relations) One-to-many relations self relations */
-    Conciertos Concierto[]
+  // Relación uno a muchos con Concierto
+  Conciertos  Concierto[]
 
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  status      Status      @default(ACCEPTED)
+  is_active   Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
-    @@map("generos")
+  @@map("generos")
 }
 
 /** 
