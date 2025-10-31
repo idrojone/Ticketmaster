@@ -24,36 +24,39 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
   const { optionsEnv, config } = configuracion;
   // console.log("Iniciando servidor con configuración:", configuracion);
   await server
+
+    /* EL CORS */
     .register(cors, {})
     .after(err => {
       if (err) console.error('Error al registrar CORS:', err);
     })
-    // Enable all CORS requests
 
+    /* Cargar las variables de entorno */
     .register(fastifyEnv, optionsEnv)
     .after(err => {
       if (err) console.error('Error al cargar variables de entorno:', err);
     })
-    // Load environment variables
 
+    /* Cargar los plugins */
     .register(autoLoad, {
       dir: path.join(__dirname, 'plugins'),
       options: config
     })
     .after(err => {
       if (err) console.error('Error al cargar plugins:', err);
+      console.log("Plugins cargados");
     })
-    // Load all plugins
 
-    .register(autoLoad, {
-      dir: path.join(__dirname, 'services'),
-      options: config
-    })
-    .after(err => {
-      if (err) console.error('Error al cargar servicios:', err);
-    })
-    // Load all services
+    /* Cargar los servicios */
+    // .register(autoLoad, {
+    //   dir: path.join(__dirname, 'services'),
+    //   options: config
+    // })
+    // .after(err => {
+    //   if (err) console.error('Error al cargar servicios:', err);
+    // })
 
+    /* Cargar las rutas */
     .register(autoLoad, {
       dir: path.join(__dirname, 'routes'),
       options: config,
@@ -62,8 +65,9 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
     .after(err => {
       if (err) console.error('Error al cargar rutas:', err);
     })
-    // Load all routes
+    
 
+    /* Cargar Swagger */
     .register(swagger, {
         openapi: {
             info:{
@@ -79,8 +83,8 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
     .after(err => {
       if (err) console.error('Error al registrar Swagger:', err);
     })
-    // Register swagger plugin
-
+  
+    /* Register swagger UI plugin */
     .register(swaggerUI, {
         routePrefix: '/docs',
         uiConfig: {
@@ -93,7 +97,6 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
     .after(err => {
       if (err) console.error('Error al registrar Swagger UI:', err);
     })
-    // Register swagger UI plugin
 
   server.setErrorHandler((err: any, req: any, res: any) => {
     req.log.error({ req, res, err }, err && err.message)

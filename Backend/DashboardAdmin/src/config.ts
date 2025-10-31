@@ -4,13 +4,18 @@ env.config(); // Carga las variables de entorno desde el archivo .env
 async function getConfig() {
     
     // Schema de validación
+    /* IMPORTANTE !!!!!
+        Si añades .env variables nuevas, debes añadirlas también al schema de validación
+    */
     const schema = {
         type: 'object',
-        required: ['API_HOST', 'API_PORT', 'API_PREFIX'],
+        required: ['API_HOST', 'API_PORT', 'API_PREFIX', 'JWT_SECRET', 'JWT_EXPIRES_IN'],
         properties: {
             API_HOST: { type: 'string' },
             API_PORT: { type: 'number' },
             API_PREFIX: { type: 'string'},
+            JWT_SECRET: { type: 'string' }, 
+            JWT_EXPIRES_IN: { type: 'string' }
         },
     };
 
