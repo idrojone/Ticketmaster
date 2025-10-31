@@ -17,6 +17,18 @@ class ModelGeneros {
         }
     }
 
+    async getGeneroBySlug(slug: string){
+        try {
+            const genero = await prisma.genero.findUnique({
+                where: { slug : slug, }
+            });
+            return genero;
+        } catch (error) {
+            console.error('Error fetching genero by slug:', error);
+            throw error;
+        }
+    }
+
 }
 
 export const modelGeneros = new ModelGeneros();
