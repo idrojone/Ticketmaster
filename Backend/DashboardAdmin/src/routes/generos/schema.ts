@@ -28,4 +28,12 @@ const getGeneros = {
   },
 };
 
-export { generoSchema, getGenero, getGeneros };
+const onCreateGenero = {
+  body: generoSchema.required(),
+  response: {
+    201: generoSchema,
+    400: S.object().prop('message', S.string().default('Bad Request')),
+  },
+};
+
+export { generoSchema, getGenero, getGeneros, onCreateGenero };

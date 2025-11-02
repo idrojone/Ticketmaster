@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin'
 import { FastifyInstance } from 'fastify'
-import { getGeneros,getGenero } from './schema'
+import { getGeneros,getGenero,onCreateGenero } from './schema'
 import { modelGeneros } from '../../models/generos'
 
 async function generosRoute(server: FastifyInstance, options: Record<string, any>) {
@@ -40,6 +40,16 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
             console.error('Error fetching genero by name:', error);
             return reply.code(500).send({ error: 'Internal Server Error' });
         }
+    }
+
+    server.route({
+        method: 'POST',
+        url: options.prefix +'generos',
+        schema: onCreateGenero,
+        handler: onPost
+    })
+    async function onPost (request: any, reply: any) {
+
     }
 }
 

@@ -29,6 +29,10 @@ class ModelGeneros {
         }
     }
 
+    async createGenero(NuevoGenero: Object){
+
+    }
+
 }
 
 export const modelGeneros = new ModelGeneros();
