@@ -233,10 +233,10 @@ const getDetailsUser= asyncHandler( async (req,res) => {
 
 //Verificar Refresh Token
 const verifyRefreshToken= asyncHandler( async (req, res) => {
-    //Se lo pasamos por las cookies
     const { refreshToken } = req.cookies;
     
     if(!refreshToken){
+        console.log('❌ No hay refreshToken en cookies');
         return res.status(401).json({message: "No autorizado, no hay refresh token"});
     }
 
@@ -246,10 +246,12 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
     //Comprobamos si el refresh esta en la black list
     const isBlacklisted = await BlackListToken.findOne({ token: refreshToken });
     if (isBlacklisted) {
+        console.log('Refresh token en blacklist');
         return res.status(403).json({ message: "Refresh token en la blacklist" });
     }
 
     if(!storedToken){
+        console.log('❌ Refresh token no encontrado en BD');
         return res.status(403).json({message: "Refresh token no valido"});
     }
 
@@ -257,42 +259,55 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
     jwt.verify(
         refreshToken,
         process.env.JWT_SECRET,
-        { ignoreExpiration: true },  // ← Permite verificar tokens expirados
-    async (err, decoded) => {
-        // Si hay error de firma/formato (no expiración)
-        if(err && err.name !== 'TokenExpiredError'){
-            return res.status(403).json({message: "Refresh token no valido", error: err.message});
-        }
-
-
+        { ignoreExpiration: true }, 
+        async (err, decoded) => {
         // Si el token está expirado, añadir a blacklist
         if(err && err.name === 'TokenExpiredError'){
             // Decodificar para obtener el id del usuario
-            const decodedExpired = jwt.decode(refreshToken);
-            
-            const blackListToken = new BlackListToken({
-                userId: decodedExpired.id,
-                token: refreshToken
-            });
+            const decodedExpired = jwt.decode(refreshToken) || {};
+            const userIdFromExpired = decodedExpired.id || decodedExpired._id || null;
 
-            await blackListToken.save();
+            if (userIdFromExpired) {
+                try {
+                    const blackListToken = new BlackListToken({
+                        userId: userIdFromExpired,
+                        token: refreshToken
+                    });
+                    await blackListToken.save();
+                } catch (e) {
+                    console.warn('No se pudo guardar BlackListToken (expired):', e.message);
+                }
+            } else {
+                console.warn('Decoded token tiene no contiene id; no se añade a blacklist (expired).');
+            }
+
             await refreshTokenStore.deleteOne({ refreshToken });
 
-            return res.status(403).json({ message: "Refresh token caducado y agregado a blacklist" });
+            return res.status(401).json({ message: "Refresh token caducado y agregado a blacklist" });
         }
 
         // Verificación adicional de expiración (por si ignoreExpiration está activo)
-        const isExpired = Date.now() >= decoded.exp * 1000;
+        const isExpired = !decoded || (decoded.exp && (Date.now() >= decoded.exp * 1000));
         if (isExpired) {
-            const blackListToken = new BlackListToken({
-                userId: decoded.id,
-                token: refreshToken
-            });
+            const userIdFromDecoded = decoded && (decoded.id || decoded._id) || null;
 
-            await blackListToken.save();
+            if (userIdFromDecoded) {
+                try {
+                    const blackListToken = new BlackListToken({
+                        userId: userIdFromDecoded,
+                        token: refreshToken
+                    });
+                    await blackListToken.save();
+                } catch (e) {
+                    console.warn('No se pudo guardar BlackListToken (isExpired):', e.message);
+                }
+            } else {
+                console.warn('Decoded token no contiene id; no se añade a blacklist (isExpired).');
+            }
+
             await refreshTokenStore.deleteOne({ refreshToken });
 
-            return res.status(403).json({ message: "Refresh token caducado y agregado a blacklist" });
+            return res.status(401).json({ message: "Refresh token caducado y agregado a blacklist" });
         }
         // //Si es valido, comprobamos que el usuario existe
         const userId = decoded.id;
@@ -300,7 +315,7 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
 
         if(!user){
             refreshTokenStore.deleteOne({ refreshToken });
-            return res.status(403).json({message: "Usuario no valido para este refresh token"});
+            return res.status(401).json({message: "Usuario no valido para este refresh token"});
         }
 
         //Si el token es valido, generamos un nuevo access token

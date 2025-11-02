@@ -17,8 +17,8 @@ export class ApiService {
         return throwError(() => normalized);
     }
 
-    get(path: string, params: HttpParams = new HttpParams()): Observable<any>{
-        return this.http.get(`${environment.api_url}${path}`, { params })
+    get(path: string, params: HttpParams = new HttpParams(), credentialsRequired: boolean = false): Observable<any>{
+        return this.http.get(`${environment.api_url}${path}`, { params, withCredentials: credentialsRequired })
             .pipe(catchError(this.formatErrors));
     }       
 
