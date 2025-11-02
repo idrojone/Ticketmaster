@@ -28,7 +28,6 @@ const registerUser= asyncHandler( async (req,res) => {
     }
 
     //Hashear la contraseña
-    // const hashedPassword= await bcrypt.hash(user.password,10);
     const hashedPassword = await argon2.hash(user.password);
 
     //Definimos el objeto de Usuario
@@ -52,55 +51,57 @@ const registerUser= asyncHandler( async (req,res) => {
 });
 
 const loginUser= asyncHandler( async (req,res) => {
-
     //Comprueba si estan todos los campos
-    const { user }=req.body;
+    const { user } = req.body;
 
-    if(!user || !user.email || !user.password){
-        return res.status(400).json({message: "Asegurese de tener todos los campos"});
+    if (!user || !user.email || !user.password) {
+        return res
+            .status(400)
+            .json({ message: "Asegurese de tener todos los campos" });
     }
 
     //Mira si esta el Email
-    const encontrarUsuario= await User.findOne({ email: user.email });
+    const encontrarUsuario = await User.findOne({ email: user.email });
 
-    if(!encontrarUsuario){
-        return res.status(401).json({message: "Email no encontrado en la base de datos"}); 
+    if (!encontrarUsuario) {
+        return res
+            .status(401)
+            .json({ message: "Email no encontrado en la base de datos" });
     }
 
     //Si lo encuentra comprueba que la contraseña sea correcta
-    const match=await argon2.verify(encontrarUsuario.password, user.password);
+    const match = await argon2.verify(encontrarUsuario.password, user.password);
 
-    if(!match){
-        return res.status(401).json({message: "Contraseña incorrecta"});
+    if (!match) {
+        return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
     //Generamos los tokens
     const accessToken = await generateAccessToken(encontrarUsuario);
     const refreshToken = await generateRefreshToken(encontrarUsuario);
 
-    //Borramos los refresh tokens antiguos de este usuario
-    await refreshTokenStore.deleteMany({ id: encontrarUsuario._id });
+    // Borramos los refresh tokens antiguos de este usuario
+    await refreshTokenStore.deleteMany({ userId: encontrarUsuario._id });
 
     //Almacenamos el refresh token en el servidor
-    refreshTokenStore.create({
-        id: encontrarUsuario._id,
-        refreshToken: refreshToken
+    await refreshTokenStore.create({
+        userId: encontrarUsuario._id,
+        refreshToken: refreshToken,
     });
 
     //Enviamos los tokens al cliente
-     res.cookie('refreshToken', refreshToken, {
-         httpOnly: true,
-         secure: false, // Cambiar a true en producción con HTTPS
-         sameSite: 'lax', // lax permite cookies en navegación cross-site
-         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días en milisegundos
-     });
+    res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false, // Cambiar a true en producción con HTTPS
+        sameSite: "lax", // lax permite cookies en navegación cross-site
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
+    });
 
     //Si todo ha ido correcto
     res.status(200).json({
         user: await encontrarUsuario.toUserResponse(accessToken),
         // accessToken: accessToken
     });
-
 });
 
 const logoutUser= asyncHandler( async (req,res) => {
@@ -270,7 +271,7 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
             const decodedExpired = jwt.decode(refreshToken);
             
             const blackListToken = new BlackListToken({
-                id: decodedExpired.id,
+                userId: decodedExpired.id,
                 token: refreshToken
             });
 
@@ -284,7 +285,7 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
         const isExpired = Date.now() >= decoded.exp * 1000;
         if (isExpired) {
             const blackListToken = new BlackListToken({
-                id: decoded.id,
+                userId: decoded.id,
                 token: refreshToken
             });
 
@@ -293,7 +294,7 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
 
             return res.status(403).json({ message: "Refresh token caducado y agregado a blacklist" });
         }
-        //Si es valido, comprobamos que el usuario existe
+        // //Si es valido, comprobamos que el usuario existe
         const userId = decoded.id;
         const user = await User.findById(userId);
 
@@ -314,8 +315,7 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
 const generateAccessToken= asyncHandler( async (user) => {
     //Definimos la estructura del payload
     const payload = {
-        id: user._id,
-        public_id: user.public_id,
+        id: user.id,
         email: user.email,
         username: user.username
     };
@@ -331,7 +331,7 @@ const generateAccessToken= asyncHandler( async (user) => {
 const generateRefreshToken= asyncHandler( async (user) => {
     //Definimos la estructura del payload
     const payload = {
-        id: user._id,
+        id: user.id,
     };
 
     //Generamos el token, recordar añadir REFRESH_TOKEN_EXPIRATION a .env

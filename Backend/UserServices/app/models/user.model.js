@@ -149,23 +149,17 @@ userSchema.methods.generateAccessToken = function() {
 };
 
 userSchema.methods.toUserResponse = async function(accessToken) {
-    console.log('User Model - toUserResponse called');
-    const favSlugs = await this.getFavouriteSlugs();
-
-    const followingUsernames = await this.getFollowingUsernames();
-
-
     return {
-        _id: this._id,
+        // _id: this._id,
         public_id: this.public_id,
         username: this.username,
         email: this.email,
         bio: this.bio,
         image: this.image,
-        favouriteConciertos: favSlugs,
-        followingUsers: followingUsernames,
+        likedConciertos: this.likedConciertos,
+        followedBy: this.followedBy,
+        follows: this.follows,
         accessToken: accessToken
-        // accessToken: this.generateAccessToken(),
     };
 };
 
@@ -272,48 +266,4 @@ userSchema.methods.getFavouriteSlugs = async function() {
         return id && slugMap.has(id) ? slugMap.get(id) : null;
     }).filter(Boolean);
 };
-// const userSchema = new mongoose.Schema({
-//     public_id: {
-//         type: String,
-//         unique: true,
-//     },
-//     username:{
-//         type: String,
-//         required: true,
-//         unique: true,
-//         lowercase: true,
-//     },
-//     password:{
-//         type: String,
-//         required: true,
-//     },email:{
-//         type: String,
-//         required: true,
-//         unique: true,
-//         match: [/\S+@\S+\.\S+/, 'is invalid'],
-//         index: true
-//     },
-//     bio: {
-//         type: String,
-//         default: ''
-//     },
-//     image: {
-//         type:String,
-//         default:''
-//     },
-//     favouriteConciertos:[
-//         {
-//             type: mongoose.Schema.Types.ObjectId,
-//             // type: String,
-//             ref: 'Concierto'
-//         }
-//     ],
-//     followingUsers:[
-//         {
-//             type: mongoose.Schema.Types.ObjectId,
-//             ref: 'User'
-//         }
-//     ]
-// },{timestamps:true});
-
 module.exports = mongoose.model('User', userSchema);
