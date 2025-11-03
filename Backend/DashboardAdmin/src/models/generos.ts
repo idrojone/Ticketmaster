@@ -30,7 +30,24 @@ class ModelGeneros {
     }
 
     async createGenero(NuevoGenero: Object){
+        try {
+            const createdGenero = await prisma.genero.create({
+                data: NuevoGenero as any,
+            });
+            return createdGenero;
+        } catch (error) {
+            console.error('Error creating genero:', error);
+            throw error;
+        }
+    }
 
+    async generateSlug(name: string){
+        return await name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    }
+
+    async generateId(){
+        const { v4: uuidv4 } = await import('uuid');
+        return uuidv4();
     }
 
 }

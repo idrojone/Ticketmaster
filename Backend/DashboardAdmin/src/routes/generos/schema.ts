@@ -13,6 +13,10 @@ const generoSchema = S.object()
   .prop('createdAt', S.string().format('date-time'))
   .prop('updatedAt', S.string().format('date-time'));
 
+const generoCreateSchema = S.object()
+  .prop('name', S.string().required())
+  .prop('description', S.string());
+
 const getGenero = {
   response: {
     200: generoSchema.required(),
@@ -29,7 +33,7 @@ const getGeneros = {
 };
 
 const onCreateGenero = {
-  body: generoSchema.required(),
+  body: generoCreateSchema.required(),
   response: {
     201: generoSchema,
     400: S.object().prop('message', S.string().default('Bad Request')),

@@ -49,7 +49,26 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         handler: onPost
     })
     async function onPost (request: any, reply: any) {
+        try {
+            const generoData = await request.body;
 
+            // generoData.id = await modelGeneros.generateId();
+            generoData.slug = await modelGeneros.generateSlug(generoData.name);
+            generoData.status = 'PENDING';
+            generoData.is_active = true;
+            generoData.createdAt = new Date().toISOString();
+            generoData.updatedAt = new Date().toISOString();
+            generoData.img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXUPnDwr3HCGC-8Gm-34Gp3JRtRzmhrTwSEw&s";
+            generoData.id_genero = await modelGeneros.generateSlug(generoData.name);
+
+            const newGenero = await modelGeneros.createGenero(generoData);
+            return reply.code(201).send(newGenero);
+
+            // console.log('Creating genero with data:', generoData);
+        } catch (error) {
+            console.error('Error creating genero:', error);
+            return reply.code(500).send({ error: 'Internal Server Error' });
+        }
     }
 }
 
