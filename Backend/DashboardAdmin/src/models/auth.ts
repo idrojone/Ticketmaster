@@ -4,19 +4,36 @@ class ModelAuth {
     constructor() {}
 
     async getUserByUsername(username: string) {
-        return await prisma.userAdmin.findUnique({
+        // Primero busca en UserAdmin
+        const admin = await prisma.userAdmin.findUnique({
             where: { username }
         });
+
+        if (admin) {
+            return { ...admin, userType: 'admin' as const };
+        }
+
+        // Si no encuentra, busca en User
+        const user = await prisma.user.findUnique({
+            where: { username }
+        });
+
+        if (user) {
+            return { ...user, userType: 'user' as const };
+        }
+
+        return null;
     }
 
     async createUser(username: string, email: string, password: string) {
-        return await prisma.userAdmin.create({
+        const admin = await prisma.userAdmin.create({
             data: {
                 username,
                 email,
                 password
             }
         });
+        return { ...admin, userType: 'admin' as const };
     }
 }
 

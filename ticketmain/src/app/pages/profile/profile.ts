@@ -88,16 +88,16 @@ export class Profile implements OnInit, OnDestroy {
             this.usuario.set(user);
                 
                 this.isLoading.set(false);
-                this._checkFollowingStatus();
-                this.followersCount.set(user.followingUsers?.length || 0);
+                // this._checkFollowingStatus();
+                // this.followersCount.set(user.followingUsers?.length || 0);
               
-                this.countComentarios()
-                    .then((count) => {
-                        this.commentsCount.set(count);
-                    })
-                    .catch((err) => {
-                        this.commentsCount.set(0);
-                    });
+                // this.countComentarios()
+                //     .then((count) => {
+                //         this.commentsCount.set(count);
+                //     })
+                //     .catch((err) => {
+                //         this.commentsCount.set(0);
+                //     });
             },
             error: (error) => {
                 console.error('❌ Error al cargar el perfil:', error);

@@ -164,8 +164,8 @@ userSchema.methods.toUserResponse = async function(accessToken) {
 };
 
 userSchema.methods.toUserDetails = async function() {
-    const favSlugs = await this.getFavouriteSlugs();
-    const followingUsernames = await this.getFollowingUsernames();
+    // const favSlugs = await this.getFavouriteSlugs();
+    // const followingUsernames = await this.getFollowingUsernames();
 
     return {
         _id: this._id,
@@ -174,8 +174,12 @@ userSchema.methods.toUserDetails = async function() {
         email: this.email,
         bio: this.bio,
         image: this.image,
-        favouriteConciertos: favSlugs,
-        followingUsers: followingUsernames,
+        likedConciertos: this.likedConciertos,
+        followedBy: this.followedBy,
+        follows: this.follows,
+        // accessToken: accessToken
+        // favouriteConciertos: favSlugs,
+        // followingUsers: followingUsernames,
     };
 };
 

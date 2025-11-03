@@ -3,15 +3,10 @@ const S = require('fluent-json-schema')
 const User = S.object()
     .prop('username', S.string().minLength(3).maxLength(30).required())
     .prop('email', S.string().format(S.FORMATS.EMAIL).required())
-    .prop('password', S.string().minLength(6).required())
+    // .prop('password', S.string().minLength(6).required())
     .prop('bio', S.string())  
+    .prop('image', S.string())
     .prop('accessToken', S.string())
-    .prop('followedBy', S.array().items(S.string()))
-    .prop('follows', S.array().items(S.string()))
-    .prop('likedConciertos', S.array().items(S.string()))
-    .prop('entradas', S.array().items(S.string()))
-    .prop('comentarios', S.array().items(S.string()))
-    .prop('is_active', S.boolean().required())
 
 const UserStatus = S.object()
     .prop('username', S.string().minLength(3).maxLength(30).required())
@@ -20,6 +15,8 @@ const UserStatus = S.object()
 
 
 export const login = {
+    tags: ['Auth'],
+    description: 'Autenticar usuario con credenciales',
     body: S.object()
         .id('http://api/users/login')
         .title('Login de usuario')
@@ -38,6 +35,8 @@ export const login = {
 }
 
 export const  register = {
+    tags: ['Auth'],
+    description: 'Registrar un nuevo usuario',
     body: S.object()
         .id('http://api/users/register')
         .title('Registro de usuario')

@@ -1,4 +1,5 @@
 import { inject, Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from "rxjs";
 import { User } from "../models/user.model";
 import { ApiService } from "./api.service";
@@ -17,13 +18,13 @@ export class UserService {
 
     private apiService = inject(ApiService);
     private jwtService = inject(JwtService);
+    private router = inject(Router);
 
     private isPopulating = false;
    
     populate() {
      
         if (this.isPopulating) {
-            // console.log('⚠️ populate() ya está en ejecución, ignorando llamada duplicada');
             return;
         }
 
@@ -33,12 +34,12 @@ export class UserService {
             this.isPopulating = true;
             this.apiService.get("/api/user").subscribe({
                 next: (data) => {
-                    console.log('✅ Usuario autenticado:', data.user.username);
+                    console.log('Usuario autenticado:', data.user.username);
                     this.setAuth({ ...data.user, accessToken: accessToken });
                     this.isPopulating = false;
                 },
                 error: (err) => {
-                    console.log('❌ Access Token inválido o expirado');
+                    console.log('Access Token inválido o expirado');
                     this.purgeAuth();
                     this.isPopulating = false;
                 }
@@ -65,7 +66,7 @@ export class UserService {
     attemptAuth(type: string, credentials: any): Observable<User> {
         const route = (type === 'login') ? '/login' : '/register';
         console.log(`Intentando autenticación (${type}) con credenciales:`, credentials);
-        return this.apiService.post(`/api${route}`, { user: credentials })
+        return this.apiService.post(`/api${route}`, { user: credentials }, true)
         .pipe(map(
             data => {
                 // console.log('Autenticación exitosa. Datos del usuario recibidos:', data.user);
@@ -93,5 +94,10 @@ export class UserService {
                 this.currentUserSubject.next(data.user);
                 return data.user;
             }));
+    }
+
+    logout() {
+        this.purgeAuth();
+        this.router.navigate(['/login']);
     }
 }

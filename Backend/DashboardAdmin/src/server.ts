@@ -47,27 +47,7 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
       console.log("Plugins cargados");
     })
 
-    /* Cargar los servicios */
-    // .register(autoLoad, {
-    //   dir: path.join(__dirname, 'services'),
-    //   options: config
-    // })
-    // .after(err => {
-    //   if (err) console.error('Error al cargar servicios:', err);
-    // })
-
-    /* Cargar las rutas */
-    .register(autoLoad, {
-      dir: path.join(__dirname, 'routes'),
-      options: config,
-      dirNameRoutePrefix: false
-    })
-    .after(err => {
-      if (err) console.error('Error al cargar rutas:', err);
-    })
-    
-
-    /* Cargar Swagger */
+    /* Cargar Swagger ANTES de las rutas */
     .register(swagger, {
         openapi: {
             info:{
@@ -76,7 +56,7 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
                 version: "1.0.0",
             },
             servers: [{
-                url: 'http://localhost:3003', description: 'Servidor local'
+                url: 'http://localhost:3010', description: 'Servidor local'
             }]
         }
     })
@@ -96,6 +76,25 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
     })
     .after(err => {
       if (err) console.error('Error al registrar Swagger UI:', err);
+    })
+
+    /* Cargar los servicios */
+    // .register(autoLoad, {
+    //   dir: path.join(__dirname, 'services'),
+    //   options: config
+    // })
+    // .after(err => {
+    //   if (err) console.error('Error al cargar servicios:', err);
+    // })
+
+    /* Cargar las rutas */
+    .register(autoLoad, {
+      dir: path.join(__dirname, 'routes'),
+      options: config,
+      dirNameRoutePrefix: true
+    })
+    .after(err => {
+      if (err) console.error('Error al cargar rutas:', err);
     })
 
   server.setErrorHandler((err: any, req: any, res: any) => {
