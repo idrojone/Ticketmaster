@@ -2,6 +2,7 @@ import fp from 'fastify-plugin'
 import fastify, { FastifyInstance, FastifyReply } from 'fastify'
 import { login, register } from './schema';
 import { modelAuth } from '../../models/auth';
+import { UserAdminWithToken, AuthenticatedUser } from '../../types/User';
 
 
 
@@ -38,8 +39,15 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
         /* Comprobación de contraseña */
         if (await server.hashCompare(request.body.user.password, user.password)) {
             console.log("Contraseña correcta");
-            user.accessToken = await createAccessToken(user.username, reply);
-            return { user };
+            const accessToken = await createAccessToken(user.username, reply);
+            
+            // Crear respuesta tipada
+            const response: AuthenticatedUser = {
+                ...user,
+                accessToken
+            } as AuthenticatedUser;
+            
+            return { user: response };
         }
         
         return reply.code(401).send({ message: 'Invalid username or password' });
@@ -63,8 +71,14 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
         /* Registro de usuario */
         const hashedPassword = await server.hash(request.body.user.password);
         const newUser = await modelAuth.createUser(request.body.user.username, request.body.user.email, hashedPassword);
-        newUser.accessToken = await createAccessToken(newUser.username, reply);
-        return { user: newUser };
+        const accessToken = await createAccessToken(newUser.username, reply);
+        
+        const response: UserAdminWithToken = {
+            ...newUser,
+            accessToken
+        } as UserAdminWithToken;
+        
+        return { user: response };
     }
 
 }
