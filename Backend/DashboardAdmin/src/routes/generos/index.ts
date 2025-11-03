@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin'
 import { FastifyInstance } from 'fastify'
-import { getGeneros,getGenero,onCreateGenero } from './schema'
+import { getGeneros,getGenero,onCreateGenero,onUpdateGenero } from './schema'
 import { modelGeneros } from '../../models/generos'
 
 async function generosRoute(server: FastifyInstance, options: Record<string, any>) {
@@ -52,7 +52,6 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         try {
             const generoData = await request.body;
 
-            // generoData.id = await modelGeneros.generateId();
             generoData.slug = await modelGeneros.generateSlug(generoData.name);
             generoData.status = 'PENDING';
             generoData.is_active = true;
@@ -62,11 +61,41 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
             generoData.id_genero = await modelGeneros.generateSlug(generoData.name);
 
             const newGenero = await modelGeneros.createGenero(generoData);
-            return reply.code(201).send(newGenero);
 
-            // console.log('Creating genero with data:', generoData);
+            if ( newGenero === false ) {
+                return reply.code(400).send({ error: 'Error creating genero' });
+            }else{
+                return reply.code(201).send(newGenero);
+            }
+
         } catch (error) {
             console.error('Error creating genero:', error);
+            return reply.code(500).send({ error: 'Internal Server Error' });
+        }
+    }
+
+    server.route({
+        method: 'PUT',
+        url: '/generos/:slug',
+        schema: onUpdateGenero,
+        handler: onPut
+    })
+    async function onPut (request: any, reply: any) {
+        try {
+            const slug = request.params.slug;
+            const updatedData = await request.body;
+            updatedData.updatedAt = new Date().toISOString();
+
+            const updatedGenero = await modelGeneros.updateGenero(slug, updatedData);
+
+            if (updatedGenero) {
+                return reply.code(200).send(updatedGenero);
+            } else {
+                return reply.code(400).send({ message: 'Nuevos datos ya en uso o no existe ' });
+            }
+
+        }catch (error) {
+            console.error('Error updating genero:', error);
             return reply.code(500).send({ error: 'Internal Server Error' });
         }
     }
