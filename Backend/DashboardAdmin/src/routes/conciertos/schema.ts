@@ -1,0 +1,18 @@
+import S from 'fluent-json-schema';
+
+const generoSchema = S.object()
+    .prop('id', S.string().format('uuid'))
+    .prop('slug', S.string().minLength(3).maxLength(50))
+    .prop('name', S.string().minLength(3).maxLength(50))
+    .prop('fecha', S.string().format('date-time'))
+    .prop('artista', S.string().minLength(3).maxLength(100))
+    .prop('lugar', S.string().minLength(3).maxLength(100))
+    .prop('ciudad', S.string().minLength(3).maxLength(100))
+    .prop('descripcion', S.string().minLength(10).maxLength(500))
+    .prop('latitud', S.number().minimum(-90).maximum(90))
+    .prop('longitud', S.number().minimum(-180).maximum(180))
+    .prop('precio', S.number().minimum(0))
+    .prop('aforo', S.number().minimum(0))
+    .prop('duracion', S.number().minimum(0))
+    .prop('imagenArtista', S.string().format('uri'))
+    .prop('imagenesShow', S.string().format('uri'))
