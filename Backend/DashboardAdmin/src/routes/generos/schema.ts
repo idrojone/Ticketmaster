@@ -14,6 +14,8 @@ const generoSchema = S.object()
   .prop('updatedAt', S.string().format('date-time'));
 
 const getGenero = {
+  tags: ['Generos'],
+  description: 'Obtener un género específico por slug',
   response: {
     200: generoSchema.required(),
     404: S.object().prop('message', S.string().default('Genero not found')),
@@ -21,6 +23,8 @@ const getGenero = {
 };
 
 const getGeneros = {
+  tags: ['Generos'],
+  description: 'Obtener lista de todos los géneros',
   response: {
     200: S.object()
       .prop('generos', S.array().items(generoSchema).required())
@@ -29,6 +33,8 @@ const getGeneros = {
 };
 
 const onCreateGenero = {
+  tags: ['Generos'],
+  description: 'Crear un nuevo género',
   body: generoSchema.required(),
   response: {
     201: generoSchema,

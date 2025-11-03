@@ -20,7 +20,7 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
     */
     server.route({
         method: 'POST',
-        url: options.prefix + 'login',
+        url: '/auth/login',
         schema: login,
         handler: onLogin
     })
@@ -50,7 +50,7 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
     */
     server.route({
         method: 'POST',
-        url: options.prefix + 'register',
+        url: '/auth/register',
         schema: register,
         handler: onRegister
     })

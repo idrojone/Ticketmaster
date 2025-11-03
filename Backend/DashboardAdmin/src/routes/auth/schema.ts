@@ -20,6 +20,8 @@ const UserStatus = S.object()
 
 
 export const login = {
+    tags: ['Auth'],
+    description: 'Autenticar usuario con credenciales',
     body: S.object()
         .id('http://api/users/login')
         .title('Login de usuario')
@@ -38,6 +40,8 @@ export const login = {
 }
 
 export const  register = {
+    tags: ['Auth'],
+    description: 'Registrar un nuevo usuario',
     body: S.object()
         .id('http://api/users/register')
         .title('Registro de usuario')

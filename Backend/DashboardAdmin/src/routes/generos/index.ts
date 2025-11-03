@@ -7,7 +7,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
     // console.log(server.optionsEnvHOST);
     server.route({
         method: 'GET',
-        url: options.prefix +'generos',
+        url: '/generos',
         schema: getGeneros,
         handler: onGet
     })
@@ -23,7 +23,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
 
     server.route({
         method: 'GET',
-        url: options.prefix +'generos/:slug',
+        url: '/generos/:slug',
         schema: getGenero,
         handler: onGetGenero
     })
@@ -44,7 +44,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
 
     server.route({
         method: 'POST',
-        url: options.prefix +'generos',
+        url: '/generos',
         schema: onCreateGenero,
         handler: onPost
     })
