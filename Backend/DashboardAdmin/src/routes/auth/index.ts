@@ -4,9 +4,6 @@ import { login, register } from './schema';
 import { modelAuth } from '../../models/auth';
 import { UserAdminWithToken, AuthenticatedUser } from '../../types/User';
 
-
-
-
 async function auth (server: FastifyInstance, options: Record<string, any>) {   
     async function createAccessToken(username: string, reply: FastifyReply) {
         return await reply.jwtSign(
