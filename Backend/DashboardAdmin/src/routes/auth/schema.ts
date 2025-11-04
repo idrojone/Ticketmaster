@@ -1,9 +1,9 @@
+import { UserAdmin } from "@prisma/client"
 const S = require('fluent-json-schema')
 
 const User = S.object()
     .prop('username', S.string().minLength(3).maxLength(30).required())
     .prop('email', S.string().format(S.FORMATS.EMAIL).required())
-    // .prop('password', S.string().minLength(6).required())
     .prop('bio', S.string())  
     .prop('image', S.string())
     .prop('accessToken', S.string())
@@ -13,6 +13,14 @@ const UserStatus = S.object()
     .prop('status', S.boolean().required())
 
 
+
+
+export interface LoginRequestBody {
+    user: {
+        username: string;
+        password: string;
+    }
+}
 
 export const login = {
     tags: ['Auth'],
@@ -31,6 +39,15 @@ export const login = {
     response: {
         200: S.object().prop('user', User),
         401: S.object().prop('message', S.string())
+    }
+}
+
+
+export interface RegisterRequestBody {
+    user: {
+        username: string;
+        email: string;
+        password: string;
     }
 }
 
@@ -55,7 +72,11 @@ export const  register = {
     }
 }
 
-const get = {
+export const get = {
+    tags: ['Auth'],
+    description: 'Obtener información del usuario por username',
+    params: S.object()
+        .prop('username', S.string().minLength(3).maxLength(30).required()),
     response: {
         200: S.object().prop('user', User),
         404: S.object().prop('message', S.string())
@@ -101,5 +122,19 @@ const updateStatus = {
         200: S.object().prop('user', UserStatus),
         404: S.object().prop('message', S.string())
     }
+}
+
+
+/**
+ *  Tipar accessToken
+ */
+
+export interface UserAdminWithToken extends Omit<UserAdmin, 'password'> {
+    accessToken: string;
+}
+export type AuthenticatedUser = UserAdminWithToken;
+
+export interface LoginResponse {
+    user: AuthenticatedUser;
 }
 

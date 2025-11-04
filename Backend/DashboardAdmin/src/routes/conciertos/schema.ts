@@ -1,7 +1,6 @@
 import S from 'fluent-json-schema';
 
-const generoSchema = S.object()
-    .prop('id', S.string().format('uuid'))
+const conciertoSchema = S.object()
     .prop('slug', S.string().minLength(3).maxLength(50))
     .prop('name', S.string().minLength(3).maxLength(50))
     .prop('fecha', S.string().format('date-time'))
@@ -16,3 +15,15 @@ const generoSchema = S.object()
     .prop('duracion', S.number().minimum(0))
     .prop('imagenArtista', S.string().format('uri'))
     .prop('imagenesShow', S.string().format('uri'))
+
+const getConciertos = {
+    tags: ['Conciertos'],
+    description: 'Obtener lista de todos los conciertos',
+    response: {
+        200: S.object()
+            .prop('conciertos', S.array().items(conciertoSchema).required())
+            .prop('total', S.number()),
+        404: S.object().prop('message', S.string().default('No se encontraron conciertos')),
+    },
+};
+

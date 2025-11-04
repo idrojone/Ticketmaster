@@ -1,5 +1,4 @@
 import S from 'fluent-json-schema';
-import { fa } from 'zod/v4/locales';
 
 const generoSchema = S.object()
   .prop('id', S.string().required())

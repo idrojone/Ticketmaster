@@ -1,18 +1,9 @@
 import fp from 'fastify-plugin'
-import fastify, { FastifyInstance, FastifyReply } from 'fastify'
-import { login, register } from './schema';
+import fastify, { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import { login, register, RegisterRequestBody, LoginRequestBody, UserAdminWithToken, AuthenticatedUser, get } from './schema';
 import { modelAuth } from '../../models/auth';
-import { UserAdminWithToken, AuthenticatedUser } from '../../types/User';
 
 async function auth (server: FastifyInstance, options: Record<string, any>) {   
-    async function createAccessToken(username: string, reply: FastifyReply) {
-        return await reply.jwtSign(
-            {username: username},
-            {expiresIn: '12h'}
-        )
-    }
-    // console.log(server);
-
     /* 
         User Login 
     */
@@ -22,7 +13,7 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
         schema: login,
         handler: onLogin
     })
-    async function onLogin(request: any, reply: any) {
+    async function onLogin(request: FastifyRequest<{ Body: LoginRequestBody }>, reply: FastifyReply) {
 
         /* Comprobación de usuario */
         const user = await modelAuth.getUserByUsername(request.body.user.username);
@@ -31,12 +22,12 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
 
         /* Comprobación de status */
         if (user.status !== 'ACCEPTED') {
-            return reply.code(403).send({ message: 'El usuario no está permitido' });
+            server.throwError(403, 'El usuario no está permitido');
         }
         /* Comprobación de contraseña */
         if (await server.hashCompare(request.body.user.password, user.password)) {
             console.log("Contraseña correcta");
-            const accessToken = await createAccessToken(user.username, reply);
+            const accessToken = await server.generateAccessToken(user.username, reply);
             
             // Crear respuesta tipada
             const response: AuthenticatedUser = {
@@ -47,7 +38,8 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
             return { user: response };
         }
         
-        return reply.code(401).send({ message: 'Invalid username or password' });
+        // return reply.code(401).send({ message: 'Invalid username or password' });
+        server.throwError(401, 'Usuario o contraseña incorrectos');
     }
 
     /* 
@@ -59,7 +51,7 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
         schema: register,
         handler: onRegister
     })
-    async function onRegister(request: any, reply: any) {
+    async function onRegister(request: FastifyRequest<{ Body: RegisterRequestBody }>, reply: FastifyReply) {
         /* Comprobación de usuario */
         const user = await modelAuth.getUserByUsername(request.body.user.username);
 
@@ -68,7 +60,7 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
         /* Registro de usuario */
         const hashedPassword = await server.hash(request.body.user.password);
         const newUser = await modelAuth.createUser(request.body.user.username, request.body.user.email, hashedPassword);
-        const accessToken = await createAccessToken(newUser.username, reply);
+        const accessToken = await server.generateAccessToken(newUser.username, reply);
         
         const response: UserAdminWithToken = {
             ...newUser,
@@ -76,6 +68,29 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
         } as UserAdminWithToken;
         
         return { user: response };
+    }
+
+
+    /* 
+        User Get
+    */
+    server.route({
+        method: 'GET',
+        url: '/auth/user/:username',
+        onRequest: [server.authenticate, server.authenticateRole],
+        schema: get,
+        handler: onGetUser
+    })
+    async function onGetUser(request: FastifyRequest<{ Params: { username?: string } }>, reply: FastifyReply) {
+        const username = request.params?.username;
+
+        if (!username || username === undefined) return reply.code(400).send({ message: 'Se requiere el username' });
+
+        const user = await modelAuth.getUserByUsername(username);
+
+        if (!user) server.throwError(404, 'Usuario no encontrado');
+
+        return { user };
     }
 
 }

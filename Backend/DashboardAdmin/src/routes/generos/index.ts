@@ -4,10 +4,10 @@ import { getGeneros,getGenero,onCreateGenero,onUpdateGenero } from './schema'
 import { modelGeneros } from '../../models/generos'
 
 async function generosRoute(server: FastifyInstance, options: Record<string, any>) {
-    // console.log(server.optionsEnvHOST);
     server.route({
         method: 'GET',
         url: '/generos',
+        onRequest: [server.authenticate, server.authenticateRole],
         schema: getGeneros,
         handler: onGet
     })
@@ -24,6 +24,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
     server.route({
         method: 'GET',
         url: '/generos/:slug',
+        onRequest: [server.authenticate, server.authenticateRole],
         schema: getGenero,
         handler: onGetGenero
     })
@@ -45,6 +46,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
     server.route({
         method: 'POST',
         url: '/generos',
+        onRequest: [server.authenticate, server.authenticateRole],
         schema: onCreateGenero,
         handler: onPost
     })
@@ -77,6 +79,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
     server.route({
         method: 'PUT',
         url: '/generos/:slug',
+        onRequest: [server.authenticate, server.authenticateRole],
         schema: onUpdateGenero,
         handler: onPut
     })

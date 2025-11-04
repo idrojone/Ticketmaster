@@ -6,7 +6,7 @@ export default fp(async (server, opts) => {
     server.register(fastifyJwt, {
         secret: server.optionsEnv.JWT_SECRET,
         sign: {
-            expiresIn: server.optionsEnv.JWT_EXPIRE_IN || '1h'
+            expiresIn: server.optionsEnv.JWT_EXPIRES_IN || '1h'
         },
         verify: {
             extractToken: (request: FastifyRequest) => {
@@ -14,6 +14,21 @@ export default fp(async (server, opts) => {
             }
         }
     });
+
+    /**
+     *  Generar AccessToken
+     */
+
+    server.decorate('generateAccessToken', async function (username: string, reply: FastifyReply) {
+        return await reply.jwtSign(
+            { username: username, role: 'admin' },
+        );
+    });
+
+
+    /**
+     * Middelware 
+     */
 
     server.decorate('authenticate', async function (request: FastifyRequest, reply: FastifyReply) {
         try {
@@ -30,4 +45,20 @@ export default fp(async (server, opts) => {
             // No hacer nada si la verificación falla
         }
     });
+
+    /**
+     * Middelware de rol
+     */
+
+    server.decorate('authenticateRole', async function (request: FastifyRequest, reply: FastifyReply) {
+        try {
+            await request.jwtVerify();
+            const user = (request as any).user;
+            if (!user || user.role !== 'admin') {
+                return reply.code(403).send({ message: 'No tienes permisos para acceder a este recurso' });
+            }
+        } catch (err) {
+
+        }
+    })
 });

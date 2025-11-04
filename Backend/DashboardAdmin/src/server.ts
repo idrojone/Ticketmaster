@@ -36,7 +36,7 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
     .after(err => {
       if (err) console.error('Error al cargar variables de entorno:', err);
     })
-
+    
     /* Cargar los plugins */
     .register(autoLoad, {
       dir: path.join(__dirname, 'plugins'),

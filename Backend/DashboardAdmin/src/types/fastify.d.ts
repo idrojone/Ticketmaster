@@ -4,8 +4,11 @@ declare module 'fastify' {
   interface FastifyInstance {
     hash(password: string): Promise<string>;
     hashCompare(hashedPassword: string, plainPassword: string): Promise<boolean>;
-    authenticate(request: any, reply: any): Promise<void>;
-    authenticateOptional(request: any, reply: any): Promise<void>;
+    authenticate(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+    authenticateOptional(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+    authenticateRole(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+    generateAccessToken(username: string, reply: FastifyReply): Promise<string>;
+    throwError(statusCode: number, message: string): Promise<string>;
     optionsEnv: {
       API_HOST: string;
       API_PORT: number;
