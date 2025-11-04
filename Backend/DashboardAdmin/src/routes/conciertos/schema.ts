@@ -16,3 +16,5 @@ const generoSchema = S.object()
     .prop('duracion', S.number().minimum(0))
     .prop('imagenArtista', S.string().format('uri'))
     .prop('imagenesShow', S.string().format('uri'))
+
+const generoGetSchema = S.object()
