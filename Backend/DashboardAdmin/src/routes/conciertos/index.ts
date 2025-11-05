@@ -64,7 +64,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
      * @description Crear concierto
      * @access Private (Requiere autenticación y rol)
      * @returns {Object} 200 - Crea concierto
-     * @returns {Object} 400 - 
+     * @returns {Object} 400 - Datos inválidos
      * @returns {Object} 401 - No autorizado
      * @returns {Object} 404 - Género no encontrado
      * @returns {Object} 500 - Error del servidor

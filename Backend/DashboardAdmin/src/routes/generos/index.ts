@@ -82,22 +82,35 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         try {
             const generoData = await request.body;
 
+            /**
+             * Generar slug y estado inicial del género
+             */
+
             generoData.slug = server.generateSlug(generoData.name);
             generoData.status = 'PENDING';
             generoData.is_active = true;
-            // generoData.createdAt = new Date().toISOString();
-            // generoData.updatedAt = new Date().toISOString();
-            generoData.img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXUPnDwr3HCGC-8Gm-34Gp3JRtRzmhrTwSEw&s";
-            generoData.id_genero = server.generateSlug(generoData.name);
 
-            const newGenero = await modelGeneros(server).createGenero(generoData);
 
-            if ( newGenero === false ) {
-                return reply.code(400).send({ error: 'Error creating genero' });
-            }else{
-                return reply.code(201).send(newGenero);
+            /**
+             * Asignar imagen por defecto si no se proporciona ninguna
+             */
+            if (!generoData.img || generoData.img.trim() === '') {
+                generoData.img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXUPnDwr3HCGC-8Gm-34Gp3JRtRzmhrTwSEw&s";
             }
 
+            /**
+             * Generar id_genero único
+             */
+            generoData.id_genero = server.generateSlug(generoData.name);
+
+            /**
+             * Crear el nuevo género
+             */
+            const newGenero = await modelGeneros(server).createGenero(generoData);
+
+            if (!newGenero) return reply.code(400).send({ message: 'Error creating genero' });
+
+            return reply.code(201).send(newGenero);
         } catch (error) {
             console.error('Error creating genero:', error);
             return reply.code(500).send({ error: 'Internal Server Error' });

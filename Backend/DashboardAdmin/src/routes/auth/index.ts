@@ -16,7 +16,7 @@ async function auth (server: FastifyInstance, options: Record<string, any>) {
     async function onLogin(request: FastifyRequest<{ Body: LoginRequestBody }>, reply: FastifyReply) {
 
         /* Comprobación de usuario */
-        const user = await modelAuth.getUserByUsername(request.body.user.username);
+        const user = await modelAuth.getUserByEmail(request.body.user.email);
 
         if (!user) return reply.code(401).send({ message: 'Usuario no encontrado' });
 

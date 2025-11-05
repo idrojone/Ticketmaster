@@ -17,7 +17,7 @@ const UserStatus = S.object()
 
 export interface LoginRequestBody {
     user: {
-        username: string;
+        email: string;
         password: string;
     }
 }
@@ -32,7 +32,7 @@ export const login = {
         .prop(
             'user',
             S.object()
-                .prop('username', S.string().required())
+                .prop('email', S.string().required())
                 .prop('password', S.string().required())
         ).required(),
 

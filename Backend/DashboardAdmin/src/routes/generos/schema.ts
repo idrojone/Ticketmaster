@@ -35,6 +35,14 @@ const generoUpdateSchema = S.object()
   .prop('status', S.string().enum(['ACCEPTED', 'REJECTED', 'PENDING']))
   .prop('is_active', S.boolean());
 
+
+/**
+ * @route GET /generos/:slug  
+ * @description Obtener un género específico por slug
+ * @access Private (Requiere autenticación y rol)
+ * @returns {Object} 200 - Género encontrado
+ * @returns {Object} 404 - Género no encontrado
+ */
 const getGenero = {
   tags: ['Generos'],
   description: 'Obtener un género específico por slug',
@@ -44,6 +52,13 @@ const getGenero = {
   },
 };
 
+
+/**
+ * @route GET /generos
+ * @description Obtener lista de todos los géneros
+ * @access Private (Requiere autenticación y rol)
+ * @returns {Object} 200 - Lista de géneros con el total
+ */
 const getGeneros = {
   tags: ['Generos'],
   description: 'Obtener lista de todos los géneros',

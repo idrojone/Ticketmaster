@@ -35,6 +35,16 @@ class ModelAuth {
         });
         return { ...admin, userType: 'admin' as const };
     }
+
+    async getUserByEmail(email: string) {
+        const admin = await prisma.userAdmin.findUnique({
+            where: { email }
+        });
+        if (admin) {
+            return { ...admin, userType: 'admin' as const };
+        }
+        return null;
+    }
 }
 
 export const modelAuth = new ModelAuth();

@@ -41,34 +41,6 @@ class ModelGeneros {
     }
 
     async createGenero(NuevoGenero: Genero){
-        if (!NuevoGenero) {
-            return false;
-        }
-
-        // Generar updatetAt y createdAt
-        const now : Date = new Date();
-        NuevoGenero.createdAt = now;
-        NuevoGenero.updatedAt = now;
-
-        // Validar que existan slug e id_genero
-        if (!NuevoGenero.slug || !NuevoGenero.id_genero) {
-            return false;
-        }
-
-        // Verificar si el slug ya existe
-        const slugExists = await this.checkSlugExists(NuevoGenero.slug as string);
-        if (slugExists) {
-            console.error('Slug already exists:', NuevoGenero.slug);
-            return false;
-        }
-
-        // Verificar si el id_genero ya existe
-        const idGeneroExists = await this.checkid_generoExists(NuevoGenero.id_genero as string);
-        if (idGeneroExists) {
-            console.error('id_genero already exists:', NuevoGenero.id_genero);
-            return false;
-        }
-
         try {
             const createdGenero = await prisma.genero.create({
                 data: NuevoGenero as any,
