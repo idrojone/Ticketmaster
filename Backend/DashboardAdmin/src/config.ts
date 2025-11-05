@@ -9,13 +9,15 @@ async function getConfig() {
     */
     const schema = {
         type: 'object',
-        required: ['API_HOST', 'API_PORT', 'API_PREFIX', 'JWT_SECRET', 'JWT_EXPIRES_IN'],
+        required: ['API_HOST', 'API_PORT', 'API_PREFIX', 'JWT_SECRET', 'JWT_EXPIRES_IN', 'SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET'],
         properties: {
             API_HOST: { type: 'string' },
             API_PORT: { type: 'number' },
             API_PREFIX: { type: 'string'},
             JWT_SECRET: { type: 'string' }, 
-            JWT_EXPIRES_IN: { type: 'string' }
+            JWT_EXPIRES_IN: { type: 'string' },
+            SPOTIFY_CLIENT_ID: { type: 'string' },
+            SPOTIFY_CLIENT_SECRET: { type: 'string' },
         },
     };
 

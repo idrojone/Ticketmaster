@@ -58,7 +58,7 @@ export default fp(async (server, opts) => {
                 return reply.code(403).send({ message: 'No tienes permisos para acceder a este recurso' });
             }
         } catch (err) {
-
+            reply.code(401).send({ message: 'Unauthorized' });
         }
     })
 });

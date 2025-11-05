@@ -9,12 +9,16 @@ declare module 'fastify' {
     authenticateRole(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     generateAccessToken(username: string, reply: FastifyReply): Promise<string>;
     throwError(statusCode: number, message: string): Promise<string>;
+    generateSlug(title: string): string;
+    spotify: any;
     optionsEnv: {
       API_HOST: string;
       API_PORT: number;
       API_PREFIX: string;
       JWT_SECRET: string;
       JWT_EXPIRES_IN: string;
+      SPOTIFY_CLIENT_ID: string;
+      SPOTIFY_CLIENT_SECRET: string;
     };
   }
 }

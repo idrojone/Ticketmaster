@@ -1,14 +1,20 @@
-import { GridFSBucket } from 'mongodb';
 import { prisma } from '../plugins/prisma/index';
 import { Genero } from '@prisma/client';
-import fastify from 'fastify';
-import { error } from 'console';
-import { fa, no } from 'zod/v4/locales';
-import { nextTick } from 'process';
+import { FastifyInstance } from 'fastify'
+
 class ModelGeneros {
+    private static instance: ModelGeneros;
+    private server: FastifyInstance;
 
-    constructor(){
+    private constructor(fastify: FastifyInstance){
+        this.server = fastify;
+    }
 
+    public static getInstance(fastify: FastifyInstance) {
+        if (!ModelGeneros.instance) {
+            ModelGeneros.instance = new ModelGeneros(fastify);
+        }
+        return ModelGeneros.instance;
     }
 
     async getAllGeneros(){
@@ -90,8 +96,8 @@ class ModelGeneros {
 
         // Si el nombre cambió, generar nuevo slug e id_genero
         if (updatedData.name && updatedData.name !== genero.name) {
-            updatedData.slug = await this.generateSlug(updatedData.name);
-            updatedData.id_genero = await this.generateSlug(updatedData.name);
+            updatedData.slug = this.server.generateSlug(updatedData.name);
+            updatedData.id_genero = this.server.generateSlug(updatedData.name);
 
             // Validar que el nuevo slug no exista
             const slugExists = await this.checkSlugExists(updatedData.slug);
@@ -119,11 +125,6 @@ class ModelGeneros {
             console.error('Error al actualizar el género:', error);
             throw error;
         }
-    }
-
-
-    async generateSlug(name: string){
-        return await name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     }
 
     async generateId(){
@@ -163,8 +164,17 @@ class ModelGeneros {
         }
     }
 
-
-
+    async getGeneroById(id_genero: string){
+        try {
+            const genero = await prisma.genero.findUnique({
+                where: { id_genero : id_genero, }
+            });
+            return genero;
+        } catch (error) {
+            console.error('Error fetching genero by id_genero:', error);
+            throw error;
+        }
+    }
 }
 
-export const modelGeneros = new ModelGeneros();
+export const modelGeneros = (fastify: FastifyInstance) => ModelGeneros.getInstance(fastify);
