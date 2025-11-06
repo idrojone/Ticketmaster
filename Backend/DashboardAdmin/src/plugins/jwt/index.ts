@@ -1,8 +1,8 @@
 import fp from 'fastify-plugin';
 import fastifyJwt from '@fastify/jwt';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
-export default fp(async (server, opts) => {
+export default fp(async (server: FastifyInstance) => {
     server.register(fastifyJwt, {
         secret: server.optionsEnv.JWT_SECRET,
         sign: {
@@ -38,18 +38,9 @@ export default fp(async (server, opts) => {
         }
     });
 
-    server.decorate('authenticateOptional', async function (request: FastifyRequest, reply: FastifyReply) {
-        try {
-            await request.jwtVerify();
-        } catch (err) {
-            // No hacer nada si la verificación falla
-        }
-    });
-
     /**
      * Middelware de rol
      */
-
     server.decorate('authenticateRole', async function (request: FastifyRequest, reply: FastifyReply) {
         try {
             await request.jwtVerify();

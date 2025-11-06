@@ -1,9 +1,14 @@
 import fp from 'fastify-plugin';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { getConciertos, onCreateConcierto, CreateConciertoBody, getConciertoBySlug, onUpdateConciertoActivateSchema, onUpdateConciertoSchema, onUpdateConciertoStatusSchema, deleteConcierto } from './schema';
+import { getConciertos, onCreateConcierto, getConciertoBySlug, onUpdateConciertoActivateSchema, onUpdateConciertoSchema, onUpdateConciertoStatusSchema, deleteConcierto } from './schema';
 import { modelConciertos } from '../../models/conciertos';
 import { modelGeneros } from '../../models/generos';
+import { Concierto, Status } from '@prisma/client';
 
+
+/**
+ * Falta !!!
+ */
 async function conciertosRoutes(server: FastifyInstance , options: Record<string, any>) {
 
     /**
@@ -76,7 +81,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         schema: onCreateConcierto,
         handler : onPost
     })
-    async function onPost(request: FastifyRequest<{ Body: CreateConciertoBody }>, reply: FastifyReply) {
+    async function onPost(request: FastifyRequest<{ Body: Concierto }>, reply: FastifyReply) {
         try {
 
             const conciertosData = request.body;
@@ -98,7 +103,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
             /**
              * Validar que id_genero es una cadena de texto válida
              */
-            let id_genero =  conciertosData.id_genero;
+            const id_genero =  conciertosData.id_genero;
 
             if (typeof id_genero !== 'string' || id_genero.trim() === '') {
                 server.throwError(404, 'El campo id_genero es obligatorio y debe ser una cadena de texto válida');
@@ -107,7 +112,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
             /**
              * Encontrar el id del id_genero
              */
-            const  genero = await modelGeneros(server).getGeneroById(id_genero);
+            const  genero = await modelGeneros.getGeneroById(id_genero);
 
             if (!genero) return reply.code(404).send({ message: 'El género indicado no existe' });
             
@@ -150,7 +155,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         schema: onUpdateConciertoSchema,
         handler: onUpdateConcierto
     })
-    async function onUpdateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: CreateConciertoBody }>, reply: FastifyReply) {
+    async function onUpdateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: Concierto }>, reply: FastifyReply) {
         try {
             const { slug } = request.params;
             const updateData = request.body;
@@ -170,7 +175,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
              * Validar y actualizar id_genero si ha cambiado
              */
             if (updateData.id_genero !== concierto.id_genero) {
-                const genero = await modelGeneros(server).getGeneroById(updateData.id_genero);
+                const genero = await modelGeneros.getGeneroById(updateData.id_genero);
                 if (!genero) return reply.code(404).send({ message: 'El género indicado no existe' });
                 if (!genero.id_genero) return reply.code(400).send({ message: 'El género no tiene un id_genero válido' });
                 updateData.id_genero = genero.id_genero;
@@ -238,10 +243,12 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
                 return reply.code(400).send({ message: `El concierto ya está ${is_active ? 'activo' : 'inactivo'}` });
             }
 
+            concierto.is_active = is_active;
+
             /**
              * Actualizar el estado de actividad del concierto
              */
-            const updatedConcierto = await modelConciertos.updateConcierto(slug, { is_active });
+            const updatedConcierto = await modelConciertos.patchConciertoActive(slug, is_active);
             if (!updatedConcierto) {
                 return reply.code(404).send({ message: 'Concierto no encontrado' });
             }
@@ -268,7 +275,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         schema: onUpdateConciertoStatusSchema,
         handler: onUpdateConciertoStatus
     })
-    async function onUpdateConciertoStatus(request: FastifyRequest<{ Params: { slug: string }, Body: { status: 'PENDING' | 'APPROVED' | 'REJECTED' } }>, reply: FastifyReply) {
+    async function onUpdateConciertoStatus(request: FastifyRequest<{ Params: { slug: string }, Body: { status: Status } }>, reply: FastifyReply) {
         try {
             const { slug } = request.params;
             const { status } = request.body;
@@ -289,7 +296,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
             /**
              * Actualizar el estado del concierto
              */
-            const updatedConcierto = await modelConciertos.updateConcierto(slug, { status });
+            const updatedConcierto = await modelConciertos.patchConciertoStatus(slug, status);
            
             /**
              * Validar que la actualización fue exitosa

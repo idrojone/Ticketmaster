@@ -1,24 +1,19 @@
-import { Concierto } from "@prisma/client";
+import { Concierto, Status, PrismaClient } from "@prisma/client";
 import { prisma } from "../plugins/prisma";
 
 class ModelConciertos {
+    private prisma: PrismaClient;
 
-    private static instance: ModelConciertos;
-
-    public static getInstance() {
-        if (!ModelConciertos.instance) {
-            ModelConciertos.instance = new ModelConciertos();
-        }
-        return ModelConciertos.instance;
+    constructor(prismaClient: PrismaClient) {
+        this.prisma = prismaClient;
     }
-    
     /**
      * Obtener todos los conciertos
      * @returns  {Promise<Concierto[]>}
      */
     async getAllConciertos() {
         try {
-            const conciertos = await prisma.concierto.findMany();
+            const conciertos = await this.prisma.concierto.findMany();
             return conciertos;
         } catch (error) {
             console.error('Error fetching conciertos:', error);
@@ -31,9 +26,9 @@ class ModelConciertos {
      * @param {CreateConciertoData} conciertoData - Datos del concierto a crear
      * @returns  {Promise<Concierto>}
      */ 
-    async createConcierto(conciertoData: any) {
+    async createConcierto(conciertoData: Concierto) {
         try {
-            const newConcierto = await prisma.concierto.create({
+            const newConcierto = await this.prisma.concierto.create({
                 data: conciertoData
             });
             return newConcierto;
@@ -50,7 +45,7 @@ class ModelConciertos {
      */
     async getConciertoBySlug(slug: string) {
         try {
-            const concierto = await prisma.concierto.findUnique({
+            const concierto = await this.prisma.concierto.findUnique({
                 where: { slug }
             });
             return concierto;
@@ -66,9 +61,10 @@ class ModelConciertos {
      * @param {UpdateConciertoData} updateData - Datos a actualizar
      * @returns {Promise<Concierto>}
      */ 
-    async updateConcierto(slug: string, updateData: any) {
+    async updateConcierto(slug: string, updateData: Concierto) {
+        console.log('Updating concierto with data:', updateData);
         try {
-            const updatedConcierto = await prisma.concierto.update({
+            const updatedConcierto = await this.prisma.concierto.update({
                 where: { slug },
                 data: updateData
             });
@@ -80,13 +76,47 @@ class ModelConciertos {
     }
 
     /**
+     * 
+     * @param { string } slug 
+     * @param  { boolean } is_active 
+     * @returns 
+     */
+    async patchConciertoActive(slug: string, is_active: boolean) {
+        console.log('Patching concierto with data:', { is_active });
+        try {
+            const patchedConcierto = await this.prisma.concierto.update({
+                where: { slug },
+                data: { is_active }
+            });
+            return patchedConcierto;
+        } catch (error) {
+            console.error('Error patching concierto:', error);
+            throw error;
+        }
+    }
+
+    async patchConciertoStatus(slug: string, status: Status) {
+        console.log('Patching concierto with data:', { status });
+        try {
+            const patchedConcierto = await this.prisma.concierto.update({
+                where: { slug },
+                data: { status }
+            });
+            return patchedConcierto;
+        } catch (error) {
+            console.error('Error patching concierto:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Eliminar un concierto por slug
      * @param {string} slug - Slug del concierto a eliminar
      * @returns {Promise<Concierto>}
      */
     async deleteConcierto(slug: string) {
         try {
-            const deletedConcierto = await prisma.concierto.delete({
+            const deletedConcierto = await this.prisma.concierto.delete({
                 where: { slug }
             });
             return deletedConcierto;
@@ -95,6 +125,25 @@ class ModelConciertos {
             throw error;
         }
     }
+
+    /**
+    * Actualiza el id_genero de los conciertos relacionados al género
+    * @param {string} oldId - El id_genero antiguo
+    * @param {string} newId - El id_genero nuevo
+    * @returns {Promise<number>} - El número de conciertos actualizados
+    */
+    async updateConciertosGeneroId(oldId: string, newId: string) {
+        try {
+            const updatedConciertos = await this.prisma.concierto.updateMany({
+                where: { id_genero: oldId },
+                data: { id_genero: newId }
+            });
+            return updatedConciertos;
+        } catch (error) {
+            console.error('Error updating conciertos genero id:', error);
+            throw error;
+        }
+    }
 }
 
-export const modelConciertos = new ModelConciertos();
+export const modelConciertos = new ModelConciertos(prisma);

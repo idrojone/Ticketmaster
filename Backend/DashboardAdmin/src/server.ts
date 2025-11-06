@@ -105,7 +105,7 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
 
   // Trick to handle empty body on POST
   // because POST {{APIURL}}/articles/{{slug}}/favorite will be done without a body
-  server.addHook('onRequest', async (req: any, res: any) => {
+  server.addHook('onRequest', async (req: any) => {
     if (req.headers['content-type'] === 'application/json' && req.headers['content-length'] === '0') {
       req.headers['content-type'] = 'empty'
     }

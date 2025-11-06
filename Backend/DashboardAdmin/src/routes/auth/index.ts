@@ -1,9 +1,9 @@
 import fp from 'fastify-plugin'
-import fastify, { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { login, register, RegisterRequestBody, LoginRequestBody, UserAdminWithToken, AuthenticatedUser, get } from './schema';
 import { modelAuth } from '../../models/auth';
 
-async function auth (server: FastifyInstance, options: Record<string, any>) {   
+async function auth (server: FastifyInstance) {   
     /* 
         User Login 
     */

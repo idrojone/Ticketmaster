@@ -1,11 +1,6 @@
-// import config from './src/config';
-// import startServer from './src/server';
-// import fastify from 'fastify';
-
 import fastify from 'fastify';
-const startServer = require('./src/server').default;
-// import startServer from './src/server';
-const config = require('./src/config').default;
+import startServer from './src/server';
+import config from './src/config';
 
 const main = async () => {
     //Control de errores no manejados
@@ -25,12 +20,10 @@ const main = async () => {
         const host= (server as any).optionsEnv.API_HOST;
 
         //Log de la dirección del servidor
-        const address = await server.listen({port, host});
+    await server.listen({ port, host });
 
-        console.log(`[INFO]  Server started on `+host+':'+port);
+    console.log(`[INFO] Server started on ${host}:${port}`);
         
-        // console.log("Rutas del servidor registradas" + server.printRoutes());
-
        server.ready(err => {
         if (err) throw err;
         console.log(server.printRoutes());

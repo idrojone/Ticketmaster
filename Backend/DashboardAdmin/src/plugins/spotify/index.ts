@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 import SpotifyWebApi from 'spotify-web-api-node';
 
-export default fp(async (server, opts) => {
+export default fp(async (server) => {
     const spotifyApi = new SpotifyWebApi({
         clientId: process.env.SPOTIFY_CLIENT_ID,
         clientSecret: process.env.SPOTIFY_CLIENT_SECRET,

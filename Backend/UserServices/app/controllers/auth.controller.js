@@ -1,10 +1,12 @@
 const User=require('../models/user.model');
+const UserAdmin=require('../models/admin.model');
 const refreshTokenStore= require('../models/refreshTokenStore.model');
 const asyncHandler=require('express-async-handler');
 // const bcrypt=require('bcrypt');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const BlackListToken = require('../models/blackListToken');
+const e = require('express');
 
 
 const registerUser= asyncHandler( async (req,res) => {
@@ -64,16 +66,16 @@ const loginUser= asyncHandler( async (req,res) => {
     const encontrarUsuario = await User.findOne({ email: user.email });
 
     if (!encontrarUsuario) {
-        return res
-            .status(401)
-            .json({ message: "Email no encontrado en la base de datos" });
+        const encontrarUsuarioAdmin = await UserAdmin.findOne({email: user.email});
+        if (!encontrarUsuarioAdmin) return res.status(431).json({ message: "Email no encontrado en la base de datos" });
+        return res.status(200).json({ rol: 'admin' });
     }
 
     //Si lo encuentra comprueba que la contraseña sea correcta
     const match = await argon2.verify(encontrarUsuario.password, user.password);
 
     if (!match) {
-        return res.status(401).json({ message: "Contraseña incorrecta" });
+        return res.status(403).json({ message: "Contraseña incorrecta" });
     }
 
     //Generamos los tokens

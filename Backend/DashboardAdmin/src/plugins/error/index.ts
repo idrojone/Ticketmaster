@@ -1,8 +1,6 @@
-import fastify from 'fastify';
 import fp from 'fastify-plugin';
-import { request } from 'http';
 
-export default fp(async (fastify, opts) => {
+export default fp(async (fastify) => {
     
     fastify.setErrorHandler((error, request, reply) => {
         

@@ -1,16 +1,17 @@
-import { UserAdmin } from "@prisma/client"
-const S = require('fluent-json-schema')
+import { UserAdmin } from "@prisma/client";
+import S = require('fluent-json-schema');
+const Schema: any = S;
 
-const User = S.object()
-    .prop('username', S.string().minLength(3).maxLength(30).required())
-    .prop('email', S.string().format(S.FORMATS.EMAIL).required())
-    .prop('bio', S.string())  
-    .prop('image', S.string())
-    .prop('accessToken', S.string())
+const User = Schema.object()
+    .prop('username', Schema.string().minLength(3).maxLength(30).required())
+    .prop('email', Schema.string().format(Schema.FORMATS.EMAIL).required())
+    .prop('bio', Schema.string())  
+    .prop('image', Schema.string())
+    .prop('accessToken', Schema.string())
 
-const UserStatus = S.object()
-    .prop('username', S.string().minLength(3).maxLength(30).required())
-    .prop('status', S.boolean().required())
+const UserStatus = Schema.object()
+    .prop('username', Schema.string().minLength(3).maxLength(30).required())
+    .prop('status', Schema.boolean().required())
 
 
 
@@ -25,20 +26,20 @@ export interface LoginRequestBody {
 export const login = {
     tags: ['Auth'],
     description: 'Autenticar usuario con credenciales',
-    body: S.object()
+    body: Schema.object()
         .id('http://api/users/login')
         .title('Login de usuario')
         .description('Login del usuario y respuesta con token')
         .prop(
             'user',
-            S.object()
-                .prop('email', S.string().required())
-                .prop('password', S.string().required())
+            Schema.object()
+                .prop('email', Schema.string().required())
+                .prop('password', Schema.string().required())
         ).required(),
 
     response: {
-        200: S.object().prop('user', User),
-        401: S.object().prop('message', S.string())
+    200: Schema.object().prop('user', User),
+    401: Schema.object().prop('message', Schema.string())
     }
 }
 
@@ -54,73 +55,73 @@ export interface RegisterRequestBody {
 export const  register = {
     tags: ['Auth'],
     description: 'Registrar un nuevo usuario',
-    body: S.object()
+    body: Schema.object()
         .id('http://api/users/register')
         .title('Registro de usuario')
         .description('Registro de un nuevo usuario')
         .prop(
             'user',
-            S.object()
-                .prop('username', S.string().required())
-                .prop('email', S.string().required())
-                .prop('password', S.string().required())
+            Schema.object()
+                .prop('username', Schema.string().required())
+                .prop('email', Schema.string().required())
+                .prop('password', Schema.string().required())
         ).required(),
 
     response: {
-        200: S.object().prop('user', User),
-        400: S.object().prop('message', S.string())
+    200: Schema.object().prop('user', User),
+    400: Schema.object().prop('message', Schema.string())
     }
 }
 
 export const get = {
     tags: ['Auth'],
     description: 'Obtener información del usuario por username',
-    params: S.object()
-        .prop('username', S.string().minLength(3).maxLength(30).required()),
+    params: Schema.object()
+        .prop('username', Schema.string().minLength(3).maxLength(30).required()),
     response: {
-        200: S.object().prop('user', User),
-        404: S.object().prop('message', S.string())
+    200: Schema.object().prop('user', User),
+    404: Schema.object().prop('message', Schema.string())
     }
 }
 
-const update = {
-    body: S.object()
+export const update = {
+    body: Schema.object()
         .id('http://api/user')
         .title('Actualización de usuario')
         .description('Actualizar información del usuario')
         .prop(
             'user',
-            S.object()
-                .prop('email', S.string())
-                .prop('username', S.string())
-                .prop('password', S.string())
-                .prop('bio', S.string())
-                .prop('image', S.string())
+            Schema.object()
+                .prop('email', Schema.string())
+                .prop('username', Schema.string())
+                .prop('password', Schema.string())
+                .prop('bio', Schema.string())
+                .prop('image', Schema.string())
         ).required(),
     
     response: {
-        200: S.object().prop('user', User),
-        404: S.object().prop('message', S.string())
+        200: Schema.object().prop('user', User),
+        404: Schema.object().prop('message', Schema.string())
     }
 }
 
-const getStatus = {
+export const getStatus = {
     response: {
-        200: S.object().prop('user', UserStatus),
-        404: S.object().prop('message', S.string())
+        200: Schema.object().prop('user', UserStatus),
+        404: Schema.object().prop('message', Schema.string())
     }
 }
 
-const updateStatus = {
-    body: S.object()
+export const updateStatus = {
+    body: Schema.object()
         .id('http://api/user/status')
         .title('Actualización de estado de usuario')
         .description('Actualizar estado activo/inactivo del usuario')
         .prop('user', UserStatus).required(),
 
     response: {
-        200: S.object().prop('user', UserStatus),
-        404: S.object().prop('message', S.string())
+    200: Schema.object().prop('user', UserStatus),
+    404: Schema.object().prop('message', Schema.string())
     }
 }
 
