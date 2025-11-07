@@ -9,7 +9,7 @@ declare module 'fastify' {
     authenticateRole(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     generateAccessToken(username: string, reply: FastifyReply): Promise<string>;
   // Lanza un error y no retorna (sirve para signalizar errores HTTP desde plugins/modelos)
-  throwError(statusCode: number, message: string): never;
+  throwError(statusCode: number, message: string, details?: any): never;
     generateSlug(title: string): string;
     spotify: any;
     optionsEnv: {

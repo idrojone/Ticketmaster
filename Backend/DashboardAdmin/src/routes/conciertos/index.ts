@@ -73,7 +73,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler : onPost
     })
     async function onPost(request: FastifyRequest<{ Body: Concierto }>, reply: FastifyReply) {
-        const concierto = await modelConciertos(server).onCreateConcierto(request, reply);
+        const concierto = await modelConciertos(server).onCreateConcierto(request);
         return reply.code(201).send(concierto);        
     }
 

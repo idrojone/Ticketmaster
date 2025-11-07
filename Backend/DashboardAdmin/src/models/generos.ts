@@ -1,7 +1,9 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { prisma } from '../plugins/prisma/index';
-import { Genero, PrismaClient } from '@prisma/client';
+import { Genero, PrismaClient, Status } from '@prisma/client';
 import server from '../server';
+import conciertos from '../routes/conciertos';
+import { availableMemory } from 'process';
 
 class ModelGeneros {
     private prisma: PrismaClient;
@@ -266,17 +268,89 @@ class ModelGeneros {
         return updatedGenero;
     }
 
+    async patchGeneroActive (slug: string, is_active: boolean) {
+        try {
+            const updatedGenero = await this.prisma.genero.update({
+                where: { slug },
+                data: { is_active }
+            })
+            return updatedGenero;
+        } catch (error) {
+            this.server.throwError(500, 'Error patching genero')
+        }
+    }
+
+    async patchGeneroStatus (slug: string, status: Status) {
+        try {   
+
+            const updateGenero = await this.prisma.genero.update({
+                where: { slug },
+                data: { status }
+            });
+            return updateGenero;
+        } catch (error) {
+            this.server.throwError(500, 'Error al actuilzar el status', error)
+        }
+    }
+
+
     async onActivateGenero(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>) {
         const { slug } = request.params;
         const { is_active } = request.body;
+
         const genero = await this.getGeneroBySlug(slug);
 
         if (!genero) {
             this.server.throwError(404, 'Genero no encontrado');
             return;
         }
+
+        if (genero.is_active === is_active) {
+            this.server.throwError(400, `El genero ya está ${is_active ? 'activo' : 'inactivo'}`)
+            return;
+        }
+
+        const activar = await this.patchGeneroActive(slug, is_active)
+        if (!activar) {
+            this.server.throwError(404, 'Genero no encontrado')
+        }
+        
+    
+        return { genero: activar }
     }
 
+
+    async onStatusGenero(request: FastifyRequest<{Params: {slug: string }, Body: {status: Status }}>) {
+        const { slug } = request.params;
+        const { status } = request.body;
+
+        /**
+         * Validar que el género existe
+         */
+        const genero = await this.getGeneroBySlug(slug);
+        if ( !genero) {
+            this.server.throwError(404, 'Género no encontrado')
+            return;
+        }
+
+        /**
+         * Validar el estado del género
+         */
+        if (genero?.status === status) {
+            this.server.throwError(400, `El género ya está en estado ${status}`)
+            return;
+        }
+
+        /**
+         * Actualizar status del género
+         */
+        const updateConcierto = await this.patchGeneroStatus(slug, status);
+        if (!updateConcierto) {
+            this.server.throwError(404, 'Género no encontrado');
+        }
+
+        return { generos: updateConcierto }
+    }
 }   
 
 export const modelGeneros = (server: FastifyInstance) => new ModelGeneros(prisma, server);

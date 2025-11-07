@@ -1,8 +1,12 @@
 import S from 'fluent-json-schema';
+import { ServerDescription } from 'mongodb';
+import { describe } from 'node:test';
+import { brotliDecompress } from 'zlib';
+import { ta } from 'zod/v4/locales';
 
 
 const generoSchema = S.object()
-  .prop('id', S.string().required())
+  // .prop('id', S.string().required())
   .prop('slug', S.string().required())
   .prop('name', S.string().required())
   .prop('img', S.string())
@@ -105,3 +109,26 @@ export const onUpdateGenero = {
     404: S.object().prop('message', S.string().default('No se puede actualizar ya que el genero no existe o el slug ya está en uso')),
   },
 };
+
+
+export const onActivateGeneroSchema = {
+  tags: ['Generos'],
+  description: 'Actualizar activo del género',
+  body: S.object().prop('is_active', S.boolean().required()),
+  response: {
+    200: S.object().prop('genero', generoSchema.required()),
+    400: S.object().prop('message', S.string().default('Error actulizando el estado del concierto')),
+    404: S.object().prop('message', S.string().default('Genero no encontrado'))
+  }
+}
+
+export const onStatusGeneroSchema = {
+  tags: ['Generos'],
+  description: 'Actulizar status del género',
+  body: S.object().prop('status', S.string().enum(['ACCEPTED', 'REJECTED', 'PENDING']).required()),
+  response: {
+    200: S.object().prop('generos', generoSchema.required()),
+    400: S.object().prop('message', S.string().default('Error actulizando status del género')),
+    404: S.object().prop('message', S.string().default('Género no encontrado'))
+  }
+}

@@ -174,7 +174,7 @@ class ModelConciertos {
      * @param {FastifyReply} reply - La respuesta Fastify
      * @returns {Promise<Concierto | void>}
      */
-    async onCreateConcierto(request: FastifyRequest<{ Body: Concierto }>, reply: FastifyReply) {
+    async onCreateConcierto(request: FastifyRequest<{ Body: Concierto }>) {
         const conciertoData = request.body;
 
         /**
@@ -263,6 +263,7 @@ class ModelConciertos {
          */
 
         if (updateData.id_genero !== concierto.id_genero) {
+            // FALTA TRY CATCH
             const genero = await this.prisma.genero.findUnique({
                 where: { id_genero: updateData.id_genero }
             });
@@ -324,8 +325,6 @@ class ModelConciertos {
             this.server.throwError(400, `El concierto ya está ${is_active ? 'activo' : 'inactivo'}`);
             return;
         }
-
-        concierto.is_active = is_active;
 
         /**
          * Actualizar el estado de actividad del concierto

@@ -1,10 +1,9 @@
 import fp from 'fastify-plugin'
-import { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { getGeneros, getGenero, onCreateGenero, onUpdateGenero } from './schema'
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import { getGeneros, getGenero, onCreateGenero, onUpdateGenero, onActivateGeneroSchema, onStatusGeneroSchema } from './schema'
 import { modelGeneros } from '../../models/generos'
-import { Genero } from '@prisma/client';
-import { modelConciertos } from '../../models/conciertos';
-import { on } from 'events';
+import { Genero, Status } from '@prisma/client';
+
 
 /**
  * 
@@ -105,12 +104,24 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         method: 'PATCH',
         url: '/generos/:slug/activate',
         onRequest: [server.authenticate, server.authenticateRole],
-        // schema: onActivateGeneroSchema,
+        schema: onActivateGeneroSchema,
         handler: onActivateGenero
     })
     async function onActivateGenero (request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
         const updatedGenero = await modelGeneros(server).onActivateGenero(request);
         return reply.code(200).send(updatedGenero);
+    }
+
+    server.route({
+        method: 'PATCH',
+        url: '/generos/:slug/status',
+        onRequest: [server.authenticate, server.authenticateRole],
+        schema: onStatusGeneroSchema,
+        handler: onStatusGenero
+    })
+    async function onStatusGenero (request: FastifyRequest<{ Params: {slug: string }, Body: {status: Status } }>, reply: FastifyReply) {
+        const updateGenero = await modelGeneros(server).onStatusGenero(request);
+        return reply.code(200).send(updateGenero)
     }
 }
 
