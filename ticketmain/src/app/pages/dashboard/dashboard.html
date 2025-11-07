@@ -1,0 +1,25 @@
+<div class="dashboard-wrapper">
+  <!-- Sidebar -->
+  <aside class="dashboard-sidebar">
+    <nav class="sidebar-nav">
+      <h3>Dashboard</h3>
+      <ul>
+        <li>
+          <a routerLink="conciertos" routerLinkActive="active" class="nav-link">
+            🎵 Conciertos
+          </a>
+        </li>
+        <li>
+          <a routerLink="generos" routerLinkActive="active" class="nav-link">
+            🎸 Géneros
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

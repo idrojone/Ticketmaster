@@ -3,7 +3,7 @@ import { Component, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild }
 import { ActivatedRoute, Router } from '@angular/router';
 import { Concierto } from 'src/app/core/models/conciertos.model';
 import { Filters } from 'src/app/core/models/filters.model';
-import { ConciertosService } from 'src/app/core/services/conciertos.service';
+import { ConciertosService } from 'src/app/core/services/UserServices/conciertos.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 

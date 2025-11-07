@@ -2,7 +2,7 @@ import { Component, inject, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Concierto } from '../../core/models/conciertos.model';
 import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component';
-import { ConciertosService } from 'src/app/core/services/conciertos.service';
+import { ConciertosService } from 'src/app/core/services/UserServices/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FiltersComponent } from '../filters/filters';

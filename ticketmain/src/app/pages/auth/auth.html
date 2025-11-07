@@ -2,6 +2,27 @@
   <div class="auth-card">
     @if (modoLogin) {
       <h2>Sign In</h2>
+
+      <!-- Selector de Rol -->
+      <div class="role-selector">
+        <label>Inicia sesión como:</label>
+        <div class="role-options">
+          <button 
+            type="button"
+            class="role-btn"
+            [class.active]="selectedRole === 'USER'"
+            (click)="selectedRole = 'USER'">
+            User
+          </button>
+          <button 
+            type="button"
+            class="role-btn"
+            [class.active]="selectedRole === 'ADMIN'"
+            (click)="selectedRole = 'ADMIN'">
+             Admin
+          </button>
+        </div>
+      </div>
     } @else {
       <h2>Sign Up</h2>
     }

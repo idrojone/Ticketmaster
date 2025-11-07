@@ -6,10 +6,10 @@ import { ZardButtonComponent } from '@shared/components/button/button.component'
 import { ZardPopoverComponent, ZardPopoverDirective } from '@shared/components/popover/popover.component';
 import { ZardDatePickerComponent } from '@shared/components/date-picker/date-picker.component';
 import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
-import { GenerosService } from 'src/app/core/services/generos.service';
+import { GenerosService } from 'src/app/core/services/UserServices/generos.service';
 import { Genero } from 'src/app/core/models/generos.model';
 import { Filters } from '../../core/models/filters.model';
-import { ConciertosService } from 'src/app/core/services/conciertos.service';
+import { ConciertosService } from 'src/app/core/services/UserServices/conciertos.service';
 
 @Component({
   selector: 'app-filters',

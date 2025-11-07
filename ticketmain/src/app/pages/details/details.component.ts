@@ -5,7 +5,7 @@ import { catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
 import { Carousel } from "@shared/carousel/carousel";
 import { Concierto } from "src/app/core/models/conciertos.model";
-import { ConciertosService } from "src/app/core/services/conciertos.service";
+import { ConciertosService } from "src/app/core/services/UserServices/conciertos.service";
 import { ZardCalendarComponent } from "@shared/components/calendar/calendar.component";
 import * as L from 'leaflet';
 import { Comment } from "src/app/core/models/comment.model";

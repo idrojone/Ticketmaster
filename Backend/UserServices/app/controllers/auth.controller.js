@@ -65,7 +65,7 @@ const loginUser= asyncHandler( async (req,res) => {
 
     if (!encontrarUsuario) {
         return res
-            .status(401)
+            .status(404)
             .json({ message: "Email no encontrado en la base de datos" });
     }
 
@@ -73,7 +73,7 @@ const loginUser= asyncHandler( async (req,res) => {
     const match = await argon2.verify(encontrarUsuario.password, user.password);
 
     if (!match) {
-        return res.status(401).json({ message: "Contraseña incorrecta" });
+        return res.status(404).json({ message: "Contraseña incorrecta" });
     }
 
     //Generamos los tokens
@@ -332,7 +332,8 @@ const generateAccessToken= asyncHandler( async (user) => {
     const payload = {
         id: user.id,
         email: user.email,
-        username: user.username
+        username: user.username,
+        rol: "user"
     };
 
     //Generamos el token, recordar añadir ACCESS_TOKEN_EXPIRATION a .env
