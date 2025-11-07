@@ -34,7 +34,7 @@ export default fp(async (server: FastifyInstance) => {
         try {
             await request.jwtVerify();
         } catch (err) {
-            reply.code(401).send({ message: 'Unauthorized' });
+            server.throwError(401, 'Unauthorized');
         }
     });
 
@@ -46,10 +46,10 @@ export default fp(async (server: FastifyInstance) => {
             await request.jwtVerify();
             const user = (request as any).user;
             if (!user || user.role !== 'admin') {
-                return reply.code(403).send({ message: 'No tienes permisos para acceder a este recurso' });
+                server.throwError(403, 'No tienes permisos para acceder a este recurso');
             }
         } catch (err) {
-            reply.code(401).send({ message: 'Unauthorized' });
+            server.throwError(401, 'Unauthorized');
         }
     })
 });
