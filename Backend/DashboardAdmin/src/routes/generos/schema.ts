@@ -24,6 +24,10 @@ const generoGetSchema = S.object()
   .prop('createdAt', S.string().format('date-time'))
   .prop('updatedAt', S.string().format('date-time'));
 
+const generoListSchema = S.object()
+  .prop('generos', S.array().required())
+  .prop('total', S.number().required());
+
 const generoCreateSchema = S.object()
   .prop('name', S.string())
   .prop('description', S.string());
@@ -126,4 +130,18 @@ export const onStatusGeneroSchema = {
     400: S.object().prop('message', S.string().default('Error actulizando status del género')),
     404: S.object().prop('message', S.string().default('Género no encontrado'))
   }
+};
+
+export const onGetGeneroIdGeneroSchema = {
+  tags: ['Generos'],
+  description: 'Obtener generos por id_genero',
+  response: {
+    200: S.object().prop(
+      'generos',
+      S.array()
+        .items(S.object().prop('id_genero', S.string().required()))
+        .required()
+    ),
+    404: S.object().prop('message', S.string().default('Género no encontrado')),
+  },
 };

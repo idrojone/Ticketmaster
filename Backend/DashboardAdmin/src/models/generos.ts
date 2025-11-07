@@ -24,6 +24,18 @@ class ModelGeneros {
         }
     }
 
+    async getAllGenerosIdGenero() {
+        try {
+            return await this.prisma.genero.findMany({
+                select: {
+                    id_genero: true,
+                },
+            });
+        } catch (error) {
+            this.server.throwError(500, 'Error fetching generos by id_genero');
+        }
+    }
+
     /**
      * Obtiene un género específico basado en su slug.
      * @param {string} slug - El slug del género a buscar.
@@ -347,6 +359,11 @@ class ModelGeneros {
         }
 
         return { generos: updateConcierto };
+    }
+
+    async onGetGenerosIdGenero() {
+        const generos =  await this.getAllGenerosIdGenero();
+        return { generos };
     }
 }   
 

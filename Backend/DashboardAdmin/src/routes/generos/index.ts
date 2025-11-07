@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { getGeneros, getGenero, onCreateGenero, onUpdateGenero, onActivateGeneroSchema, onStatusGeneroSchema } from './schema';
+import { getGeneros, getGenero, onCreateGenero, onUpdateGenero, onActivateGeneroSchema, onStatusGeneroSchema, onGetGeneroIdGeneroSchema } from './schema';
 import { modelGeneros } from '../../models/generos';
 import { Genero, Status } from '@prisma/client';
 
@@ -122,6 +122,19 @@ async function generosRoute(server: FastifyInstance) {
     async function onStatusGenero (request: FastifyRequest<{ Params: {slug: string }, Body: {status: Status } }>, reply: FastifyReply) {
         const updateGenero = await modelGeneros(server).onStatusGenero(request);
         return reply.code(200).send(updateGenero);
+    }
+
+
+    server.route({
+        method: 'GET',
+        url: '/generos/id_genero',
+        onRequest: [server.authenticate, server.authenticateRole],
+        schema: onGetGeneroIdGeneroSchema,
+        handler: onGetGeneroIdGenero
+    });
+    async function onGetGeneroIdGenero (request: FastifyRequest<{ Params: { id_genero: string } }>, reply: FastifyReply) {
+        const genero = await modelGeneros(server).onGetGenerosIdGenero();
+        return reply.code(200).send(genero);
     }
 }
 
