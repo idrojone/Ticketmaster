@@ -140,7 +140,8 @@ userSchema.methods.generateAccessToken = function() {
             id: this._id,
             public_id: this.public_id,
             email: this.email,
-            username: this.username
+            username: this.username,
+            role: "user"
         },
         process.env.JWT_SECRET,
         {expiresIn: '1d'}

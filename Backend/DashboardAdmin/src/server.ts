@@ -26,7 +26,12 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
   await server
 
     /* EL CORS */
-    .register(cors, {})
+    .register(cors, {
+      origin: 'http://localhost:4200', // Origen específico para Angular
+      credentials: true, // Permitir cookies y headers de autenticación
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    })
     .after(err => {
       if (err) console.error('Error al registrar CORS:', err);
     })

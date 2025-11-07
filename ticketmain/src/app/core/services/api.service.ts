@@ -17,26 +17,51 @@ export class ApiService {
         return throwError(() => normalized);
     }
 
-    get(path: string, params: HttpParams = new HttpParams(), credentialsRequired: boolean = false): Observable<any>{
-        return this.http.get(`${environment.api_url}${path}`, { params, withCredentials: credentialsRequired })
+    get(path: string, params: HttpParams = new HttpParams(), credentialsRequired: boolean = false, server?: string): Observable<any>{
+        if(server==="dashboard"){
+            console.log(' llamando a dashboard API:', `${environment.dashboard_url}${path}`);
+            return this.http.get(`${environment.dashboard_url}${path}`, { params, withCredentials: credentialsRequired })
             .pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.get(`${environment.api_url}${path}`, { params, withCredentials: credentialsRequired })
+            .pipe(catchError(this.formatErrors));
+        }
     }       
 
-    put(path: string, body: Object = {}): Observable<any> {
-        return this.http.put(
-            `${environment.api_url}${path}`,
-            JSON.stringify(body)
-        ).pipe(catchError(this.formatErrors));
+    put(path: string, body: Object = {}, server?: string): Observable<any> {
+        if(server==="dashboard"){
+            return this.http.put(
+                `${environment.dashboard_url}${path}`,
+                JSON.stringify(body)
+            ).pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.put(
+                `${environment.api_url}${path}`,
+                JSON.stringify(body)
+            ).pipe(catchError(this.formatErrors));
+        }
     }
 
-    post(path: string, body: any = {}, credentialsRequired: boolean = false): Observable<any> {
+    post(path: string, body: any = {}, credentialsRequired: boolean = false, server?: string): Observable<any> {
         console.log(body);
-        return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        console.log(server);    
+        if(server==="dashboard"){
+            // console.log(' llamando a dashboard API:', `${environment.dashboard_url}${path}`);
+            return this.http.post(`${environment.dashboard_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        }
     }
 
-    delete(path: any): Observable<any> {
-        return this.http.delete(
-            `${environment.api_url}${path}`
-        ).pipe(catchError(this.formatErrors));  
+    delete(path: any, server?: string): Observable<any> {
+        if(server==="dashboard"){
+            return this.http.delete(
+                `${environment.dashboard_url}${path}`
+            ).pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.delete(
+                `${environment.api_url}${path}`
+            ).pipe(catchError(this.formatErrors));
+        }
     }
 }

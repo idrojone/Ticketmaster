@@ -37,6 +37,53 @@
     font-weight: 700;
 }
 
+/* Role Selector */
+.role-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.role-selector label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.role-options {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.role-btn:hover {
+    border-color: #999;
+    background: #f8f9fa;
+}
+
+.role-btn.active {
+    border-color: #000;
+    background: #000;
+    color: white;
+}
+
 .auth-form {
     display: flex;
     flex-direction: column;

@@ -334,7 +334,8 @@ const generateAccessToken= asyncHandler( async (user) => {
     const payload = {
         id: user.id,
         email: user.email,
-        username: user.username
+        username: user.username,
+        rol: "user"
     };
 
     //Generamos el token, recordar añadir ACCESS_TOKEN_EXPIRATION a .env

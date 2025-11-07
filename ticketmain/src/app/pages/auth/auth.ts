@@ -19,6 +19,7 @@ export class Auth implements OnInit {
   enviando = false;
   errors: any = {};
   returnUrl: string = '/';
+  selectedRole: 'USER' | 'ADMIN' = 'USER';
   
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -78,14 +79,15 @@ export class Auth implements OnInit {
 
     const credentials = this.prepararCredenciales();
     const authType = this.modoLogin ? 'login' : 'register';
-    
+
+
     console.log(`Enviando ${authType}:`, credentials);
 
-    this.userService.attemptAuth(authType, credentials).subscribe({
+    this.userService.attemptAuth(authType, credentials, this.selectedRole).subscribe({
       next: (response: any) => {
         console.log(`${authType} exitoso:`, response);
         this.enviando = false;
-   
+        
         this.router.navigateByUrl(this.returnUrl);
         
         Swal.fire({
@@ -95,12 +97,44 @@ export class Auth implements OnInit {
           confirmButtonText: 'Continuar'
         });
 
-      },
-      error: (error: any) => {
+      }, error: (error: any) => {
         console.error(`Error en ${authType}:`, error);
         this.enviando = false;
-        const message = (error && (error.message || error.error || error.msg)) || (error) || 'Error desconocido';
-        this.errors = { general: message };
+        
+        let titulo = 'Error';
+        let mensaje = 'Error desconocido';
+
+        // Control de errores por status code
+        if (error.status === 0) {
+          titulo = 'Error de conexión';
+          mensaje = 'No se pudo conectar al servidor. Verifica que esté ejecutándose.';
+        } else if (error.status === 401) {
+          titulo = 'Credenciales inválidas';
+          mensaje = 'Email o contraseña incorrectos. Verifica tus datos.';
+        } else if (error.status === 403) {
+          titulo = 'Acceso denegado';
+          mensaje = 'No tienes permisos para acceder como ADMIN.';
+        } else if (error.status === 409) {
+          titulo = 'Usuario existente';
+          mensaje = error.error?.message || 'Este usuario ya existe.';
+        } else if (error.status === 400) {
+          titulo = 'Datos inválidos';
+          mensaje = error.error?.message || 'Verifica que todos los campos sean correctos.';
+        } else if (error.status >= 500) {
+          titulo = 'Error del servidor';
+          mensaje = 'El servidor no está respondiendo correctamente.';
+        } else if (error.error?.message) {
+          mensaje = error.error.message;
+        }
+
+        this.errors = { general: mensaje };
+        
+        Swal.fire({
+          icon: 'error',
+          title: titulo,
+          text: mensaje,
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Genero } from 'src/app/core/models/generos.model';
-import { GenerosService } from 'src/app/core/services/generos.service';
+import { GenerosService } from 'src/app/core/services/UserServices/generos.service';
 import { CardGeneros } from '../card-generos/card-generos';
 
 @Component({

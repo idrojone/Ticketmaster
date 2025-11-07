@@ -33,6 +33,7 @@ const verifyJWTOpcional = (req, res, next) => {
             req.public_id = decoded.public_id;
             req.email = decoded.email;
             req.username = decoded.username;
+            req.rol = decoded.role;
 
             next();
         }

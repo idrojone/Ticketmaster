@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
-import { ApiService } from "./api.service";
+import { ApiService } from "../api.service";
 import { map, Observable } from "rxjs";
-import { Comment } from "../models/comment.model";
+import { Comment } from "../../models/comment.model";
 
 // Interfaces para tipar las respuestas de la API
 interface CommentResponse {

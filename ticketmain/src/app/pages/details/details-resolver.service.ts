@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { catchError, Observable } from "rxjs";
 import { Concierto } from "src/app/core/models/conciertos.model";
-import { ConciertosService } from "src/app/core/services/conciertos.service";
+import { ConciertosService } from "src/app/core/services/UserServices/conciertos.service";
 
 
 @Injectable({

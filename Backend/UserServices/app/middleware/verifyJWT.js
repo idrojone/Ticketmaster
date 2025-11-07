@@ -36,6 +36,7 @@ const verifyJWT = async (req, res, next) => {
                 req.email = decoded.email;
                 req.username = decoded.username;
                 req.blacklisted = false;
+                req.rol = decoded.role;
 
                 console.log("Decoded JWT válido:", decoded);
                 return next();
@@ -181,6 +182,7 @@ const verifyJWT = async (req, res, next) => {
                         req.email = user.email;
                         req.username = user.username;
                         req.blacklisted = false;
+                        req.rol = user.role;
 
                         // Continuar con la request
                         next();
