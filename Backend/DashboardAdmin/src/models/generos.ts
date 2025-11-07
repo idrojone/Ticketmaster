@@ -1,13 +1,21 @@
+import { FastifyInstance, FastifyRequest } from 'fastify';
 import { prisma } from '../plugins/prisma/index';
 import { Genero, PrismaClient } from '@prisma/client';
+import server from '../server';
 
 class ModelGeneros {
     private prisma: PrismaClient;
+    private server: FastifyInstance;
 
-    constructor(prismaClient: PrismaClient) {
+    constructor(prismaClient: PrismaClient, server: FastifyInstance) {
         this.prisma = prismaClient;
+        this.server = server;
     }
 
+    /** 
+     * Obtiene todos los géneros disponibles en la base de datos.
+     * @returns {Promise<Genero[]>} Una promesa que resuelve a una lista de objetos Genero.
+    */
     async getAllGeneros(){
         try {
             return await this.prisma.genero.findMany();
@@ -17,17 +25,26 @@ class ModelGeneros {
         }
     }
 
+    /**
+     * Obtiene un género específico basado en su slug.
+     * @param {string} slug - El slug del género a buscar.
+     * @returns {Promise<Genero | null>} Una promesa que resuelve a un objeto Genero o null si no se encuentra.
+     */
     async getGeneroBySlug(slug: string){
         try {
             return await this.prisma.genero.findUnique({
                 where: { slug : slug, }
             });
         } catch (error) {
-            console.error('Error fetching genero by slug:', error);
-            throw error;
+            this.server.throwError(500, 'Error buscando genero por slug');
         }
     }
 
+    /**
+     * Crea un nuevo género en la base de datos.
+     * @param {Genero} NuevoGenero - El objeto Genero que se va a crear.
+     * @returns {Promise<Genero>} Una promesa que resuelve al género creado.
+     */
     async createGenero(NuevoGenero: Genero) {
         try {
             return await this.prisma.genero.create({
@@ -39,6 +56,12 @@ class ModelGeneros {
         }
     }
 
+    /** 
+     * Actualiza los conciertos asociados a un género cuando el id_genero del género cambia.
+     * @param {string} oldIdGenero - El id_genero antiguo del género.
+     * @param {string} newIdGenero - El nuevo id_genero del género.
+     * @returns {Promise<Prisma.BatchPayload>} Una promesa que resuelve al resultado de la actualización masiva.
+    */
     async updateConciertosGeneroId(oldIdGenero: string, newIdGenero: string) {
         try {
             return await this.prisma.concierto.updateMany({
@@ -51,6 +74,12 @@ class ModelGeneros {
         }
     }
 
+    /**
+     * Actualiza un género existente en la base de datos.
+     * @param {string} slug - El slug del género a actualizar.
+     * @param {Partial<Genero>} updatedData - Los datos actualizados del género.
+     * @returns {Promise<Genero>} Una promesa que resuelve al género actualizado.
+     */
     async updateGenero(slug: string, updatedData: Partial<Genero>) {
         try {
             return await this.prisma.genero.update({
@@ -63,6 +92,11 @@ class ModelGeneros {
         }
     }
 
+    /**
+     * Verifica si un género con un slug específico ya existe en la base de datos.
+     * @param {string} slug - El slug del género a verificar.
+     * @returns {Promise<Genero | null>} Una promesa que resuelve al género si existe, o null si no existe.
+     */
     async checkSlugExists(slug: string){
         try {
             return await this.prisma.genero.findUnique({
@@ -74,6 +108,11 @@ class ModelGeneros {
         }
     }
     
+    /**
+     * Verifica si un género con un id_genero específico ya existe en la base de datos.
+     * @param {string} id_genero - El id_genero del género a verificar.
+     * @returns {Promise<Genero | null>} Una promesa que resuelve al género si existe, o null si no existe.
+     */
     async checkid_generoExists(id_genero: string){
         try {
             return await this.prisma.genero.findUnique({
@@ -85,6 +124,11 @@ class ModelGeneros {
         }
     }
 
+    /**
+     * Obtiene un género específico basado en su id_genero.
+     * @param {string} id_genero - El id_genero del género a buscar.
+     * @returns {Promise<Genero | null>} Una promesa que resuelve a un objeto Genero o null si no se encuentra.
+     */
     async getGeneroById(id_genero: string){
         try {
             this.checkid_generoExists(id_genero);
@@ -96,6 +140,143 @@ class ModelGeneros {
             throw error;
         }
     }
-}
 
-export const modelGeneros = new ModelGeneros(prisma);
+    async getGeneroByName(name: string){
+        try {
+            return await this.prisma.genero.findUnique({
+                where: { name : name }
+            });
+        } catch (error) {
+            console.error('Error fetching genero by name:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Obtiene un género específico basado en su slug.
+     * @param {FastifyRequest<{Params: {slug: string}}>} request - La solicitud Fastify que contiene el slug en los parámetros.
+     * @returns {Promise<Genero>} Una promesa que resuelve a un objeto Genero.
+     * @throws {Error} Lanza un error si el género no se encuentra.
+     */
+    async onGetGenero(request: FastifyRequest<{Params: {slug: string}}>) {
+        const { slug } = request.params;
+        const genero = await this.getGeneroBySlug(slug);
+        if (!genero) {
+            this.server.throwError(404, 'Genero not found');
+        }
+        return genero;
+    }
+
+    /**
+     * Crea un nuevo género basado en los datos proporcionados en la solicitud.
+     * @param {FastifyRequest<{Body: Genero}>} request - La solicitud Fastify que contiene los datos del nuevo género en el cuerpo.
+     * @returns {Promise<Genero>} Una promesa que resuelve al género creado.
+     * @throws {Error} Lanza un error si hay un problema al crear el género.
+     */
+    async onCreateGenero(request: FastifyRequest<{ Body: Genero }>) {
+        
+        const generoData = request.body;
+        /**
+         * Generar slug y estado inicial
+         */
+
+        generoData.slug = this.server.generateSlug(generoData.name);
+        generoData.status = 'PENDING';
+        generoData.is_active = false;
+
+        /**
+         * Asignar imagen por defecto si no se proporciona ninguna
+         */
+        if (!generoData.img || generoData.img.trim() === '') {
+            generoData.img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXUPnDwr3HCGC-8Gm-34Gp3JRtRzmhrTwSEw&s";
+        }
+         
+        /**
+         * Generar id_genero único
+         */
+        generoData.id_genero = this.server.generateSlug(generoData.name);
+
+        /**
+         * Crear el nuevo género
+         */
+        const newGenero = await this.createGenero(generoData);
+        if (!newGenero) {
+            this.server.throwError(400, 'Error creating genero');
+        }
+        return newGenero;
+    }
+
+    /**
+     * Actualiza un género existente basado en los datos proporcionados en la solicitud.
+     * @param {FastifyRequest<{ Params: { slug: string }, Body: Genero }>} request - La solicitud Fastify que contiene el slug en los parámetros y los datos actualizados en el cuerpo.
+     * @returns {Promise<Genero>} Una promesa que resuelve al género actualizado.
+     * @throws {Error} Lanza un error si el género no se encuentra o si hay un problema al actualizarlo.
+     */
+    async onUpdateGenero(request: FastifyRequest<{ Params: { slug: string }, Body: Genero }>) {
+        const { slug } = request.params;
+        const updatedData = request.body;
+
+        const genero = await this.getGeneroBySlug(slug);
+
+        if (!genero) {
+            this.server.throwError(404, 'Genero no encontrado');
+            return;
+        }
+
+        /**
+         * Si el nombre ha cambiado, actualizar el slug e id_genero
+         */
+        if (updatedData.name && updatedData.name !== genero.name) {
+            const existingGenero = await this.getGeneroByName(updatedData.name);
+            if (existingGenero) {
+                this.server.throwError(400, 'El nombre del género ya existe');
+                return;
+            }
+            updatedData.slug = this.server.generateSlug(updatedData.name);
+        }
+
+        if (updatedData.id_genero !== genero.id_genero && updatedData.id_genero) {
+            if (!genero.id_genero) {
+                this.server.throwError(500, 'Internal Server Error');
+                return;
+            }
+
+            const oldId = genero.id_genero;
+
+            if (!updatedData.id_genero) {
+                this.server.throwError(400, 'El id_genero no puede estar vacío');
+                return;
+            }
+
+            const newId = updatedData.id_genero;
+
+            try {
+                await this.updateConciertosGeneroId(oldId, newId);
+            } catch (error) {
+                this.server.throwError(500, 'Error updating conciertos with new id_genero');
+                return;
+            } 
+        }
+
+        const updatedGenero = await this.updateGenero(slug, updatedData);
+        if (!updatedGenero) {
+            this.server.throwError(400, 'Nuevos datos ya en uso o no existe');
+            return;
+        }
+        return updatedGenero;
+    }
+
+    async onActivateGenero(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>) {
+        const { slug } = request.params;
+        const { is_active } = request.body;
+        const genero = await this.getGeneroBySlug(slug);
+
+        if (!genero) {
+            this.server.throwError(404, 'Genero no encontrado');
+            return;
+        }
+    }
+
+}   
+
+export const modelGeneros = (server: FastifyInstance) => new ModelGeneros(prisma, server);

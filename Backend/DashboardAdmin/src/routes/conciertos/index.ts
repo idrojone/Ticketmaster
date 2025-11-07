@@ -4,6 +4,7 @@ import { getConciertos, onCreateConcierto, getConciertoBySlug, onUpdateConcierto
 import { modelConciertos } from '../../models/conciertos';
 import { modelGeneros } from '../../models/generos';
 import { Concierto, Status } from '@prisma/client';
+import { resourceUsage } from 'process';
 
 
 /**
@@ -28,12 +29,8 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler : onGet
     })
     async function onGet(_: FastifyRequest, reply: FastifyReply) {
-        try {
-            const conciertos = await modelConciertos.getAllConciertos();
-            return reply.code(200).send({ conciertos, total: conciertos.length });
-        } catch (error) {
-            server.throwError(500, 'Error obteniendo conciertos');
-        }
+        const conciertos = await modelConciertos(server).getAllConciertos();
+        return reply.code(200).send({ total: conciertos.length, conciertos });
     }
 
     /**
@@ -54,14 +51,8 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler : onGetBySlug
     })
     async function onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
-        try {
-            const { slug } = request.params;
-            const concierto = await modelConciertos.getConciertoBySlug(slug);
-            if (!concierto) return reply.code(404).send({ message: 'Concierto no encontrado' });
-            return reply.code(200).send(concierto);
-        } catch (error) {
-            server.throwError(500, 'Error obteniendo concierto por slug');
-        }
+        const result = await modelConciertos(server).onGetBySlug(request, reply);
+        return reply.code(200).send(result);
     }
 
     /**
@@ -82,61 +73,8 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler : onPost
     })
     async function onPost(request: FastifyRequest<{ Body: Concierto }>, reply: FastifyReply) {
-        try {
-
-            const conciertosData = request.body;
-
-            /**
-             * Generar slug y estado inicial del concierto
-             */
-            conciertosData.slug = server.generateSlug(conciertosData.nombre);
-            console.log('Slug generado:', conciertosData.slug);
-            conciertosData.status = 'PENDING';
-            conciertosData.is_active = true;
-            
-            /**
-             * Obtener imagen del artista desde la API de Spotify
-             */
-            const spotifyImage = await server.spotify(conciertosData.artista);
-            conciertosData.imagenArtista = spotifyImage ? spotifyImage.url : '';
-
-            /**
-             * Validar que id_genero es una cadena de texto válida
-             */
-            const id_genero =  conciertosData.id_genero;
-
-            if (typeof id_genero !== 'string' || id_genero.trim() === '') {
-                server.throwError(404, 'El campo id_genero es obligatorio y debe ser una cadena de texto válida');
-            }
-
-            /**
-             * Encontrar el id del id_genero
-             */
-            const  genero = await modelGeneros.getGeneroById(id_genero);
-
-            if (!genero) return reply.code(404).send({ message: 'El género indicado no existe' });
-            
-            /**
-             *  Update id_genero
-             */
-            const generoResuelto: string = genero.id; 
-            conciertosData.id_genero = generoResuelto;
-
-            /**
-             * Crear Concierto
-             */
-            const newConcierto = await modelConciertos.createConcierto(conciertosData);
-
-            /**
-             * Excluir el id de la respuesta para que coincida con el schema
-             */
-            const { id, ...conciertoSinId } = newConcierto;
-
-            return reply.code(200).send(conciertoSinId);
-
-        } catch (error) {
-            server.throwError(500, 'Error procesando la solicitud');
-        }
+        const concierto = await modelConciertos(server).onCreateConcierto(request, reply);
+        return reply.code(201).send(concierto);        
     }
 
     /**
@@ -156,56 +94,8 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler: onUpdateConcierto
     })
     async function onUpdateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: Concierto }>, reply: FastifyReply) {
-        try {
-            const { slug } = request.params;
-            const updateData = request.body;
-            
-            const concierto = await modelConciertos.getConciertoBySlug(slug);
-            if (!concierto) return reply.code(404).send({ message: 'Concierto no encontrado' });
-
-            /**
-             * Cambiar la imagen si el nombre del artista cambia
-             */
-            if (updateData.artista !== concierto.artista) {
-                const spotifyImage = await server.spotify(updateData.artista);
-                updateData.imagenArtista = spotifyImage ? spotifyImage.url : '';
-            }
-
-            /**
-             * Validar y actualizar id_genero si ha cambiado
-             */
-            if (updateData.id_genero !== concierto.id_genero) {
-                const genero = await modelGeneros.getGeneroById(updateData.id_genero);
-                if (!genero) return reply.code(404).send({ message: 'El género indicado no existe' });
-                if (!genero.id_genero) return reply.code(400).send({ message: 'El género no tiene un id_genero válido' });
-                updateData.id_genero = genero.id_genero;
-            }
-
-            /**
-             * Actualizar slug si el nombre del concierto cambia
-             */
-
-            if (updateData.nombre !== concierto.nombre) {
-                updateData.slug = server.generateSlug(updateData.nombre);
-            }
-
-            /**
-             * Actualizar el concierto
-             */
-            const updatedConcierto = await modelConciertos.updateConcierto(slug, updateData);
-            if (!updatedConcierto) {
-                return reply.code(404).send({ message: 'Concierto no encontrado' });
-            }
-
-            /**
-             * Excluir el id de la respuesta para que coincida con el schema
-             */
-            const { id, ...conciertoSinId } = updatedConcierto;
-
-            return reply.code(200).send({ concierto: conciertoSinId });
-        } catch (error) {
-            server.throwError(500, 'Error actualizando concierto');
-        }
+        const concierto = await modelConciertos(server).onUpdateConcierto(request, reply);
+        return reply.code(200).send(concierto);
     }
 
     /**
@@ -226,36 +116,8 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler: onActivateConcierto
     })
     async function onActivateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
-        try {
-            const { slug } = request.params;
-            const { is_active } = request.body;
-
-            /**
-             * Validar que el concierto existe
-             */
-            const concierto = await modelConciertos.getConciertoBySlug(slug);
-            if (!concierto) return reply.code(404).send({ message: 'Concierto no encontrado' });
-
-            /**
-             * Validar que el estado no sea el mismo que el actual
-             */
-            if (concierto.is_active === is_active) {
-                return reply.code(400).send({ message: `El concierto ya está ${is_active ? 'activo' : 'inactivo'}` });
-            }
-
-            concierto.is_active = is_active;
-
-            /**
-             * Actualizar el estado de actividad del concierto
-             */
-            const updatedConcierto = await modelConciertos.patchConciertoActive(slug, is_active);
-            if (!updatedConcierto) {
-                return reply.code(404).send({ message: 'Concierto no encontrado' });
-            }
-            return reply.code(200).send({ concierto: updatedConcierto });
-        } catch (error) {
-            server.throwError(500, 'Error actualizando estado de actividad del concierto');
-        }
+        const updatedConcierto = await modelConciertos(server).onActivateConcierto(request, reply);
+        return reply.code(200).send(updatedConcierto);
     }
 
     /**
@@ -276,39 +138,8 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler: onUpdateConciertoStatus
     })
     async function onUpdateConciertoStatus(request: FastifyRequest<{ Params: { slug: string }, Body: { status: Status } }>, reply: FastifyReply) {
-        try {
-            const { slug } = request.params;
-            const { status } = request.body;
-            
-            /**
-             * Validar que el concierto existe
-             */
-            const concierto = await modelConciertos.getConciertoBySlug(slug);
-            if (!concierto) return reply.code(404).send({ message: 'Concierto no encontrado' });
-           
-            /**
-             * Validar que el estado no sea el mismo que el actual
-             */
-            if (concierto.status === status) {
-                return reply.code(400).send({ message: `El concierto ya está en estado ${status}` });
-            }
-
-            /**
-             * Actualizar el estado del concierto
-             */
-            const updatedConcierto = await modelConciertos.patchConciertoStatus(slug, status);
-           
-            /**
-             * Validar que la actualización fue exitosa
-             */
-            if (!updatedConcierto) {
-                return reply.code(404).send({ message: 'Concierto no encontrado' });
-            }
-
-            return reply.code(200).send({ concierto: updatedConcierto });
-        } catch (error) {
-            server.throwError(500, 'Error actualizando estado del concierto');
-        }
+        const updateConcierto = await modelConciertos(server).onUpdateConciertoStatus(request);
+        return reply.code(200).send(updateConcierto);
     }
 
     /**
@@ -328,16 +159,8 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         handler: onDeleteConcierto
     })
     async function onDeleteConcierto(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
-        try {
-            const { slug } = request.params;
-            const deleted = await modelConciertos.deleteConcierto(slug);
-            if (!deleted) {
-                return reply.code(404).send({ message: 'Concierto no encontrado' });
-            }
-            return reply.code(200).send({ message: 'Concierto eliminado correctamente' });
-        } catch (error) {
-            server.throwError(500, 'Error eliminando concierto');
-        }
+        const deleted = await modelConciertos(server).onDeleteConcierto(request);
+        return reply.code(200).send(deleted);
     }
 }
 

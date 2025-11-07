@@ -33,13 +33,8 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         handler: onGet
     })
     async function onGet (_: FastifyRequest, reply: FastifyReply) {
-        try {
-            const generos = await modelGeneros.getAllGeneros();
-            return reply.code(200).send({ generos , total: generos.length });
-        } catch (error) {
-            console.error('Error fetching generos:', error);
-            return reply.code(500).send({ error: 'Internal Server Error' });
-        }       
+        const generos = await modelGeneros(server).getAllGeneros();
+        return reply.code(200).send({ generos , total: generos.length });
     }
 
     /**
@@ -59,18 +54,8 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         handler: onGetGenero
     })
     async function onGetGenero (request: FastifyRequest<{Params: {slug: string}}>, reply: FastifyReply) {
-        try {
-            const slug = request.params.slug;
-            const genero = await modelGeneros.getGeneroBySlug(slug);
-            if (genero) {
-                return reply.code(200).send(genero);
-            } else {
-                return reply.code(404).send({ message: 'Genero not found' });
-            }
-        } catch (error) {
-            console.error('Error fetching genero by name:', error);
-            return reply.code(500).send({ error: 'Internal Server Error' });
-        }
+        const genero = await modelGeneros(server).onGetGenero(request);
+        return reply.code(200).send(genero);
     }
 
     /**
@@ -90,42 +75,8 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         handler: onPost
     })
     async function onPost (request: FastifyRequest<{ Body: Genero }>, reply: FastifyReply) {
-        try {
-            const generoData = request.body;
-
-            /**
-             * Generar slug y estado inicial del género
-             */
-
-            generoData.slug = server.generateSlug(generoData.name);
-            generoData.status = 'PENDING';
-            generoData.is_active = true;
-
-
-            /**
-             * Asignar imagen por defecto si no se proporciona ninguna
-             */
-            if (!generoData.img || generoData.img.trim() === '') {
-                generoData.img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXUPnDwr3HCGC-8Gm-34Gp3JRtRzmhrTwSEw&s";
-            }
-
-            /**
-             * Generar id_genero único
-             */
-            generoData.id_genero = server.generateSlug(generoData.name);
-
-            /**
-             * Crear el nuevo género
-             */
-            const newGenero = await modelGeneros.createGenero(generoData);
-
-            if (!newGenero) return reply.code(400).send({ message: 'Error creating genero' });
-
-            return reply.code(201).send(newGenero);
-        } catch (error) {
-            console.error('Error creating genero:', error);
-            return reply.code(500).send({ error: 'Internal Server Error' });
-        }
+        const newGenero = await modelGeneros(server).onCreateGenero(request);
+        return reply.code(201).send(newGenero);
     }
 
     /**
@@ -146,48 +97,8 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         handler: onPut
     })
     async function onPut (request: FastifyRequest<{ Params: { slug: string }, Body: Genero }>, reply: FastifyReply) {
-        try {
-
-            const { slug } = request.params;
-            const updatedData = request.body;
-
-            const genero = await modelGeneros.getGeneroBySlug(slug);
-
-            if (!genero) return reply.code(404).send({ message: 'Genero not found' });
-
-            /**
-             * Si el nombre ha cambiado, actualizar el slug e id_genero
-             */
-            if (updatedData.name !== genero.name) {
-                // mirar antes si el nombre ya existe
-                updatedData.slug = server.generateSlug(updatedData.name);
-            }
-
-            if (updatedData.id_genero !== genero.id_genero) {
-
-                if (!genero.id_genero) return reply.code(500).send({ error: 'Internal Server Error' });
-                const oldId = genero.id_genero;
-                const newId = server.generateSlug(updatedData.name || genero.name);
-                try {
-                    await modelGeneros.updateConciertosGeneroId(oldId, newId);
-                    await modelConciertos.updateConciertosGeneroId(oldId, newId);
-                } catch (error) {
-                    console.error('Error actualizando conciertos para cambio de id_genero:', error);
-                    return reply.code(500).send({ error: 'Internal Server Error' });
-                }
-            }
-
-            const updatedGenero = await modelGeneros.updateGenero(slug, updatedData);
-
-            if (updatedGenero) {
-                return reply.code(200).send(updatedGenero);
-            } else {
-                return reply.code(400).send({ message: 'Nuevos datos ya en uso o no existe ' });
-            }
-        }catch (error) {
-            console.error('Error updating genero:', error);
-            return reply.code(500).send({ error: 'Internal Server Error' });
-        }
+        const updatedGenero = await modelGeneros(server).onUpdateGenero(request);
+        return reply.code(200).send(updatedGenero);
     }
 
     server.route({
@@ -198,7 +109,8 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         handler: onActivateGenero
     })
     async function onActivateGenero (request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
-
+        const updatedGenero = await modelGeneros(server).onActivateGenero(request);
+        return reply.code(200).send(updatedGenero);
     }
 }
 

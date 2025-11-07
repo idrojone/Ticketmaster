@@ -40,7 +40,8 @@ const createConciertoSchema = S.object()
     .prop('duracion', S.number().minimum(0).required())
     .prop('id_genero', S.string().required())
     .prop('imagenArtista', S.string())
-    .prop('imagenesShow', S.array());
+    .prop('imagenesShow', S.array())
+    .additionalProperties(false);
 
 /**
  * @route GET /conciertos

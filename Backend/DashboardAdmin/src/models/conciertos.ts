@@ -1,12 +1,16 @@
 import { Concierto, Status, PrismaClient } from "@prisma/client";
 import { prisma } from "../plugins/prisma";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 class ModelConciertos {
     private prisma: PrismaClient;
+    private server: FastifyInstance
 
-    constructor(prismaClient: PrismaClient) {
+    constructor(prismaClient: PrismaClient, server: FastifyInstance) {
         this.prisma = prismaClient;
+        this.server = server;
     }
+
     /**
      * Obtener todos los conciertos
      * @returns  {Promise<Concierto[]>}
@@ -95,6 +99,12 @@ class ModelConciertos {
         }
     }
 
+    /**
+     * Actualiza el estado de un concierto por su slug
+     * @param {string} slug - Slug del concierto a actualizar
+     * @param {Status} status - Nuevo estado del concierto
+     * @returns {Promise<Concierto>}
+     */
     async patchConciertoStatus(slug: string, status: Status) {
         console.log('Patching concierto with data:', { status });
         try {
@@ -144,6 +154,245 @@ class ModelConciertos {
             throw error;
         }
     }
+
+    /**
+     * Manejador de ruta para obtener un concierto por slug
+     * @param {FastifyRequest<{ Params: { slug: string } }>} request - La solicitud Fastify
+     * @param {FastifyReply} reply - La respuesta Fastify
+     * @returns {Promise<Concierto | void>}
+     */
+    async onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) { 
+        const { slug } = request.params;
+        const concierto = await this.getConciertoBySlug(slug);
+        if (!concierto) return reply.code(404).send({ message: 'Concierto no encontrado' });
+        return concierto;
+    }
+
+    /**
+     * Manejador de ruta para crear un nuevo concierto
+     * @param {FastifyRequest<{ Body: Concierto }>} request - La solicitud Fastify
+     * @param {FastifyReply} reply - La respuesta Fastify
+     * @returns {Promise<Concierto | void>}
+     */
+    async onCreateConcierto(request: FastifyRequest<{ Body: Concierto }>, reply: FastifyReply) {
+        const conciertoData = request.body;
+
+        /**
+        *  Generar slug y estado inicial
+        */
+        conciertoData.slug = this.server.generateSlug(conciertoData.nombre);
+        conciertoData.status = 'PENDING';
+        conciertoData.is_active = false;
+
+        // Asegurar que los campos numéricos sean del tipo correcto
+        if (conciertoData.precio !== undefined) conciertoData.precio = Number(conciertoData.precio) as any;
+        if (conciertoData.aforo !== undefined) conciertoData.aforo = Number(conciertoData.aforo) as any;
+        if (conciertoData.duracion !== undefined) conciertoData.duracion = Number(conciertoData.duracion) as any;
+
+        // Asegurar que imagenesShow sea un array
+        if (!Array.isArray(conciertoData.imagenesShow)) {
+            conciertoData.imagenesShow = [] as any;
+        }
+
+        /**
+         * Obtener imagen del artista desde la API de Spotify
+         */
+        if (!conciertoData.imagenArtista) {
+            const spotifyImage = await this.server.spotify(conciertoData.artista);
+            conciertoData.imagenArtista = spotifyImage ? spotifyImage.url : '';
+        }
+
+        /**
+         * Validar que el id del id_genero exista
+         */
+
+        const genero = await this.prisma.genero.findUnique({
+            where: { id_genero: conciertoData.id_genero }
+        });
+        if (!genero) {
+            this.server.throwError(404, 'Género no encontrado');
+            return; 
+        }
+
+        /**
+         * Crear concierto
+         */
+
+        const newConcierto = await this.createConcierto(conciertoData);
+
+        /**
+         * Retornar nuevo concierto creado sin id, envuelto como { concierto }
+         */
+        const { id, ...conciertoWithoutId } = newConcierto;
+        return { concierto: conciertoWithoutId };
+    }
+
+    /**
+     * Manejador de ruta para actualizar un concierto existente
+     * @param {FastifyRequest<{ Params: { slug: string }, Body: Concierto }>} request - La solicitud Fastify
+     * @param {FastifyReply} reply - La respuesta Fastify
+     * @returns {Promise<Concierto | void>}
+     */
+    async onUpdateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: Concierto }>, reply: FastifyReply) {
+
+        const { slug } = request.params;
+        const updateData = request.body;
+
+        const concierto = await this.getConciertoBySlug(slug);
+        if (!concierto) {
+            this.server.throwError(404, 'Concierto no encontrado');
+            return;
+        }
+
+        // Asegurar que los campos numéricos sean del tipo correcto
+        if (updateData.precio !== undefined) updateData.precio = Number(updateData.precio) as any;
+        if (updateData.aforo !== undefined) updateData.aforo = Number(updateData.aforo) as any;
+        if (updateData.duracion !== undefined) updateData.duracion = Number(updateData.duracion) as any;
+
+        /**
+         * Cambiar la imagen si el nombre del artista ha cambiado
+         */
+
+        if (updateData.artista !== concierto.artista) {
+            const spotifyImage = await this.server.spotify(updateData.artista);
+            updateData.imagenArtista = spotifyImage ? spotifyImage.url : '';
+        }
+
+        /**
+         *  Validar y actualizar id_genero si ha cambiado
+         */
+
+        if (updateData.id_genero !== concierto.id_genero) {
+            const genero = await this.prisma.genero.findUnique({
+                where: { id_genero: updateData.id_genero }
+            });
+            if (!genero) {
+                this.server.throwError(404, 'Género no encontrado');
+                return; 
+            }
+            if (!genero.id_genero) {
+                this.server.throwError(400, 'El género no tiene un id_genero válido');
+                return;
+            }
+            updateData.id_genero = genero.id_genero;
+        }
+
+        /**
+         * Actualizar slug si el nombre ha cambiado
+         */
+        if (updateData.nombre !== concierto.nombre) {
+            updateData.slug = this.server.generateSlug(updateData.nombre);
+        }
+
+        const updatedConcierto = await this.updateConcierto(slug, updateData);
+        if (!updatedConcierto) {
+            this.server.throwError(500, 'Error actualizando el concierto');
+            return;
+        }
+
+        /**
+         * Retornar el concierto actualizado
+         */
+
+        const { id, ...conciertoWithoutId } = updatedConcierto;
+        return { concierto: conciertoWithoutId };
+    }
+
+    /**
+     * Manejador de ruta para actualizar el estado de actividad de un concierto
+     * @param {FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>} request - La solicitud Fastify
+     * @param {FastifyReply} reply - La respuesta Fastify
+     * @returns {Promise<Concierto | void>}
+     */
+    async onActivateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
+        const { slug } = request.params;
+        const { is_active } = request.body;
+
+        /**
+         * Validar que el concierto existe
+         */
+        const concierto = await this.getConciertoBySlug(slug);
+        if (!concierto) {
+            this.server.throwError(404, 'Concierto no encontrado');
+            return;
+        }
+
+        /**
+         * Validar que el estado no sea el mismo que el actual
+         */
+        if (concierto.is_active === is_active) {
+            this.server.throwError(400, `El concierto ya está ${is_active ? 'activo' : 'inactivo'}`);
+            return;
+        }
+
+        concierto.is_active = is_active;
+
+        /**
+         * Actualizar el estado de actividad del concierto
+         */
+        const updatedConcierto = await this.patchConciertoActive(slug, is_active);
+        if (!updatedConcierto) {
+            this.server.throwError(404, 'Concierto no encontrado');
+            return;
+        }
+
+        return { concierto: updatedConcierto };
+    }
+
+    /**
+     * Manejador de ruta para actualizar el estado de un concierto
+     * @param {FastifyRequest<{ Params: { slug: string }, Body: { status: Status } }>} request - La solicitud Fastify
+     * @param {FastifyReply} reply - La respuesta Fastify
+     * @returns {Promise<Concierto | void>}
+     */
+    async onUpdateConciertoStatus(request: FastifyRequest<{ Params: { slug: string }, Body: { status: Status } }>) {
+        const { slug } = request.params;
+        const { status } = request.body;
+
+        /**
+         * Validar que el concierto existe
+         */
+        const concierto = await this.getConciertoBySlug(slug);
+        if (!concierto) {
+            this.server.throwError(404, 'Concierto no encontrado');
+            return;
+        }
+
+        /**
+         * Validar que el estado no sea el mismo que el actual
+         */
+        if (concierto.status === status) {
+            this.server.throwError(400, `El concierto ya está en estado ${status}`);
+            return;
+        }
+
+        /**
+         * Actualizar el estado del concierto
+         */
+        const updatedConcierto = await this.patchConciertoStatus(slug, status);
+        if (!updatedConcierto) {
+            this.server.throwError(404, 'Concierto no encontrado');
+            return;
+        }
+        
+        return { concierto: updatedConcierto };
+    }
+
+    async onDeleteConcierto(request: FastifyRequest<{ Params: { slug: string } }>) {
+        const { slug } = request.params;
+
+        const concierto = await this.getConciertoBySlug(slug);
+        if (!concierto) {
+            this.server.throwError(404, 'Concierto no encontrado');
+            return;
+        }
+        const deletedConcierto = await this.deleteConcierto(slug);
+        if (!deletedConcierto) {
+            this.server.throwError(500, 'Error eliminando el concierto');
+            return;
+        }
+        return { concierto: deletedConcierto };
+    }
 }
 
-export const modelConciertos = new ModelConciertos(prisma);
+export const modelConciertos = (server: FastifyInstance) => new ModelConciertos(prisma, server);
