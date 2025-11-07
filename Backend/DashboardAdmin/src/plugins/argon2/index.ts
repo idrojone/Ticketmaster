@@ -1,4 +1,4 @@
-import fp from 'fastify-plugin'
+import fp from 'fastify-plugin';
 import { FastifyInstance } from 'fastify';
 import * as argon2 from 'argon2';
 

@@ -7,11 +7,11 @@ const User = Schema.object()
     .prop('email', Schema.string().format(Schema.FORMATS.EMAIL).required())
     .prop('bio', Schema.string())  
     .prop('image', Schema.string())
-    .prop('accessToken', Schema.string())
+    .prop('accessToken', Schema.string());
 
 const UserStatus = Schema.object()
     .prop('username', Schema.string().minLength(3).maxLength(30).required())
-    .prop('status', Schema.boolean().required())
+    .prop('status', Schema.boolean().required());
 
 
 
@@ -41,7 +41,7 @@ export const login = {
     200: Schema.object().prop('user', User),
     401: Schema.object().prop('message', Schema.string())
     }
-}
+};
 
 
 export interface RegisterRequestBody {
@@ -71,7 +71,7 @@ export const  register = {
     200: Schema.object().prop('user', User),
     400: Schema.object().prop('message', Schema.string())
     }
-}
+};
 
 export const get = {
     tags: ['Auth'],
@@ -82,7 +82,7 @@ export const get = {
     200: Schema.object().prop('user', User),
     404: Schema.object().prop('message', Schema.string())
     }
-}
+};
 
 export const update = {
     body: Schema.object()
@@ -103,14 +103,14 @@ export const update = {
         200: Schema.object().prop('user', User),
         404: Schema.object().prop('message', Schema.string())
     }
-}
+};
 
 export const getStatus = {
     response: {
         200: Schema.object().prop('user', UserStatus),
         404: Schema.object().prop('message', Schema.string())
     }
-}
+};
 
 export const updateStatus = {
     body: Schema.object()
@@ -123,7 +123,7 @@ export const updateStatus = {
     200: Schema.object().prop('user', UserStatus),
     404: Schema.object().prop('message', Schema.string())
     }
-}
+};
 
 
 /**

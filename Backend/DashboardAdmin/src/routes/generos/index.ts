@@ -1,7 +1,7 @@
-import fp from 'fastify-plugin'
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { getGeneros, getGenero, onCreateGenero, onUpdateGenero, onActivateGeneroSchema, onStatusGeneroSchema } from './schema'
-import { modelGeneros } from '../../models/generos'
+import fp from 'fastify-plugin';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { getGeneros, getGenero, onCreateGenero, onUpdateGenero, onActivateGeneroSchema, onStatusGeneroSchema } from './schema';
+import { modelGeneros } from '../../models/generos';
 import { Genero, Status } from '@prisma/client';
 
 
@@ -14,7 +14,7 @@ import { Genero, Status } from '@prisma/client';
  * - status
  */
 
-async function generosRoute(server: FastifyInstance, options: Record<string, any>) {
+async function generosRoute(server: FastifyInstance) {
     
     /**
      * @route GET /generos
@@ -30,7 +30,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         onRequest: [server.authenticate, server.authenticateRole],
         schema: getGeneros,
         handler: onGet
-    })
+    });
     async function onGet (_: FastifyRequest, reply: FastifyReply) {
         const generos = await modelGeneros(server).getAllGeneros();
         return reply.code(200).send({ generos , total: generos.length });
@@ -51,7 +51,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         onRequest: [server.authenticate, server.authenticateRole],
         schema: getGenero,
         handler: onGetGenero
-    })
+    });
     async function onGetGenero (request: FastifyRequest<{Params: {slug: string}}>, reply: FastifyReply) {
         const genero = await modelGeneros(server).onGetGenero(request);
         return reply.code(200).send(genero);
@@ -72,7 +72,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onCreateGenero,
         handler: onPost
-    })
+    });
     async function onPost (request: FastifyRequest<{ Body: Genero }>, reply: FastifyReply) {
         const newGenero = await modelGeneros(server).onCreateGenero(request);
         return reply.code(201).send(newGenero);
@@ -94,7 +94,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onUpdateGenero,
         handler: onPut
-    })
+    });
     async function onPut (request: FastifyRequest<{ Params: { slug: string }, Body: Genero }>, reply: FastifyReply) {
         const updatedGenero = await modelGeneros(server).onUpdateGenero(request);
         return reply.code(200).send(updatedGenero);
@@ -106,7 +106,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onActivateGeneroSchema,
         handler: onActivateGenero
-    })
+    });
     async function onActivateGenero (request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
         const updatedGenero = await modelGeneros(server).onActivateGenero(request);
         return reply.code(200).send(updatedGenero);
@@ -118,11 +118,11 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onStatusGeneroSchema,
         handler: onStatusGenero
-    })
+    });
     async function onStatusGenero (request: FastifyRequest<{ Params: {slug: string }, Body: {status: Status } }>, reply: FastifyReply) {
         const updateGenero = await modelGeneros(server).onStatusGenero(request);
-        return reply.code(200).send(updateGenero)
+        return reply.code(200).send(updateGenero);
     }
 }
 
-export default fp(generosRoute)
+export default fp(generosRoute);

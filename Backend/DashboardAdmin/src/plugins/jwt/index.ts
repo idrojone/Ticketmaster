@@ -30,7 +30,7 @@ export default fp(async (server: FastifyInstance) => {
      * Middelware 
      */
 
-    server.decorate('authenticate', async function (request: FastifyRequest, reply: FastifyReply) {
+    server.decorate('authenticate', async function (request: FastifyRequest) {
         try {
             await request.jwtVerify();
         } catch (err) {
@@ -41,7 +41,7 @@ export default fp(async (server: FastifyInstance) => {
     /**
      * Middelware de rol
      */
-    server.decorate('authenticateRole', async function (request: FastifyRequest, reply: FastifyReply) {
+    server.decorate('authenticateRole', async function (request: FastifyRequest) {
         try {
             await request.jwtVerify();
             const user = (request as any).user;
@@ -51,5 +51,5 @@ export default fp(async (server: FastifyInstance) => {
         } catch (err) {
             server.throwError(401, 'Unauthorized');
         }
-    })
+    });
 });

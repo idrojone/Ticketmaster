@@ -21,7 +21,7 @@ const conciertoSchema = S.object()
     .prop('imagenesShow', S.array())
     .prop('is_active', S.boolean())
     .prop('status', S.string().enum(['PENDING', 'ACCEPTED', 'REJECTED']))
-    .additionalProperties(false)
+    .additionalProperties(false);
 
 /**
  * Schema para la creación de un nuevo concierto
@@ -91,7 +91,7 @@ export const deleteConcierto = {
         200: S.object().prop('message', S.string().default('Concierto eliminado exitosamente')),
         404: S.object().prop('message', S.string().default('Concierto no encontrado')),
     },
-}
+};
 
 /**
  * @route POST /conciertos
@@ -127,7 +127,7 @@ export const onUpdateConciertoSchema = {
         400: S.object().prop('message', S.string().default('Error actualizando concierto')),
         404: S.object().prop('message', S.string().default('Concierto no encontrado')),
     },
-}
+};
 
 /**
  * @route PATCH /conciertos/:slug/activate
@@ -146,7 +146,7 @@ export const onUpdateConciertoActivateSchema = {
         400: S.object().prop('message', S.string().default('Error actualizando estado del concierto')),
         404: S.object().prop('message', S.string().default('Concierto no encontrado')),
     }
-}
+};
 /**
  * @route PATCH /conciertos/:slug/status
  * @description Actualizar el estado de un concierto existente
@@ -164,4 +164,4 @@ export const onUpdateConciertoStatusSchema = {
         400: S.object().prop('message', S.string().default('Error actualizando estado del concierto')),
         404: S.object().prop('message', S.string().default('Concierto no encontrado')),
     }
-}
+};

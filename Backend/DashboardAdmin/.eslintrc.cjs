@@ -17,6 +17,10 @@ module.exports = {
   },
   rules: {
     'no-console': 'off',
-    '@typescript-eslint/no-explicit-any': 'off'
+    '@typescript-eslint/no-explicit-any': 'off',
+    // Require semicolons
+    'semi': ['error', 'always'],
+    '@typescript-eslint/semi': ['error', 'always']
   }
 };
+

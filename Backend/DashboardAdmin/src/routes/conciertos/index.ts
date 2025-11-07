@@ -2,15 +2,14 @@ import fp from 'fastify-plugin';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { getConciertos, onCreateConcierto, getConciertoBySlug, onUpdateConciertoActivateSchema, onUpdateConciertoSchema, onUpdateConciertoStatusSchema, deleteConcierto } from './schema';
 import { modelConciertos } from '../../models/conciertos';
-import { modelGeneros } from '../../models/generos';
 import { Concierto, Status } from '@prisma/client';
-import { resourceUsage } from 'process';
+
 
 
 /**
  * Falta !!!
  */
-async function conciertosRoutes(server: FastifyInstance , options: Record<string, any>) {
+async function conciertosRoutes(server: FastifyInstance) {
 
     /**
      * @route GET /conciertos
@@ -27,7 +26,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         onRequest: [server.authenticate, server.authenticateRole],
         schema: getConciertos,
         handler : onGet
-    })
+    });
     async function onGet(_: FastifyRequest, reply: FastifyReply) {
         const conciertos = await modelConciertos(server).getAllConciertos();
         return reply.code(200).send({ total: conciertos.length, conciertos });
@@ -49,9 +48,9 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         onRequest: [server.authenticate, server.authenticateRole],
         schema: getConciertoBySlug,
         handler : onGetBySlug
-    })
+    });
     async function onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
-        const result = await modelConciertos(server).onGetBySlug(request, reply);
+        const result = await modelConciertos(server).onGetBySlug(request);
         return reply.code(200).send(result);
     }
 
@@ -71,7 +70,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onCreateConcierto,
         handler : onPost
-    })
+    });
     async function onPost(request: FastifyRequest<{ Body: Concierto }>, reply: FastifyReply) {
         const concierto = await modelConciertos(server).onCreateConcierto(request);
         return reply.code(201).send(concierto);        
@@ -92,9 +91,9 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onUpdateConciertoSchema,
         handler: onUpdateConcierto
-    })
+    });
     async function onUpdateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: Concierto }>, reply: FastifyReply) {
-        const concierto = await modelConciertos(server).onUpdateConcierto(request, reply);
+        const concierto = await modelConciertos(server).onUpdateConcierto(request);
         return reply.code(200).send(concierto);
     }
 
@@ -114,9 +113,9 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onUpdateConciertoActivateSchema,
         handler: onActivateConcierto
-    })
+    });
     async function onActivateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
-        const updatedConcierto = await modelConciertos(server).onActivateConcierto(request, reply);
+        const updatedConcierto = await modelConciertos(server).onActivateConcierto(request);
         return reply.code(200).send(updatedConcierto);
     }
 
@@ -136,7 +135,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         onRequest: [server.authenticate, server.authenticateRole],
         schema: onUpdateConciertoStatusSchema,
         handler: onUpdateConciertoStatus
-    })
+    });
     async function onUpdateConciertoStatus(request: FastifyRequest<{ Params: { slug: string }, Body: { status: Status } }>, reply: FastifyReply) {
         const updateConcierto = await modelConciertos(server).onUpdateConciertoStatus(request);
         return reply.code(200).send(updateConcierto);
@@ -157,7 +156,7 @@ async function conciertosRoutes(server: FastifyInstance , options: Record<string
         schema: deleteConcierto,
         onRequest: [server.authenticate, server.authenticateRole],
         handler: onDeleteConcierto
-    })
+    });
     async function onDeleteConcierto(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
         const deleted = await modelConciertos(server).onDeleteConcierto(request);
         return reply.code(200).send(deleted);

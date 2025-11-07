@@ -1,9 +1,6 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { prisma } from '../plugins/prisma/index';
 import { Genero, PrismaClient, Status } from '@prisma/client';
-import server from '../server';
-import conciertos from '../routes/conciertos';
-import { availableMemory } from 'process';
 
 class ModelGeneros {
     private prisma: PrismaClient;
@@ -273,10 +270,10 @@ class ModelGeneros {
             const updatedGenero = await this.prisma.genero.update({
                 where: { slug },
                 data: { is_active }
-            })
+            });
             return updatedGenero;
         } catch (error) {
-            this.server.throwError(500, 'Error patching genero')
+            this.server.throwError(500, 'Error patching genero');
         }
     }
 
@@ -289,7 +286,7 @@ class ModelGeneros {
             });
             return updateGenero;
         } catch (error) {
-            this.server.throwError(500, 'Error al actuilzar el status', error)
+            this.server.throwError(500, 'Error al actuilzar el status', error);
         }
     }
 
@@ -306,17 +303,17 @@ class ModelGeneros {
         }
 
         if (genero.is_active === is_active) {
-            this.server.throwError(400, `El genero ya está ${is_active ? 'activo' : 'inactivo'}`)
+            this.server.throwError(400, `El genero ya está ${is_active ? 'activo' : 'inactivo'}`);
             return;
         }
 
-        const activar = await this.patchGeneroActive(slug, is_active)
+        const activar = await this.patchGeneroActive(slug, is_active);
         if (!activar) {
-            this.server.throwError(404, 'Genero no encontrado')
+            this.server.throwError(404, 'Genero no encontrado');
         }
         
     
-        return { genero: activar }
+        return { genero: activar };
     }
 
 
@@ -329,7 +326,7 @@ class ModelGeneros {
          */
         const genero = await this.getGeneroBySlug(slug);
         if ( !genero) {
-            this.server.throwError(404, 'Género no encontrado')
+            this.server.throwError(404, 'Género no encontrado');
             return;
         }
 
@@ -337,7 +334,7 @@ class ModelGeneros {
          * Validar el estado del género
          */
         if (genero?.status === status) {
-            this.server.throwError(400, `El género ya está en estado ${status}`)
+            this.server.throwError(400, `El género ya está en estado ${status}`);
             return;
         }
 
@@ -349,7 +346,7 @@ class ModelGeneros {
             this.server.throwError(404, 'Género no encontrado');
         }
 
-        return { generos: updateConcierto }
+        return { generos: updateConcierto };
     }
 }   
 

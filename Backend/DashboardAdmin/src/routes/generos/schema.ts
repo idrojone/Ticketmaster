@@ -1,9 +1,4 @@
 import S from 'fluent-json-schema';
-import { ServerDescription } from 'mongodb';
-import { describe } from 'node:test';
-import { brotliDecompress } from 'zlib';
-import { ta } from 'zod/v4/locales';
-
 
 const generoSchema = S.object()
   // .prop('id', S.string().required())
@@ -120,7 +115,7 @@ export const onActivateGeneroSchema = {
     400: S.object().prop('message', S.string().default('Error actulizando el estado del concierto')),
     404: S.object().prop('message', S.string().default('Genero no encontrado'))
   }
-}
+};
 
 export const onStatusGeneroSchema = {
   tags: ['Generos'],
@@ -131,4 +126,4 @@ export const onStatusGeneroSchema = {
     400: S.object().prop('message', S.string().default('Error actulizando status del género')),
     404: S.object().prop('message', S.string().default('Género no encontrado'))
   }
-}
+};

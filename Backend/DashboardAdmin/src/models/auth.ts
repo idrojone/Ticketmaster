@@ -1,4 +1,3 @@
-import { UserAdmin } from "@prisma/client";
 import { prisma } from "../plugins/prisma";
 import { AuthenticatedUser, LoginRequestBody, RegisterRequestBody, UserAdminWithToken } from "../routes/auth/schema";
 import { FastifyInstance, FastifyReply } from "fastify";
@@ -120,7 +119,7 @@ class ModelAuth {
         }
     }
 
-    async onGetUser(request: { params: { username?: string } }, reply: FastifyReply) {
+    async onGetUser(request: { params: { username?: string } }) {
         const username = request.params?.username;
 
         if (!username || username === undefined) {

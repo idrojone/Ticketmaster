@@ -1,10 +1,10 @@
 import { Concierto, Status, PrismaClient } from "@prisma/client";
 import { prisma } from "../plugins/prisma";
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyRequest } from "fastify";
 
 class ModelConciertos {
     private prisma: PrismaClient;
-    private server: FastifyInstance
+    private server: FastifyInstance;
 
     constructor(prismaClient: PrismaClient, server: FastifyInstance) {
         this.prisma = prismaClient;
@@ -158,20 +158,18 @@ class ModelConciertos {
     /**
      * Manejador de ruta para obtener un concierto por slug
      * @param {FastifyRequest<{ Params: { slug: string } }>} request - La solicitud Fastify
-     * @param {FastifyReply} reply - La respuesta Fastify
      * @returns {Promise<Concierto | void>}
      */
-    async onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) { 
+    async onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>) { 
         const { slug } = request.params;
         const concierto = await this.getConciertoBySlug(slug);
-        if (!concierto) return reply.code(404).send({ message: 'Concierto no encontrado' });
+        if (!concierto) this.server.throwError(404, 'Concierto no encontrado');
         return concierto;
     }
 
     /**
      * Manejador de ruta para crear un nuevo concierto
      * @param {FastifyRequest<{ Body: Concierto }>} request - La solicitud Fastify
-     * @param {FastifyReply} reply - La respuesta Fastify
      * @returns {Promise<Concierto | void>}
      */
     async onCreateConcierto(request: FastifyRequest<{ Body: Concierto }>) {
@@ -230,10 +228,9 @@ class ModelConciertos {
     /**
      * Manejador de ruta para actualizar un concierto existente
      * @param {FastifyRequest<{ Params: { slug: string }, Body: Concierto }>} request - La solicitud Fastify
-     * @param {FastifyReply} reply - La respuesta Fastify
      * @returns {Promise<Concierto | void>}
      */
-    async onUpdateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: Concierto }>, reply: FastifyReply) {
+    async onUpdateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: Concierto }>) {
 
         const { slug } = request.params;
         const updateData = request.body;
@@ -302,10 +299,9 @@ class ModelConciertos {
     /**
      * Manejador de ruta para actualizar el estado de actividad de un concierto
      * @param {FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>} request - La solicitud Fastify
-     * @param {FastifyReply} reply - La respuesta Fastify
      * @returns {Promise<Concierto | void>}
      */
-    async onActivateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
+    async onActivateConcierto(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>) {
         const { slug } = request.params;
         const { is_active } = request.body;
 
@@ -341,7 +337,6 @@ class ModelConciertos {
     /**
      * Manejador de ruta para actualizar el estado de un concierto
      * @param {FastifyRequest<{ Params: { slug: string }, Body: { status: Status } }>} request - La solicitud Fastify
-     * @param {FastifyReply} reply - La respuesta Fastify
      * @returns {Promise<Concierto | void>}
      */
     async onUpdateConciertoStatus(request: FastifyRequest<{ Params: { slug: string }, Body: { status: Status } }>) {

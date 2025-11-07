@@ -1,9 +1,9 @@
-import * as path from 'path'
-import fp from 'fastify-plugin'
-import autoLoad from '@fastify/autoload'
-import cors from '@fastify/cors'
-import { FastifyInstance } from 'fastify'
-import { fastifyEnv } from '@fastify/env'
+import * as path from 'path';
+import fp from 'fastify-plugin';
+import autoLoad from '@fastify/autoload';
+import cors from '@fastify/cors';
+import { FastifyInstance } from 'fastify';
+import { fastifyEnv } from '@fastify/env';
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 
@@ -91,7 +91,7 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
     })
     .after(err => {
       if (err) console.error('Error al cargar rutas:', err);
-    })
+    });
 
   // NOTE: el manejo de errores se realiza en el plugin `src/plugins/error`.
   // No registramos otro setErrorHandler aquí para evitar sobrescribir el del plugin.
@@ -100,12 +100,12 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
   // because POST {{APIURL}}/articles/{{slug}}/favorite will be done without a body
   server.addHook('onRequest', async (req: any) => {
     if (req.headers['content-type'] === 'application/json' && req.headers['content-length'] === '0') {
-      req.headers['content-type'] = 'empty'
+      req.headers['content-type'] = 'empty';
     }
-  })
+  });
   server.addContentTypeParser('empty', (request: any, body: any, done: any) => {
-    done(null, {})
-  })
+    done(null, {});
+  });
 }
 
 // module.exports = fp(plugin)

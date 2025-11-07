@@ -1,8 +1,7 @@
-import fp from 'fastify-plugin'
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import fp from 'fastify-plugin';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { login, register, RegisterRequestBody, LoginRequestBody, get } from './schema';
 import { modelAuth } from '../../models/auth';
-import { log } from 'console';
 
 async function auth (server: FastifyInstance) {   
     /* 
@@ -13,7 +12,7 @@ async function auth (server: FastifyInstance) {
         url: '/auth/login',
         schema: login,
         handler: onLogin
-    })
+    });
     async function onLogin(request: FastifyRequest<{ Body: LoginRequestBody }>, reply: FastifyReply) {
         const result = await modelAuth(server).onLogin(request.body, reply);
         return reply.code(200).send(result);
@@ -27,7 +26,7 @@ async function auth (server: FastifyInstance) {
         url: '/auth/register',
         schema: register,
         handler: onRegister
-    })
+    });
     async function onRegister(request: FastifyRequest<{ Body: RegisterRequestBody }>, reply: FastifyReply) {
         const result = await modelAuth(server).onRegister(request.body, reply);
         return reply.code(201).send(result);
@@ -43,9 +42,9 @@ async function auth (server: FastifyInstance) {
         onRequest: [server.authenticate, server.authenticateRole],
         schema: get,
         handler: onGetUser
-    })
+    });
     async function onGetUser(request: FastifyRequest<{ Params: { username?: string } }>, reply: FastifyReply) {
-        const result = await modelAuth(server).onGetUser({ params: request.params }, reply);
+        const result = await modelAuth(server).onGetUser({ params: request.params });
         return reply.code(200).send(result);
     }
 
