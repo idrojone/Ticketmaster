@@ -2,7 +2,7 @@ import fp from 'fastify-plugin'
 import { FastifyInstance } from 'fastify';
 import * as argon2 from 'argon2';
 
-export default fp(async (server: FastifyInstance, options: Record<string, any>) => {
+export default fp(async (server: FastifyInstance) => {
     try {
         server.decorate('hash', async function (password: string) {
             return await argon2.hash(password);

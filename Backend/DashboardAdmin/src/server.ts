@@ -83,15 +83,6 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
       if (err) console.error('Error al registrar Swagger UI:', err);
     })
 
-    /* Cargar los servicios */
-    // .register(autoLoad, {
-    //   dir: path.join(__dirname, 'services'),
-    //   options: config
-    // })
-    // .after(err => {
-    //   if (err) console.error('Error al cargar servicios:', err);
-    // })
-
     /* Cargar las rutas */
     .register(autoLoad, {
       dir: path.join(__dirname, 'routes'),
@@ -102,15 +93,12 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
       if (err) console.error('Error al cargar rutas:', err);
     })
 
-  server.setErrorHandler((err: any, req: any, res: any) => {
-    req.log.error({ req, res, err }, err && err.message)
-    err.message = 'An error has occurred'
-    res.send(err)
-  })
+  // NOTE: el manejo de errores se realiza en el plugin `src/plugins/error`.
+  // No registramos otro setErrorHandler aquí para evitar sobrescribir el del plugin.
 
   // Trick to handle empty body on POST
   // because POST {{APIURL}}/articles/{{slug}}/favorite will be done without a body
-  server.addHook('onRequest', async (req: any, res: any) => {
+  server.addHook('onRequest', async (req: any) => {
     if (req.headers['content-type'] === 'application/json' && req.headers['content-length'] === '0') {
       req.headers['content-type'] = 'empty'
     }

@@ -1,5 +1,6 @@
 import S from 'fluent-json-schema';
 
+
 const generoSchema = S.object()
   .prop('id', S.string().required())
   .prop('slug', S.string().required())
@@ -43,7 +44,7 @@ const generoUpdateSchema = S.object()
  * @returns {Object} 200 - Género encontrado
  * @returns {Object} 404 - Género no encontrado
  */
-const getGenero = {
+export const getGenero = {
   tags: ['Generos'],
   description: 'Obtener un género específico por slug',
   response: {
@@ -58,35 +59,49 @@ const getGenero = {
  * @description Obtener lista de todos los géneros
  * @access Private (Requiere autenticación y rol)
  * @returns {Object} 200 - Lista de géneros con el total
+ * @returns {Object} 400 - Error al obtener los géneros
  */
-const getGeneros = {
+export const getGeneros = {
   tags: ['Generos'],
   description: 'Obtener lista de todos los géneros',
   response: {
     200: S.object()
       .prop('generos', S.array().items(generoGetSchema).required())
       .prop('total', S.number()),
+    400: S.object().prop('message', S.string().default('Error obteniendo generos')),
   },
 };
 
-const onCreateGenero = {
+/**
+ * @route POST /generos 
+ * @description Crear un nuevo género
+ * @access Private (Requiere autenticación y rol)
+ * @returns {Object} 201 - Género creado exitosamente
+ * @returns {Object} 400 - Error al crear el género
+ */
+export const onCreateGenero = {
   tags: ['Generos'],
   description: 'Crear un nuevo género',
   body: generoCreateSchema.required(),
   response: {
     201: generoGetSchema,
-    400: S.object().prop('message', S.string().default('Error creating genero')),
+    400: S.object().prop('message', S.string().default('Error creando genero')),
   },
 };
 
-const onUpdateGenero = {
+/**
+ * @route PUT /generos/:slug
+ * @description Actualizar un género existente
+ * @access Private (Requiere autenticación y rol)
+ * @returns {Object} 200 - Género actualizado exitosamente
+ * @returns {Object} 404 - Género no encontrado o slug en uso
+ */
+export const onUpdateGenero = {
   tags: ['Generos'],
   description: 'Actualizar un género existente',
   body: generoUpdateSchema,
   response: {
     200: generoGetSchema,
-    404: S.object().prop('message', S.string().default('NO se puede actualizar ya que el genero no existe o el slug ya está en uso')),
+    404: S.object().prop('message', S.string().default('No se puede actualizar ya que el genero no existe o el slug ya está en uso')),
   },
 };
-
-export { generoSchema, getGenero, getGeneros, onCreateGenero, onUpdateGenero };

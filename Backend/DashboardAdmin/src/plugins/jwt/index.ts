@@ -1,8 +1,8 @@
 import fp from 'fastify-plugin';
 import fastifyJwt from '@fastify/jwt';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
-export default fp(async (server, opts) => {
+export default fp(async (server: FastifyInstance) => {
     server.register(fastifyJwt, {
         secret: server.optionsEnv.JWT_SECRET,
         sign: {
@@ -34,31 +34,22 @@ export default fp(async (server, opts) => {
         try {
             await request.jwtVerify();
         } catch (err) {
-            reply.code(401).send({ message: 'Unauthorized' });
-        }
-    });
-
-    server.decorate('authenticateOptional', async function (request: FastifyRequest, reply: FastifyReply) {
-        try {
-            await request.jwtVerify();
-        } catch (err) {
-            // No hacer nada si la verificación falla
+            server.throwError(401, 'Unauthorized');
         }
     });
 
     /**
      * Middelware de rol
      */
-
     server.decorate('authenticateRole', async function (request: FastifyRequest, reply: FastifyReply) {
         try {
             await request.jwtVerify();
             const user = (request as any).user;
             if (!user || user.role !== 'admin') {
-                return reply.code(403).send({ message: 'No tienes permisos para acceder a este recurso' });
+                server.throwError(403, 'No tienes permisos para acceder a este recurso');
             }
         } catch (err) {
-            reply.code(401).send({ message: 'Unauthorized' });
+            server.throwError(401, 'Unauthorized');
         }
     })
 });

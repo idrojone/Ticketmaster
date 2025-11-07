@@ -1,5 +1,4 @@
-const env = require('dotenv');
-env.config(); // Carga las variables de entorno desde el archivo .env
+import 'dotenv/config';
 
 async function getConfig() {
     

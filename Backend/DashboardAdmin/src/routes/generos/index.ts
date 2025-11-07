@@ -1,7 +1,19 @@
 import fp from 'fastify-plugin'
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { getGeneros,getGenero,onCreateGenero,onUpdateGenero } from './schema'
+import { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import { getGeneros, getGenero, onCreateGenero, onUpdateGenero } from './schema'
 import { modelGeneros } from '../../models/generos'
+import { Genero } from '@prisma/client';
+import { modelConciertos } from '../../models/conciertos';
+import { on } from 'events';
+
+/**
+ * 
+ * Falta !!!!
+ * - Validar que el nombre no exista ya al crear o actualizar
+ * - Tests
+ * - is_active
+ * - status
+ */
 
 async function generosRoute(server: FastifyInstance, options: Record<string, any>) {
     
@@ -22,14 +34,13 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
     })
     async function onGet (_: FastifyRequest, reply: FastifyReply) {
         try {
-            const generos = await modelGeneros(server).getAllGeneros();
+            const generos = await modelGeneros.getAllGeneros();
             return reply.code(200).send({ generos , total: generos.length });
         } catch (error) {
             console.error('Error fetching generos:', error);
             return reply.code(500).send({ error: 'Internal Server Error' });
         }       
     }
-
 
     /**
      * @route GET /generos/:slug
@@ -47,10 +58,10 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         schema: getGenero,
         handler: onGetGenero
     })
-    async function onGetGenero (request: any, reply: any) {
+    async function onGetGenero (request: FastifyRequest<{Params: {slug: string}}>, reply: FastifyReply) {
         try {
             const slug = request.params.slug;
-            const genero = await modelGeneros(server).getGeneroBySlug(slug);
+            const genero = await modelGeneros.getGeneroBySlug(slug);
             if (genero) {
                 return reply.code(200).send(genero);
             } else {
@@ -78,9 +89,9 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         schema: onCreateGenero,
         handler: onPost
     })
-    async function onPost (request: any, reply: any) {
+    async function onPost (request: FastifyRequest<{ Body: Genero }>, reply: FastifyReply) {
         try {
-            const generoData = await request.body;
+            const generoData = request.body;
 
             /**
              * Generar slug y estado inicial del género
@@ -106,7 +117,7 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
             /**
              * Crear el nuevo género
              */
-            const newGenero = await modelGeneros(server).createGenero(generoData);
+            const newGenero = await modelGeneros.createGenero(generoData);
 
             if (!newGenero) return reply.code(400).send({ message: 'Error creating genero' });
 
@@ -134,24 +145,60 @@ async function generosRoute(server: FastifyInstance, options: Record<string, any
         schema: onUpdateGenero,
         handler: onPut
     })
-    async function onPut (request: any, reply: any) {
+    async function onPut (request: FastifyRequest<{ Params: { slug: string }, Body: Genero }>, reply: FastifyReply) {
         try {
-            const slug = request.params.slug;
-            const updatedData = await request.body;
-            updatedData.updatedAt = new Date().toISOString();
 
-            const updatedGenero = await modelGeneros(server).updateGenero(slug, updatedData);
+            const { slug } = request.params;
+            const updatedData = request.body;
+
+            const genero = await modelGeneros.getGeneroBySlug(slug);
+
+            if (!genero) return reply.code(404).send({ message: 'Genero not found' });
+
+            /**
+             * Si el nombre ha cambiado, actualizar el slug e id_genero
+             */
+            if (updatedData.name !== genero.name) {
+                // mirar antes si el nombre ya existe
+                updatedData.slug = server.generateSlug(updatedData.name);
+            }
+
+            if (updatedData.id_genero !== genero.id_genero) {
+
+                if (!genero.id_genero) return reply.code(500).send({ error: 'Internal Server Error' });
+                const oldId = genero.id_genero;
+                const newId = server.generateSlug(updatedData.name || genero.name);
+                try {
+                    await modelGeneros.updateConciertosGeneroId(oldId, newId);
+                    await modelConciertos.updateConciertosGeneroId(oldId, newId);
+                } catch (error) {
+                    console.error('Error actualizando conciertos para cambio de id_genero:', error);
+                    return reply.code(500).send({ error: 'Internal Server Error' });
+                }
+            }
+
+            const updatedGenero = await modelGeneros.updateGenero(slug, updatedData);
 
             if (updatedGenero) {
                 return reply.code(200).send(updatedGenero);
             } else {
                 return reply.code(400).send({ message: 'Nuevos datos ya en uso o no existe ' });
             }
-
         }catch (error) {
             console.error('Error updating genero:', error);
             return reply.code(500).send({ error: 'Internal Server Error' });
         }
+    }
+
+    server.route({
+        method: 'PATCH',
+        url: '/generos/:slug/activate',
+        onRequest: [server.authenticate, server.authenticateRole],
+        // schema: onActivateGeneroSchema,
+        handler: onActivateGenero
+    })
+    async function onActivateGenero (request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>, reply: FastifyReply) {
+
     }
 }
 

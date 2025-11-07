@@ -43,30 +43,6 @@ const createConciertoSchema = S.object()
     .prop('imagenesShow', S.array());
 
 /**
- * Interface para el cuerpo de la solicitud de creación de concierto
- */
-
-export interface CreateConciertoBody {
-    slug: string;
-    nombre: string;
-    status: string;
-    is_active: boolean;
-    fecha: string;
-    artista: string;
-    lugar: string;
-    ciudad: string;
-    descripcion: string;
-    latitud?: number;
-    longitud?: number;
-    precio: number;
-    aforo: number;
-    duracion: number;
-    id_genero: string;
-    imagenArtista?: string;
-    imagenesShow?: string[];
-}
-
-/**
  * @route GET /conciertos
  * @description Obtener lista de todos los conciertos
  * @access Private (Requiere autenticación y rol)
