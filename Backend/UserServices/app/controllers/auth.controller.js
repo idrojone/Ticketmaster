@@ -138,7 +138,9 @@ const getUserData= asyncHandler( async (req,res) => {
     const encontrarUsuario= await User.findOne( {email} ).exec();
 
     if(!encontrarUsuario){
-        return res.status(404).json({message: "Email del Usuario no encontrado"});
+        const encontrarUsuarioAdmin = await UserAdmin.findOne({email});
+        if (!encontrarUsuarioAdmin) return res.status(404).json({message: "Email del Usuario no encontrado"});
+        return res.status(200).json({rol: 'admin'});
     }
 
     res.status(200).json({
