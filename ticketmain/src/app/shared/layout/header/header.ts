@@ -74,7 +74,7 @@ export class Header implements OnInit {
     this.user_type.userType$.subscribe({
       next: (type) => {
         console.log('Tipo de usuario en header:', type);
-        if (type === 'ADMIN') {
+        if (type === 'admin') {
           this.user_type_signal.set(true);
           console.log("El signal esta acutalmente " + this.user_type_signal());
         }else if (type === null || type === "USER") {

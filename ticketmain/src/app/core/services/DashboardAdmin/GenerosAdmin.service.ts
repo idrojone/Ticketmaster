@@ -17,6 +17,7 @@ export class GenerosAdminService {
     }
 
     PostGeneroAdmin(genero: PostGeneroAdmin): Observable<GeneroAdmin> {
+        console.log(genero);
         return this.ApiService.post('/generos', genero, false, "dashboard").pipe(
             map((response: any) => response.data as GeneroAdmin)
         );

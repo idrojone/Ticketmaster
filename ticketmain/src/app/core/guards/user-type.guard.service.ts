@@ -22,7 +22,7 @@ export class UserTypeGuard implements CanActivate {
                 console.log('Decoded token:', decodedToken);
                 const userType = decodedToken.role;
 
-                const isAdmin = this.userTypeService.getUserType() === 'ADMIN';
+                const isAdmin = this.userTypeService.getUserType() === 'admin';
 
                 console.log(userType, isAdmin);
 

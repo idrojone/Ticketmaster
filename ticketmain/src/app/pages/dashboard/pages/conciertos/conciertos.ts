@@ -73,6 +73,10 @@ export class DashboardConciertos {
           this.ConciertosAdminService.PostConciertoAdmin(formData).subscribe({
             next: (data) => {
               console.log('Concierto creado:', data);
+              this.LoadConciertos();
+            },
+            error: (error) => {
+              console.error('Error creando concierto:', error);
             }
           });
         }
