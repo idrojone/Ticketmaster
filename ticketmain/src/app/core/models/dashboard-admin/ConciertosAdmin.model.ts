@@ -1,5 +1,3 @@
-import { InfiniteScrollDirective } from "ngx-infinite-scroll";
-
 export interface ConciertoAdmin {
       slug: string;
       nombre: string;

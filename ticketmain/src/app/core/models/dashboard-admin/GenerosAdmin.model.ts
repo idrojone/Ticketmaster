@@ -15,3 +15,18 @@ export interface PostGeneroAdmin {
     description: string;
 }
 
+export interface PutGeneroAdmin {
+    name: string;
+    description: string;
+    img: string;
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+    is_active: boolean;
+}
+
+export interface PatchGeneroActivate {
+    is_active: boolean;
+}
+
+export interface PatchGeneroStatus {
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+}

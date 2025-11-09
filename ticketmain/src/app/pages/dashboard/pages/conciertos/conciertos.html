@@ -1,3 +1,11 @@
+	<div class="conciertos-container">
+		<div class="header-section">
+			<h2>Gestión de Conciertos</h2>
+			<p class="subtitle">Total: {{ ConciertoAdmin().length }} conciertos</p>
+      <button (click)="openAddDialog()" class="btn btn-add-concierto">
+        Añadir Concierto
+      </button>
+	</div>	  					
 
 @if(IsLoading() === false){
 	<div class="spinner-container">
@@ -8,19 +16,10 @@
 
 @if(ConciertoAdmin() && ConciertoAdmin().length === 0){
 	<div class="empty-state">
-		<p>📋 No hay conciertos para mostrar.</p>
+		<p>No hay conciertos para mostrar.</p>
 	</div>
 }
 @else if(ConciertoAdmin() && ConciertoAdmin().length > 0) {
-	<div class="conciertos-container">
-		<div class="header-section">
-			<h2>Gestión de Conciertos</h2>
-			<p class="subtitle">Total: {{ ConciertoAdmin().length }} conciertos</p>
-      <button (click)="openAddDialog()" class="btn btn-add-concierto">
-        Añadir Concierto
-      </button>
-		</div>
-
 		<div class="cards-grid">
 			@for(concierto of ConciertoAdmin(); track concierto.slug) {
 				<div class="concierto-card" [class]="'status-' + concierto.status.toLowerCase()">
@@ -90,8 +89,4 @@
 				</div>
 			}
 		</div>
-	</div>
-}
-
-
-<!-- Dialog eliminado: Ahora usa ZardDialogService -->
+	}

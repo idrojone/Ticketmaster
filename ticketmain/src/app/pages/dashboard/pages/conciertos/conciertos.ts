@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConciertosAdminService } from 'src/app/core/services/DashboardAdmin/ConciertosAdmin.service';
 import { ConciertoAdmin } from 'src/app/core/models/dashboard-admin/ConciertosAdmin.model';
-import { ZardDialogModule } from '@shared/components/dialog/dialog.component';
+import { ZardDialogComponent } from '@shared/components/dialog/dialog.component';
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { ConciertosEditDialogComponent } from '@shared/conciertos-edit-dialog/conciertos-edit-dialog.component';
 import { AddConcierto } from '@shared/add-concierto/add-concierto';
@@ -13,7 +13,7 @@ import { AddConcierto } from '@shared/add-concierto/add-concierto';
   templateUrl: './conciertos.html',
   styleUrl: './conciertos.css',
   standalone: true,
-  imports: [CommonModule, FormsModule, ZardDialogModule],
+  imports: [CommonModule, FormsModule, ZardDialogComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardConciertos {
@@ -67,6 +67,9 @@ export class DashboardConciertos {
       zOnOk: (instance: any) => {
         const formData = instance.form?.value;
         if (formData) {
+          formData.imagenesShow = [];
+          formData.is_active = true;
+          formData.status = 'PENDING';
           this.ConciertosAdminService.PostConciertoAdmin(formData).subscribe({
             next: (data) => {
               console.log('Concierto creado:', data);
@@ -91,7 +94,6 @@ export class DashboardConciertos {
   }   
 
   updateStatus(status : string, concierto: ConciertoAdmin) {
-
     this.ConciertosAdminService.PatchConciertoStatus(concierto.slug, status).subscribe({
       next: (data) => {
         console.log('Estado actualizado:', data);

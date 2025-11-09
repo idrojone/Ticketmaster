@@ -1,8 +1,9 @@
-import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PostConciertoAdmin } from 'src/app/core/models/dashboard-admin/ConciertosAdmin.model';
 import { ZardDatePickerComponent } from '@shared/components/date-picker/date-picker.component';
+import { GenerosAdminService } from 'src/app/core/services/DashboardAdmin/GenerosAdmin.service';
 
 
 @Component({
@@ -48,14 +49,17 @@ import { ZardDatePickerComponent } from '@shared/components/date-picker/date-pic
         </div>
         @if (selectedDate() && selectedDateFormatted()) {
           <div class="text-xs text-blue-600 mt-1">
-            📅 {{ selectedDateFormatted() }}
+            {{ selectedDateFormatted() }}
           </div>
         }
       </div>
 
       <div class="grid gap-3">
         <label for="id_genero" class="text-sm font-medium">Género</label>
-        <input z-input formControlName="id_genero" id="id_genero" />
+        <select z-input formControlName="id_genero" id="id_genero">
+          <option value="" disabled selected>Seleccione un género</option>
+          <option *ngFor="let genero of GenerosList()" [value]="genero.id_genero">{{ genero.name }}</option>
+        </select>
       </div>
 
       <div class="grid gap-3 col-span-2">
@@ -99,6 +103,20 @@ import { ZardDatePickerComponent } from '@shared/components/date-picker/date-pic
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AddConcierto implements OnInit {
+  public GenerosList = signal<Array<any>>([]);
+
+  private GeneroService = inject(GenerosAdminService);
+
+  constructor() {
+    this.GeneroService.GetAllGenerosAdmin().subscribe({
+      next: (generos) => {
+        this.GenerosList.set(generos);
+        console.log("Generos constructor" + generos);
+      }
+    });
+
+    console.log("Generos NO constructor" + this.GenerosList());
+  }
 
   selectedDate = signal<Date | null>(null);
   selectedDateFormatted = signal<string>('');
