@@ -64,4 +64,22 @@ export class ApiService {
             ).pipe(catchError(this.formatErrors));
         }
     }
+
+    patch(path: string, body: Object = {}, credentialsRequired: boolean = false, server?: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        
+        if(server==="dashboard"){
+            return this.http.patch(
+                `${environment.dashboard_url}${path}`,
+                body,
+                { headers, withCredentials: credentialsRequired }
+            ).pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.patch(
+                `${environment.api_url}${path}`,
+                body,
+                { headers, withCredentials: credentialsRequired }
+            ).pipe(catchError(this.formatErrors));
+        }
+    }
 }

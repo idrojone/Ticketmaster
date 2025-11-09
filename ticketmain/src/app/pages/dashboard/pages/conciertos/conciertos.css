@@ -1,8 +1,376 @@
+/* Contenedor principal */
 .conciertos-container {
   padding: 2rem;
+  background: white;
+  min-height: 100%;
 }
 
-h2 {
-  color: #333;
+.header-section {
+  margin-bottom: 3rem;
+}
+
+.header-section h2 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+/* Grid de cards */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+/* Card individual sin bordes redondeados */
+.concierto-card {
+  background: white;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  border: none;
+  align-items: stretch;
+  height: 320px;
+  max-width: 100%;
+}
+
+.concierto-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  z-index: 10;
+}
+
+.concierto-card:hover {
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
+}
+
+/* Imagen */
+.card-image {
+  position: relative;
+  width: 320px;
+  height: 100%;
+  min-width: 320px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+/* Badge de estado */
+.status-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  color: white;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-align: center;
+  padding: 0.3rem;
+}
+
+/* Estados de badge */
+.concierto-card.status-pending .status-badge {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+
+.concierto-card.status-approved .status-badge {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.concierto-card.status-rejected .status-badge {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+/* Contenido */
+.card-content {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  justify-content: space-between;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.card-title {
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Info items */
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.2rem 0;
+  overflow: hidden;
+}
+
+.info-item .label {
+  color: #95a5a6;
+  font-weight: 500;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.info-item .value {
+  color: #2c3e50;
+  font-weight: 600;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-item .price {
+  color: #27ae60;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Estadísticas */
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding: 0.8rem 0;
+  background: transparent;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.stat {
+  text-align: center;
+  padding: 0.3rem 0;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.65rem;
+  color: #95a5a6;
+  margin-top: 0.2rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.stat.active .stat-label {
+  color: #27ae60;
+}
+
+/* Acciones */
+.card-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.btn {
+  padding: 0.5rem 0.4rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 0.65rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  background: white;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 32px;
+}
+
+.btn:hover {
+  background: #f5f7fa;
+  border-color: #667eea;
+  color: #667eea;
+  box-shadow: inset 0 0 0 1px #667eea;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  grid-column: span 1;
+}
+
+.btn-edit:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  grid-column: span 1;
+}
+
+.btn-delete:hover {
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-status {
+  border: 1px solid #f39c12;
+  color: #f39c12;
+  background: white;
+  grid-column: span 1;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f39c12' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.25em 1.25em;
+  padding-right: 2rem;
+}
+
+.btn-status:hover {
+  background-color: #fef5e7;
+  border-color: #f39c12;
+  box-shadow: inset 0 0 0 1px #f39c12;
+}
+
+.btn-toggle-active {
+  border: 1px solid #27ae60;
+  color: #27ae60;
+  background: white;
+  grid-column: span 1;
+}
+
+.btn-toggle-active:hover {
+  background: #e8f8f5;
+  border-color: #27ae60;
+  box-shadow: inset 0 0 0 1px #27ae60;
+}
+
+.btn-toggle-active.inactive {
+  border-color: #95a5a6;
+  color: #95a5a6;
+}
+
+.btn-toggle-active.inactive:hover {
+  background: #ecf0f1;
+  box-shadow: inset 0 0 0 1px #95a5a6;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #7f8c8d;
+}
+
+.empty-state p {
+  font-size: 1.3rem;
+}
+
+/* Spinner styles */
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  margin: 2rem 0;
+}
+
+.spinner {
+  border: 4px solid #ecf0f1;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
   margin-bottom: 1rem;
+}
+
+.spinner-container p {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

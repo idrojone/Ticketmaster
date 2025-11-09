@@ -1,0 +1,27 @@
+<form class="dialog-form">
+  <div class="form-group">
+    <label>Nombre del Género</label>
+    <input type="text" class="form-input" [(ngModel)]="genero.name" name="name" />
+  </div>
+
+  <div class="form-group">
+    <label>Descripción</label>
+    <textarea class="form-input" [(ngModel)]="genero.description" name="description" rows="4"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Estado</label>
+    <select class="form-input" [(ngModel)]="genero.status" name="status">
+      <option value="PENDING">Pendiente</option>
+      <option value="ACCEPTED">Aceptado</option>
+      <option value="REJECTED">Rechazado</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox" [(ngModel)]="genero.is_active" name="is_active" />
+      Activo
+    </label>
+  </div>
+</form>

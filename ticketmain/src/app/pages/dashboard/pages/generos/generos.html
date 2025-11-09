@@ -1,4 +1,72 @@
 <div class="generos-container">
-  <h2>Gestión de Géneros</h2>
-  <p>Aquí irá el contenido de gestión de géneros</p>
-</div>
+	<div class="header-section">
+		<h2>Gestión de Géneros</h2>
+		<p class="subtitle">Total: {{ GeneroAdmin().length }} géneros</p>
+      <button (click)="openAddDialog()" class="btn btn-add-genero">
+        Añadir Género
+      </button>
+	</div>	  					
+
+@if(IsLoading() === false){
+	<div class="spinner-container">
+		<div class="spinner"></div>
+		<p>Cargando géneros...</p>
+	</div>
+}
+
+@if(GeneroAdmin() && GeneroAdmin().length === 0){
+	<div class="empty-state">
+		<p>No hay géneros para mostrar.</p>
+	</div>
+}
+@else if(GeneroAdmin() && GeneroAdmin().length > 0) {
+	<div class="cards-grid">
+		@for(genero of GeneroAdmin(); track genero.slug) {
+			<div class="genero-card" [class]="'status-' + genero.status.toLowerCase()">
+				<!-- Imagen -->
+				<div class="card-image">
+					@if(genero.img) {
+						<img [src]="genero.img" [alt]="genero.name" />
+					}
+					@else {
+						<div class="placeholder-image">🎵</div>
+					}
+					<span class="status-badge">{{ genero.status }}</span>
+				</div>
+
+				<!-- Contenido -->
+				<div class="card-content">
+					<h3 class="card-title">{{ genero.name }}</h3>
+					
+					<div class="card-info">
+						<div class="info-item">
+							<span class="label">Descripción:</span>
+							<span class="value">{{ genero.description }}</span>
+						</div>
+					</div>
+
+					<!-- Estadísticas -->
+					<div class="card-stats">
+						<div class="stat" [class.active]="genero.is_active">
+							<span class="stat-label">{{ genero.is_active ? 'Activo' : 'Inactivo' }}</span>
+						</div>
+					</div>
+
+					<!-- Acciones -->
+					<div class="card-actions">
+						<button class="btn btn-edit" (click)="openEditDialog(genero)">Editar</button>
+						<button class="btn btn-delete" (click)="deleteGenero(genero)">Eliminar</button>
+						<select class="btn btn-status" (change)="updateStatus($any($event.target).value, genero)" [value]="genero.status">
+							<option value="PENDING">PENDING</option>
+							<option value="ACCEPTED">ACCEPTED</option>
+							<option value="REJECTED">REJECTED</option>
+						</select>
+						<button class="btn btn-toggle-active" [class.inactive]="!genero.is_active" (click)="toggleActivate(genero)">
+							{{ genero.is_active ? 'Activo' : 'Inactivo' }}
+						</button>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}

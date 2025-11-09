@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Router, RouterLinkWithHref } from "@angular/router";
-import { BehaviorSubject, distinctUntilChanged, map, Observable } from "rxjs";
+import { BehaviorSubject, distinctUntilChanged, elementAt, map, Observable, of } from "rxjs";
 import { User } from "../models/user.model";
 import { ApiService } from "./api.service";
 import { JwtService } from "./jwt.service";
@@ -33,28 +33,34 @@ export class UserService {
         }
 
         const accessToken = this.jwtService.getAccessToken();
-        // if (accessToken) {
-        //     try {
-        //         const decodedToken: any = jwtDecode(accessToken);
-        //         if (decodedToken.)
-        //     }catch(error) {
-        //         console.log('Access Token inválido o expirado');
-        //         this.purgeAuth();
-        //         return;
-        //     }
-        // }
+        console.log("Access Token en populate: " + accessToken);
         if (accessToken) {
+            console.log("Access Token en populate: " + accessToken);
+            let accessTokenDecoded= jwtDecode<any>(accessToken);
+            // console.log(accessTokenDecoded);
+
             this.isPopulating = true;
             this.apiService.get("/api/user").subscribe({
                 next: (data) => {
                     console.log('Usuario autenticado:', data.user.username);
                     this.setAuth({ ...data.user, accessToken: accessToken });
-                    this.isPopulating = false;
+                    // this.isPopulating = false;
                 },
                 error: (err) => {
-                    console.log('Access Token inválido o expirado');
-                    this.purgeAuth();
-                    this.isPopulating = false;
+                    console.log(accessTokenDecoded);
+                    this.apiService.get(`/auth/user/${accessTokenDecoded.username}`, undefined, false, "dashboard").subscribe({
+                        next: (data) => {
+                            console.log('Usuario admin autenticado:', data.user.username);
+                            this.setAuth(data.user);
+                            this.userTypeService.setUserType('admin');
+                            this.isPopulating = false;
+                        },
+                        error: (err) => {
+                            console.log('Access Token inválido o expirado');
+                            this.purgeAuth();
+                            this.isPopulating = false;
+                        }
+                    });
                 }
             });
         } else {
@@ -63,13 +69,7 @@ export class UserService {
     }
 
     setAuth(user: User) {
-        // console.log('Estableciendo autenticación para el usuario:', user);
         this.jwtService.saveAccessToken(user.accessToken);
-
-        // decode de token para obtener el rol
-
-        // const role = 
-
         this.currentUserSubject.next(user);
         this.isAuthenticatedSubject.next(true);
     }
@@ -85,25 +85,27 @@ export class UserService {
     attemptAuth(type: string, credentials: any, user_rol?: any): Observable<User> {
         const route = (type === 'login') ? '/login' : '/register';
 
-        if (type === 'login' && user_rol === 'ADMIN') {
-            return this.apiService.post(`/auth/login`, { user: credentials }, true, "dashboard")
-                .pipe(map(
-                    data => {
-                        this.setAuth(data.user);
-                        this.userTypeService.setUserType('ADMIN');
-                        return data.user;
-                    }
-                ));
-        } else {
-            return this.apiService.post(`/api${route}`, { user: credentials }, true)
-                .pipe(map(
-                    data => {
+        return this.apiService.post(`/api${route}`, { user: credentials }, true)
+            .pipe(
+                map(data => {
+                    if (data.rol && data.rol === 'admin') {
+                        console.log('Intentando autenticación como admin:', data);
+                        // Realiza la autenticación del admin de forma síncrona
+                        this.apiService.post(`/auth/login`, { user: credentials }, true, "dashboard")
+                            .subscribe({
+                                next: (adminData) => {
+                                    console.log('Usuario admin autenticado:', adminData);
+                                    this.setAuth(adminData.user);
+                                    this.userTypeService.setUserType('admin');
+                                }
+                            });
+                    } else {
                         this.setAuth(data.user);
                         this.userTypeService.setUserType('USER');
-                        return data.user;
                     }
-                ));
-        }
+                    return data.user;
+                })
+            );
     }
 
     getUserProfile(username: string | null): Observable<User> {

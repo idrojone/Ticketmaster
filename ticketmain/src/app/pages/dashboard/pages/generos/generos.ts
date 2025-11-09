@@ -1,15 +1,132 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { GenerosAdminService } from 'src/app/core/services/DashboardAdmin/GenerosAdmin.service';
+import { GeneroAdmin } from 'src/app/core/models/dashboard-admin/GenerosAdmin.model';
+import { ZardDialogComponent } from '@shared/components/dialog/dialog.component';
+import { ZardDialogService } from '@shared/components/dialog/dialog.service';
+import { GenerosEditDialogComponent } from '@shared/generos-edit-dialog/generos-edit-dialog.component';
+import { AddGenero } from '@shared/add-genero/add-genero';
 
 @Component({
   selector: 'app-dashboard-generos',
   templateUrl: './generos.html',
   styleUrl: './generos.css',
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule, ZardDialogComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardGeneros {
+  public IsLoading = signal(false);
+  public GeneroAdmin = signal([] as GeneroAdmin[]);
 
-    
-    
+  private GenerosAdminService = inject(GenerosAdminService);
+  private dialogService = inject(ZardDialogService);
+
+  constructor() {
+    this.LoadGeneros();
+  }
+
+  private LoadGeneros() {
+    this.GenerosAdminService.GetAllGenerosAdmin().subscribe({
+      next: (data) => {
+        this.GeneroAdmin.set(data);
+        console.log('GenerosAdmin:', data);
+        this.IsLoading.set(true);
+      },
+      error: (error) => {
+        console.error('Error loading GenerosAdmin:', error);
+      }
+    });       
+  }
+
+  // Abrir dialog para editar
+  openEditDialog(genero: GeneroAdmin) {
+    this.dialogService.create({
+      zTitle: 'Editar Género',
+      zDescription: 'Realiza cambios a los detalles del género.',
+      zContent: GenerosEditDialogComponent,
+      zData: { ...genero },
+      zOkText: 'Guardar Cambios',
+      zOnOk: (instance: any) => {
+        const formData = instance.form?.value;
+        if (formData) {
+          this.updateGenero({ ...genero, ...formData });
+        }
+      },
+      zWidth: '500px'
+    });
+  }
+
+  openAddDialog(){
+    this.dialogService.create({
+      zTitle: 'Añadir Género',
+      zDescription: 'Crea un nuevo género',
+      zContent: AddGenero,
+      zOkText: 'Crear',
+      zOnOk: (instance: any) => {
+        const formData = instance.form?.value;
+        if (formData) {
+          this.GenerosAdminService.PostGeneroAdmin(formData).subscribe({
+            next: (data) => {
+              console.log('Género creado:', data);
+              this.LoadGeneros();
+            }
+          });
+        }
+      },
+      zWidth: '500px',
+    });
+  }
+
+  private updateGenero(genero: GeneroAdmin) {
+    this.GenerosAdminService.PutGeneroAdmin(genero.slug, genero).subscribe({
+      next: (data) => {
+        console.log('Género actualizado:', data);
+        this.LoadGeneros();
+      },
+      error: (error) => {
+        console.error('Error actualizando género:', error);
+      }
+    });
+  }   
+
+  updateStatus(status : string, genero: GeneroAdmin) {
+    this.GenerosAdminService.PatchGeneroStatus(genero.slug, status).subscribe({
+      next: (data) => {
+        console.log('Estado actualizado:', data);
+        this.LoadGeneros();
+      },
+      error: (error) => {
+        console.error('Error actualizando estado:', error);
+      }
+    });
+  }
+
+  toggleActivate(genero: GeneroAdmin) {
+    const isActivate = genero.is_active;
+    const newActiveState = !isActivate;
+
+    this.GenerosAdminService.PatchGeneroActivate(genero.slug, newActiveState).subscribe({
+      next: (data) => {
+        console.log('Activación actualizada:', data);
+        this.LoadGeneros();
+      },
+      error: (error) => {
+        console.error('Error actualizando activación:', error);
+      }
+    });
+  }
+
+  deleteGenero(genero: GeneroAdmin) {
+    this.GenerosAdminService.DeleteGeneroAdmin(genero.slug).subscribe({
+      next: (data) => {
+        console.log('Género eliminado:', data);
+        this.LoadGeneros();
+      },
+      error: (error) => {
+        console.error('Error eliminando género:', error);
+      }
+    });
+  }
 }
