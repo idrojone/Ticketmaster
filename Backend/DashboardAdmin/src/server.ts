@@ -29,7 +29,7 @@ async function plugin (server: FastifyInstance, configuracion: Record<string, an
     .register(cors, {
       origin: 'http://localhost:4200', // Origen específico para Angular
       credentials: true, // Permitir cookies y headers de autenticación
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
       allowedHeaders: ['Content-Type', 'Authorization']
     })
     .after(err => {

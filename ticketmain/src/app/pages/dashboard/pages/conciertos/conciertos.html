@@ -1,4 +1,97 @@
-<div class="conciertos-container">
-  <h2>Gestión de Conciertos</h2>
-  <p>Aquí irá el contenido de gestión de conciertos</p>
-</div>
+
+@if(IsLoading() === false){
+	<div class="spinner-container">
+		<div class="spinner"></div>
+		<p>Cargando conciertos...</p>
+	</div>
+}
+
+@if(ConciertoAdmin() && ConciertoAdmin().length === 0){
+	<div class="empty-state">
+		<p>📋 No hay conciertos para mostrar.</p>
+	</div>
+}
+@else if(ConciertoAdmin() && ConciertoAdmin().length > 0) {
+	<div class="conciertos-container">
+		<div class="header-section">
+			<h2>Gestión de Conciertos</h2>
+			<p class="subtitle">Total: {{ ConciertoAdmin().length }} conciertos</p>
+      <button (click)="openAddDialog()" class="btn btn-add-concierto">
+        Añadir Concierto
+      </button>
+		</div>
+
+		<div class="cards-grid">
+			@for(concierto of ConciertoAdmin(); track concierto.slug) {
+				<div class="concierto-card" [class]="'status-' + concierto.status.toLowerCase()">
+					<!-- Imagen -->
+					<div class="card-image">
+						@if(concierto.imagenArtista) {
+							<img [src]="concierto.imagenArtista" [alt]="concierto.nombre" />
+						}
+						@else {
+							<div class="placeholder-image">🎵</div>
+						}
+						<span class="status-badge">{{ concierto.status }}</span>
+					</div>
+
+					<!-- Contenido -->
+					<div class="card-content">
+						<h3 class="card-title">{{ concierto.nombre }}</h3>
+						
+						<div class="card-info">
+							<div class="info-item">
+								<span class="label">Artista:</span>
+								<span class="value">{{ concierto.artista }}</span>
+							</div>
+							<div class="info-item">
+								<span class="label">Lugar:</span>
+								<span class="value">{{ concierto.lugar }}</span>
+							</div>
+							<div class="info-item">
+								<span class="label">Fecha:</span>
+								<span class="value">{{ concierto.fecha | date: 'dd/MM/yyyy' }}</span>
+							</div>
+							<div class="info-item">
+								<span class="label">Precio:</span>
+								<span class="value price">${{ concierto.precio }}</span>
+							</div>
+						</div>
+
+						<!-- Estadísticas -->
+						<div class="card-stats">
+							<div class="stat">
+								<span class="stat-value">{{ concierto.aforo }}</span>
+								<span class="stat-label">Aforo</span>
+							</div>
+							<div class="stat">
+								<span class="stat-value">{{ concierto.duracion }}h</span>
+								<span class="stat-label">Duración</span>
+							</div>
+							<div class="stat" [class.active]="concierto.is_active">
+								<span class="stat-label">{{ concierto.is_active ? 'Activo' : 'Inactivo' }}</span>
+							</div>
+						</div>
+
+						<!-- Acciones -->
+						<div class="card-actions">
+							<button class="btn btn-edit" (click)="openEditDialog(concierto)">Editar</button>
+							<button class="btn btn-delete">Eliminar</button>
+							<select class="btn btn-status" (change)="updateStatus($any($event.target).value, concierto)" [value]="concierto.status">
+								<option value="PENDING">PENDING</option>
+								<option value="ACCEPTED">ACCEPTED</option>
+								<option value="REJECTED">REJECTED</option>
+							</select>
+							<button class="btn btn-toggle-active" [class.inactive]="!concierto.is_active" (click)="toggleActivate(concierto)">
+								{{ concierto.is_active ? 'Activo' : 'Inactivo' }}
+							</button>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+}
+
+
+<!-- Dialog eliminado: Ahora usa ZardDialogService -->
