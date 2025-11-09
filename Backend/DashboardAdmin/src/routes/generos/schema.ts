@@ -110,6 +110,14 @@ export const onUpdateGenero = {
 };
 
 
+/**
+ * @route PATCH /generos/activate/:slug
+ * @description Actualizar activo del género
+ * @access Private (Requiere autenticación y rol)
+ * @returns {Object} 200 - Género actualizado exitosamente
+ * @returns {Object} 400 - Error al actualizar el estado del género
+ * @returns {Object} 404 - Género no encontrado
+ */
 export const onActivateGeneroSchema = {
   tags: ['Generos'],
   description: 'Actualizar activo del género',
@@ -121,6 +129,14 @@ export const onActivateGeneroSchema = {
   }
 };
 
+/**
+ * @route PATCH /generos/status/:slug
+ * @description Actulizar status del género
+ * @access Private (Requiere autenticación y rol)
+ * @returns {Object} 200 - Género actualizado exitosamente
+ * @returns {Object} 400 - Error al actualizar el status del género
+ * @returns {Object} 404 - Género no encontrado
+ */
 export const onStatusGeneroSchema = {
   tags: ['Generos'],
   description: 'Actulizar status del género',
@@ -132,6 +148,13 @@ export const onStatusGeneroSchema = {
   }
 };
 
+/**
+ * @route GET /generos/id_genero/:id_genero
+ * @description Obtener generos por id_genero
+ * @access Private (Requiere autenticación y rol)
+ * @returns {Object} 200 - Generos encontrados
+ * @returns {Object} 404 - Género no encontrado
+ */
 export const onGetGeneroIdGeneroSchema = {
   tags: ['Generos'],
   description: 'Obtener generos por id_genero',

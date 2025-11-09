@@ -24,6 +24,11 @@ class ModelGeneros {
         }
     }
 
+    /** 
+     * Obtiene todos los id_genero de los géneros disponibles en la base de datos.
+     * @returns {Promise<{ id_genero: string }[]>} Una promesa que resuelve a una lista de objetos con id_genero.
+     * @throws {Error} Lanza un error si ocurre un problema al obtener los géneros.
+    */
     async getAllGenerosIdGenero() {
         try {
             return await this.prisma.genero.findMany({
@@ -152,6 +157,11 @@ class ModelGeneros {
         }
     }
 
+    /** 
+     * Obtiene un género específico basado en su nombre.
+     * @param {string} name - El nombre del género a buscar.
+     * @returns {Promise<Genero | null>} Una promesa que resuelve a un objeto Genero o null si no se encuentra.
+    */
     async getGeneroByName(name: string){
         try {
             return await this.prisma.genero.findUnique({
@@ -231,7 +241,6 @@ class ModelGeneros {
 
         if (!genero) {
             this.server.throwError(404, 'Genero no encontrado');
-            return;
         }
 
         /**
@@ -241,7 +250,6 @@ class ModelGeneros {
             const existingGenero = await this.getGeneroByName(updatedData.name);
             if (existingGenero) {
                 this.server.throwError(400, 'El nombre del género ya existe');
-                return;
             }
             updatedData.slug = this.server.generateSlug(updatedData.name);
         }
@@ -249,14 +257,12 @@ class ModelGeneros {
         if (updatedData.id_genero !== genero.id_genero && updatedData.id_genero) {
             if (!genero.id_genero) {
                 this.server.throwError(500, 'Internal Server Error');
-                return;
             }
 
             const oldId = genero.id_genero;
 
             if (!updatedData.id_genero) {
                 this.server.throwError(400, 'El id_genero no puede estar vacío');
-                return;
             }
 
             const newId = updatedData.id_genero;
@@ -265,18 +271,23 @@ class ModelGeneros {
                 await this.updateConciertosGeneroId(oldId, newId);
             } catch (error) {
                 this.server.throwError(500, 'Error updating conciertos with new id_genero');
-                return;
             } 
         }
 
         const updatedGenero = await this.updateGenero(slug, updatedData);
         if (!updatedGenero) {
             this.server.throwError(400, 'Nuevos datos ya en uso o no existe');
-            return;
         }
         return updatedGenero;
     }
 
+    /** 
+     * Actualiza el estado activo de un género existente en la base de datos.
+     * @param {string} slug - El slug del género a actualizar.
+     * @param {boolean} is_active - El nuevo estado activo del género.
+     * @returns {Promise<Genero>} Una promesa que resuelve al género actualizado.
+     * @throws {Error} Lanza un error si el género no se encuentra o si hay un problema al actualizarlo.
+    */
     async patchGeneroActive (slug: string, is_active: boolean) {
         try {
             const updatedGenero = await this.prisma.genero.update({
@@ -289,6 +300,12 @@ class ModelGeneros {
         }
     }
 
+    /**
+     * Actualiza el estado de un género existente en la base de datos.
+     * @param {string} slug - El slug del género a actualizar.
+     * @param {Status} status - El nuevo estado del género.
+     * @returns {Promise<Genero>} Una promesa que resuelve al género actualizado.
+     */
     async patchGeneroStatus (slug: string, status: Status) {
         try {   
 
@@ -302,7 +319,12 @@ class ModelGeneros {
         }
     }
 
-
+    /**
+     * Actualiza el estado activo de un género existente en la base de datos.
+     * @param {FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>} request - La solicitud Fastify que contiene el slug en los parámetros y el nuevo estado activo en el cuerpo.
+     * @returns {Promise<{ genero: Genero }>} Una promesa que resuelve al género actualizado.
+     * @throws {Error} Lanza un error si el género no se encuentra o si hay un problema al actualizarlo.
+     */
     async onActivateGenero(request: FastifyRequest<{ Params: { slug: string }, Body: { is_active: boolean } }>) {
         const { slug } = request.params;
         const { is_active } = request.body;
@@ -328,7 +350,12 @@ class ModelGeneros {
         return { genero: activar };
     }
 
-
+    /**
+     *  Actualiza el estado de un género existente en la base de datos.
+     * @param {FastifyRequest<{Params: {slug: string }, Body: {status: Status }}>} request - La solicitud Fastify que contiene el slug en los parámetros y el nuevo estado en el cuerpo.
+     * @returns {Promise<{ generos: Genero }>} Una promesa que resuelve al género actualizado.
+     * @throws {Error} Lanza un error si el género no se encuentra o si hay un problema al actualizarlo.
+     */
     async onStatusGenero(request: FastifyRequest<{Params: {slug: string }, Body: {status: Status }}>) {
         const { slug } = request.params;
         const { status } = request.body;
@@ -361,6 +388,10 @@ class ModelGeneros {
         return { generos: updateConcierto };
     }
 
+    /**
+     * Obtiene todos los id_genero de los géneros disponibles en la base de datos.
+     * @returns {Promise<{ generos: { id_genero: string }[] }>} Una promesa que resuelve a un objeto con una lista de id_genero.
+     */
     async onGetGenerosIdGenero() {
         const generos =  await this.getAllGenerosIdGenero();
         return { generos };

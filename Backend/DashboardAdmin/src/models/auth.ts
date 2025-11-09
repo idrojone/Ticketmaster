@@ -10,51 +10,68 @@ class ModelAuth {
         this.server = server;
     }
 
+    /**
+     * Obtiene un usuario (admin o user) por su nombre de usuario
+     * @param username Nombre de usuario
+     * @returns Usuario encontrado o null si no existe
+     */
     async getUserByUsername(username: string) {
-        const admin = await prisma.userAdmin.findUnique({
-            where: { username }
-        });
-
-        if (admin) {
-            return { ...admin, userType: 'admin' as const };
+        try {
+            const admin = await prisma.userAdmin.findUnique({
+                where: { username }
+            });
+            return admin;
+        } catch (error) {
+            this.server.throwError(500, 'Error fetching user by username', error);
         }
-
-        const user = await prisma.user.findUnique({
-            where: { username }
-        });
-
-        if (user) {
-            return { ...user, userType: 'user' as const };
-        }
-
-        return null;
     }
 
+    /**
+     * Crea un nuevo usuario administrador
+     * @param username Nombre de usuario
+     * @param email Correo electrónico
+     * @param password Contraseña hasheada
+     * @returns Usuario administrador creado
+     */
     async createUser(username: string, email: string, password: string) {
-        const admin = await prisma.userAdmin.create({
-            data: {
-                username,
-                email,
-                password
-            }
-        });
-        return { ...admin, userType: 'admin' as const };
-    }
-
-    async getUserByEmail(email: string) {
-        const admin = await prisma.userAdmin.findUnique({
-            where: { email }
-        });
-        if (admin) {
+        try {
+            const admin = await prisma.userAdmin.create({
+                data: {
+                    username,
+                    email,
+                    password
+                }
+            });
             return { ...admin, userType: 'admin' as const };
+        } catch (error) {
+            this.server.throwError(500, 'Error creating user', error);
         }
-        return null;
+    }
+    /**
+     * Obtiene un usuario administrador por su correo electrónico
+     * @param email Correo electrónico
+     * @returns Usuario administrador encontrado o null si no existe
+     */
+    async getUserByEmail(email: string) {
+        try {
+            const admin = await prisma.userAdmin.findUnique({
+                where: { email }
+            });
+            if (admin) return { ...admin, userType: 'admin' as const };
+        } catch (error) {
+            this.server.throwError(500, 'Error fetching user by email', error);
+        }
     }
 
+    /**
+     * Maneja la lógica de inicio de sesión de un usuario administrador
+     * @param Body Cuerpo de la solicitud de inicio de sesión
+     * @param reply Respuesta Fastify
+     * @returns Usuario autenticado con token de acceso
+     */
     async onLogin(Body: LoginRequestBody, reply: FastifyReply) {
         const user = await this.getUserByEmail(Body.user.email);
 
-        // No revelar si el usuario existe: devolver error genérico de credenciales
         if (!user) {
             this.server.throwError(401, 'Credenciales incorrectas');
             return;
@@ -73,7 +90,6 @@ class ModelAuth {
 
         const accessToken = await this.server.generateAccessToken(user.username, reply);
 
-        // Eliminar campos sensibles antes de devolver
         const safeUser: any = { ...user };
         delete safeUser.password;
 
@@ -84,14 +100,18 @@ class ModelAuth {
         return { user: response };
     }
 
-    
+    /**
+     * Maneja la lógica de registro de un nuevo usuario administrador
+     * @param Body Cuerpo de la solicitud de registro
+     * @param reply Respuesta Fastify
+     * @returns Nuevo usuario registrado con token de acceso
+     */
     async onRegister(Body: RegisterRequestBody, reply: FastifyReply) {
 
         const user = await this.getUserByUsername(Body.user.username);
 
         if (user) {
             this.server.throwError(409, 'Username already exists');
-            return;
         }
 
         const hashedPassword = await this.server.hash(Body.user.password);
@@ -111,35 +131,34 @@ class ModelAuth {
         } catch (err: any) {
             if (err?.code === 'P2002') {
                 this.server.throwError(409, 'Username or email already exists');
-                return;
             }
             this.server.log.error(err);
             this.server.throwError(500, 'Error creating user');
-            return;
         }
     }
 
+    /**
+     * Maneja la obtención de un usuario por su nombre de usuario
+     * @param request Solicitud Fastify con parámetros
+     * @returns Usuario encontrado sin campos sensibles
+     */
     async onGetUser(request: { params: { username?: string } }) {
         const username = request.params?.username;
 
         if (!username || username === undefined) {
             this.server.throwError(400, 'Se requiere el username');
-            return;
         }
 
         const user = await this.getUserByUsername(username);
 
         if (!user) {
             this.server.throwError(404, 'Usuario no encontrado');
-            return;
         }
 
         const safeUser: any = { ...user };
         delete safeUser.password;
         return { user: safeUser };
     }
-
-
 }
 
 export const modelAuth = (server: FastifyInstance) => new ModelAuth(server);

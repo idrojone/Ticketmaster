@@ -4,9 +4,15 @@ import { login, register, RegisterRequestBody, LoginRequestBody, get } from './s
 import { modelAuth } from '../../models/auth';
 
 async function auth (server: FastifyInstance) {   
-    /* 
-        User Login 
-    */
+    /**
+     * @route POST /auth/login
+     * @description Iniciar sesión de usuario
+     * @access Public
+     * @returns {Object} 200 - Inicio de sesión exitoso
+     * @returns {Object} 400 - Error en la solicitud
+     * @returns {Object} 500 - Error del servidor
+     * @returns {Object} 401 - Credenciales incorrectas
+     */
     server.route({
         method: 'POST',
         url: '/auth/login',
@@ -18,8 +24,14 @@ async function auth (server: FastifyInstance) {
         return reply.code(200).send(result);
     }
 
-    /* 
-        User Register
+   /**
+    * @route POST /auth/register
+    * @description Registrar un nuevo usuario
+    * @access Public / Para desarrollo, en producción NO exsiste este endpoint
+    * @returns {Object} 201 - Usuario registrado exitosamente
+    * @returns {Object} 400 - Error en la solicitud
+    * @returns {Object} 500 - Error del servidor
+    * @returns {Object} 409 - Conflicto (usuario ya existe)
     */
     server.route({
         method: 'POST',
@@ -33,9 +45,16 @@ async function auth (server: FastifyInstance) {
     }
 
 
-    /* 
-        User Get
-    */
+    /**
+     * @route GET /auth/user/:username
+     * @description Obtener un usuario por su nombre de usuario
+     * @access Private (Requiere autenticación y rol)
+     * @returns {Object} 200 - Usuario encontrado
+     * @returns {Object} 404 - Usuario no encontrado
+     * @returns {Object} 500 - Error del servidor
+     * @returns {Object} 401 - No autorizado
+     * @returns {Object} 400 - Solicitud incorrecta
+     */
     server.route({
         method: 'GET',
         url: '/auth/user/:username',

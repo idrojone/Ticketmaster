@@ -5,15 +5,6 @@ import { modelGeneros } from '../../models/generos';
 import { Genero, Status } from '@prisma/client';
 
 
-/**
- * 
- * Falta !!!!
- * - Validar que el nombre no exista ya al crear o actualizar
- * - Tests
- * - is_active
- * - status
- */
-
 async function generosRoute(server: FastifyInstance) {
     
     /**
@@ -100,6 +91,15 @@ async function generosRoute(server: FastifyInstance) {
         return reply.code(200).send(updatedGenero);
     }
 
+    /** 
+     * @route PATCH /generos/:slug/activate
+     * @description Activar o desactivar un género por su slug
+     * @access Private (Requiere autenticación y rol)
+     * @returns {Object} 200 - Género actualizado
+     * @returns {Object} 400 - Error en la actualización del género
+     * @returns {Object} 500 - Error del servidor
+     * @returns {Object} 401 - No autorizado
+    */
     server.route({
         method: 'PATCH',
         url: '/generos/:slug/activate',
@@ -112,6 +112,15 @@ async function generosRoute(server: FastifyInstance) {
         return reply.code(200).send(updatedGenero);
     }
 
+    /**
+     * @route PATCH /generos/:slug/status
+     * @description Cambiar el estado de un género por su slug
+     * @access Private (Requiere autenticación y rol)
+     * @returns {Object} 200 - Género actualizado
+     * @returns {Object} 400 - Error en la actualización del género
+     * @returns {Object} 500 - Error del servidor
+     * @returns {Object} 401 - No autorizado
+     */
     server.route({
         method: 'PATCH',
         url: '/generos/:slug/status',
@@ -124,7 +133,15 @@ async function generosRoute(server: FastifyInstance) {
         return reply.code(200).send(updateGenero);
     }
 
-
+    /**
+     * @route GET /generos/id_genero
+     * @description Obtener géneros por su id_genero
+     * @access Private (Requiere autenticación y rol)
+     * @returns {Object} 200 - Géneros encontrados
+     * @returns {Object} 500 - Error del servidor
+     * @returns {Object} 401 - No autorizado
+     * @returns {Object} 404 - Género no encontrado 
+     */
     server.route({
         method: 'GET',
         url: '/generos/id_genero',
