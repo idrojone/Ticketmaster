@@ -2,12 +2,23 @@ const User=require('../models/user.model');
 const UserAdmin=require('../models/admin.model');
 const refreshTokenStore= require('../models/refreshTokenStore.model');
 const asyncHandler=require('express-async-handler');
-// const bcrypt=require('bcrypt');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const BlackListToken = require('../models/blackListToken');
-const e = require('express');
 
+
+/**
+ * Rutas públicas
+ * - registerUser
+ * - loginUser
+ * - verifyRefreshToken
+ * - logoutUser
+ * 
+ * Rutas privadas (pasar por el middleware de autenticación)
+ * - getUserData
+ * - updateUser
+ * - getDetailsUser
+ */
 
 const registerUser= asyncHandler( async (req,res) => {
 
