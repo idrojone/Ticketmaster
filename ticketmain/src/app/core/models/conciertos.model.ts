@@ -13,4 +13,6 @@ export interface Concierto {
     duracion?: number; 
     imagenArtista?: string;
     imagenesShow?: string[];
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+    is_active: boolean;
 }

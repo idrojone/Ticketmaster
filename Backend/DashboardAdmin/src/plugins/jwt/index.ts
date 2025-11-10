@@ -19,9 +19,9 @@ export default fp(async (server: FastifyInstance) => {
      *  Generar AccessToken
      */
 
-    server.decorate('generateAccessToken', async function (username: string, reply: FastifyReply) {
+    server.decorate('generateAccessToken', async function (username: string, email: string, reply: FastifyReply) {
         return await reply.jwtSign(
-            { username: username, role: 'admin' },
+            { username: username, role: 'admin', email: email },
         );
     });
 

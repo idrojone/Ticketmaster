@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConciertosAdminService } from 'src/app/core/services/DashboardAdmin/ConciertosAdmin.service';
 import { ConciertoAdmin } from 'src/app/core/models/dashboard-admin/ConciertosAdmin.model';
-import { ZardDialogComponent } from '@shared/components/dialog/dialog.component';
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { ConciertosEditDialogComponent } from '@shared/conciertos-edit-dialog/conciertos-edit-dialog.component';
 import { AddConcierto } from '@shared/add-concierto/add-concierto';
@@ -13,7 +12,7 @@ import { AddConcierto } from '@shared/add-concierto/add-concierto';
   templateUrl: './conciertos.html',
   styleUrl: './conciertos.css',
   standalone: true,
-  imports: [CommonModule, FormsModule, ZardDialogComponent],
+  imports: [CommonModule, FormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardConciertos {

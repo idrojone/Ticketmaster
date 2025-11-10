@@ -25,18 +25,6 @@
             </ul>
         </nav>
 
-        @if(user_type_signal()){
-            
-        <!-- Admin Buttons -->
-            <div class="admin-buttons flex space-x-4">
-                <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2"
-                    [routerLink]="'/dashboard'">
-                    <i class="fas fa-crown w-4 h-4"></i>
-                    DASHBOARD
-                </a>
-            </div>
-        }
-
         @if(loggedIn) {
             <div class="items-center">
                 <button z-dropdown [zDropdownMenu]="menu" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2">
@@ -51,6 +39,12 @@
                     <z-dropdown-menu-item (click)="logout()">
                         <i class="fas fa-sign-out-alt"></i> Log out
                     </z-dropdown-menu-item>
+                    @if(user_type_signal()){
+                        <z-dropdown-menu-label>Dashboard</z-dropdown-menu-label>
+                        <z-dropdown-menu-item [routerLink]="['/dashboard']">
+                        <i class="fas fa-crown"></i>Dashboard Admin
+                        </z-dropdown-menu-item>
+                    }
                 </z-dropdown-menu-content>
             </div>
         } @else {

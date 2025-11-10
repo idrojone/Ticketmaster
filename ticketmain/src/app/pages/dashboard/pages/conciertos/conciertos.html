@@ -75,8 +75,12 @@
 						<!-- Acciones -->
 						<div class="card-actions">
 							<button class="btn btn-edit" (click)="openEditDialog(concierto)">Editar</button>
-							<button class="btn btn-delete">Eliminar</button>
-							<select class="btn btn-status" (change)="updateStatus($any($event.target).value, concierto)" [value]="concierto.status">
+							<select class="btn btn-status" 
+								[class.status-accepted]="concierto.status === 'ACCEPTED'"
+								[class.status-pending]="concierto.status === 'PENDING'"
+								[class.status-rejected]="concierto.status === 'REJECTED'"
+								(change)="updateStatus($any($event.target).value, concierto)" 
+								[value]="concierto.status">
 								<option value="PENDING">PENDING</option>
 								<option value="ACCEPTED">ACCEPTED</option>
 								<option value="REJECTED">REJECTED</option>

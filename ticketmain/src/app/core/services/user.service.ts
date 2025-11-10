@@ -6,6 +6,7 @@ import { ApiService } from "./api.service";
 import { JwtService } from "./jwt.service";
 import { UserTypeService } from "./user-type.service";
 import { jwtDecode } from "jwt-decode";
+import { UserAdmin } from "../models/dashboard-admin/UserAdmin.model";
 
 
 @Injectable ({
@@ -13,7 +14,12 @@ import { jwtDecode } from "jwt-decode";
 })  
 export class UserService {
     private currentUserSubject = new BehaviorSubject<User>({} as User);
+
+    private currentUserAdminSubject = new BehaviorSubject<UserAdmin>({} as UserAdmin);
+
     public currentUser = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
+
+    public currentUserAdmin = this.currentUserAdminSubject.asObservable().pipe(distinctUntilChanged());
 
     private userTypeService = inject(UserTypeService);
 
@@ -34,39 +40,62 @@ export class UserService {
 
         const accessToken = this.jwtService.getAccessToken();
         console.log("Access Token en populate: " + accessToken);
+        
         if (accessToken) {
-            console.log("Access Token en populate: " + accessToken);
-            let accessTokenDecoded= jwtDecode<any>(accessToken);
-            // console.log(accessTokenDecoded);
+            try {
+                let accessTokenDecoded = jwtDecode<any>(accessToken);
+                console.log('Token decodificado:', accessTokenDecoded);
 
-            this.isPopulating = true;
-            this.apiService.get("/api/user").subscribe({
-                next: (data) => {
-                    console.log('Usuario autenticado:', data.user.username);
-                    this.setAuth({ ...data.user, accessToken: accessToken });
-                    // this.isPopulating = false;
-                },
-                error: (err) => {
-                    console.log(accessTokenDecoded);
-                    this.apiService.get(`/auth/user/${accessTokenDecoded.username}`, undefined, false, "dashboard").subscribe({
-                        next: (data) => {
-                            console.log('Usuario admin autenticado:', data.user.username);
-                            this.setAuth(data.user);
-                            this.userTypeService.setUserType('admin');
+                this.isPopulating = true;
+
+                // Verificar si es admin directamente del token decodificado
+                if (accessTokenDecoded.role === 'admin') {
+                    console.log('Admin detectado en token');
+                    const adminUser: User = {
+                        username: accessTokenDecoded.username,
+                        email: accessTokenDecoded.email,
+                        accessToken: accessToken,
+                        bio: '',
+                        image: ''
+                    };
+                    this.setAuth(adminUser);
+                    this.userTypeService.setUserType('admin');
+                    this.isPopulating = false;
+                } else {
+                    // Para usuarios regulares, obtener datos del endpoint
+                    this.apiService.get("/api/user").subscribe({
+                        next: (response) => {
+                            console.log('Respuesta de /api/user:', response);
+                            
+                            const userData = response.user || response;
+                            this.setAuth({ ...userData, accessToken: accessToken });
+                            this.userTypeService.setUserType('USER');
                             this.isPopulating = false;
                         },
                         error: (err) => {
-                            console.log('Access Token inválido o expirado');
-                            this.purgeAuth();
+                            console.log('Error en /api/user:', err);
+                            // Solo limpiar el token si es un error 401 (no autorizado, token inválido)
+                            if (err?.status === 401 || err?.status === 403) {
+                                console.log('Token inválido o expirado, limpiando...');
+                                this.purgeAuth();
+                            } else {
+                                console.log('Error del servidor, manteniendo token:', err?.status);
+                            }
                             this.isPopulating = false;
                         }
                     });
                 }
-            });
+            } catch (error) {
+                console.log('Error decodificando token:', error);
+                this.purgeAuth();
+                this.isPopulating = false;
+            }
         } else {
             this.purgeAuth();
         }
     }
+
+
 
     setAuth(user: User) {
         this.jwtService.saveAccessToken(user.accessToken);
@@ -90,7 +119,6 @@ export class UserService {
                 map(data => {
                     if (data.rol && data.rol === 'admin') {
                         console.log('Intentando autenticación como admin:', data);
-                        // Realiza la autenticación del admin de forma síncrona
                         this.apiService.post(`/auth/login`, { user: credentials }, true, "dashboard")
                             .subscribe({
                                 next: (adminData) => {

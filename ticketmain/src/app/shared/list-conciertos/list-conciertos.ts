@@ -95,7 +95,9 @@ export class ListConciertos implements OnInit {
         }else{
             this.filters = new Filters();
         }
-    }    get_conciertos_by_genero() {
+    }
+       
+    get_conciertos_by_genero() {
         this.conciertosService.get_conciertos_by_genero(this.slug_genero!).subscribe(
             (data: any) => {
                 console.log(data.conciertos);

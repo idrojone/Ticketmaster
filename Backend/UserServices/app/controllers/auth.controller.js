@@ -146,6 +146,8 @@ const getUserData= asyncHandler( async (req,res) => {
     // Recibimos el email y lo buscamos
     const email = req.email;
 
+    console.log('Email decodificado del token:', email);
+
     const encontrarUsuario= await User.findOne( {email} ).exec();
 
     if(!encontrarUsuario){

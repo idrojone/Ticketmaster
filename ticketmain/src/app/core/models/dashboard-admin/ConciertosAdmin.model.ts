@@ -14,7 +14,7 @@ export interface ConciertoAdmin {
       id_genero: string;
       imagenArtista: string;
       is_active: boolean;
-      status: 'PENDING' | 'APPROVED' | 'REJECTED';
+      status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
 }
 
 export interface PostConciertoAdmin {

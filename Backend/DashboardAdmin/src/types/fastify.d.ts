@@ -7,7 +7,7 @@ declare module 'fastify' {
     authenticate(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     authenticateOptional(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     authenticateRole(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-    generateAccessToken(username: string, reply: FastifyReply): Promise<string>;
+    generateAccessToken(username: string, email: string, reply: FastifyReply): Promise<string>;
   // Lanza un error y no retorna (sirve para signalizar errores HTTP desde plugins/modelos)
   throwError(statusCode: number, message: string, details?: any): never;
     generateSlug(title: string): string;

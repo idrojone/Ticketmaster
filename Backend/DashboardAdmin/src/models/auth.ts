@@ -88,7 +88,7 @@ class ModelAuth {
             return;
         }
 
-        const accessToken = await this.server.generateAccessToken(user.username, reply);
+        const accessToken = await this.server.generateAccessToken(user.username, user.email, reply);
 
         const safeUser: any = { ...user };
         delete safeUser.password;
@@ -117,7 +117,7 @@ class ModelAuth {
         const hashedPassword = await this.server.hash(Body.user.password);
         try {
             const newUser = await this.createUser(Body.user.username, Body.user.email, hashedPassword);
-            const accessToken = await this.server.generateAccessToken(newUser.username, reply);
+            const accessToken = await this.server.generateAccessToken(newUser.username, newUser.email, reply);
 
             const safeUser: any = { ...newUser };
             delete safeUser.password;

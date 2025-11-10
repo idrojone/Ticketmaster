@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GenerosAdminService } from 'src/app/core/services/DashboardAdmin/GenerosAdmin.service';
 import { GeneroAdmin } from 'src/app/core/models/dashboard-admin/GenerosAdmin.model';
-import { ZardDialogComponent } from '@shared/components/dialog/dialog.component';
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { GenerosEditDialogComponent } from '@shared/generos-edit-dialog/generos-edit-dialog.component';
 import { AddGenero } from '@shared/add-genero/add-genero';
@@ -13,7 +12,7 @@ import { AddGenero } from '@shared/add-genero/add-genero';
   templateUrl: './generos.html',
   styleUrl: './generos.css',
   standalone: true,
-  imports: [CommonModule, FormsModule, ZardDialogComponent],
+  imports: [CommonModule, FormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardGeneros {

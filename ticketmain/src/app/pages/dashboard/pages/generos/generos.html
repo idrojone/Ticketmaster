@@ -55,8 +55,12 @@
 					<!-- Acciones -->
 					<div class="card-actions">
 						<button class="btn btn-edit" (click)="openEditDialog(genero)">Editar</button>
-						<button class="btn btn-delete" (click)="deleteGenero(genero)">Eliminar</button>
-						<select class="btn btn-status" (change)="updateStatus($any($event.target).value, genero)" [value]="genero.status">
+						<select class="btn btn-status" 
+							[class.status-accepted]="genero.status === 'ACCEPTED'"
+							[class.status-pending]="genero.status === 'PENDING'"
+							[class.status-rejected]="genero.status === 'REJECTED'"
+							(change)="updateStatus($any($event.target).value, genero)" 
+							[value]="genero.status">
 							<option value="PENDING">PENDING</option>
 							<option value="ACCEPTED">ACCEPTED</option>
 							<option value="REJECTED">REJECTED</option>
