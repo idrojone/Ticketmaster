@@ -75,7 +75,9 @@ async function findAllConciertos(req, res) {
     } else {
         console.log("No se ha proporcionado género");
     }
-
+    
+    query.status = 'ACCEPTED';
+    query.is_active = true;
 
     console.log("Query final:", JSON.stringify(query, null, 2));
 
