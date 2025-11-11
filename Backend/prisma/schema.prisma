@@ -202,6 +202,9 @@ model Concierto {
     /* Relación de entradas One To Many */
     entradas Entrada[]
 
+    /* Relación con Ventas */
+    ventas Venta[]
+
     /* Relación con Comentarios */
     comentarios Comentario[]
 
@@ -255,6 +258,15 @@ model Venta {
     userId String @db.ObjectId
     user User @relation(fields: [userId], references: [id])
 
+    conciertoId String? @db.ObjectId
+    concierto Concierto? @relation(fields: [conciertoId], references: [id])
+
+    merchandisingId String? @db.ObjectId
+    merchandising Merchandising? @relation(fields: [merchandisingId], references: [id])
+
+    // conciertoID, stock, merchandisingId
+
+
     /* Relación con Pagos */
     pagos Pagos[]
 
@@ -275,6 +287,14 @@ model Merchandising {
     precio Float
     stock Int
     imagen String?
+
+    // categoriaID
+
+    categoriaId String @db.ObjectId
+    categoria CategoriaMerchandising @relation(fields: [categoriaId], references: [id])
+
+    /* Relación con Ventas */
+    ventas Venta[]
 
     status Status @default(ACCEPTED)
     is_active Boolean @default(true)
@@ -298,6 +318,20 @@ model Pagos {
     updatedAt DateTime @updatedAt
 
     @@map("pagos")
+}
+
+model CategoriaMerchandising {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    nombre String @unique
+    descripcion String?
+    imagen String?
+    merchandising Merchandising[]
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("categorias_merchandising")
 }
 /** 
 *   Comentarios Model
