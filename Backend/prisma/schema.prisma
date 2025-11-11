@@ -8,17 +8,10 @@ datasource db {
 }
 
 /** 
-    FALTA !!!!!!
-    - ? Añadimos modelo de Artista
-    - ? Añadimos modelo de Lugar
+    TABLAS NUEVAS !!!!
+    - UserEmpresa, Entrada, Venta, Merchandaising, Pagos
 
-    HECHO !!!!!
-    - Relaciones de Likes entre Usuario y Concierto
-    - Relaciones de Seguidores entre Usuarios (self relation)
-    - Modelo de RefreshTokenStore
-    - Modelo de BlackListToken
-    - Relaciones Entradas con Usuario y Concierto
-    - Relaciones Comentarios con Usuario y Concierto
+    
 */
 
 /**
@@ -62,6 +55,9 @@ model User {
     /* Relación con entradas */
     entradas Entrada[]
 
+    /* Relación con ventas */
+    ventas Venta[]
+
     /* Relación con Comentarios */
     comentarios Comentario[]
 
@@ -95,6 +91,22 @@ model UserAdmin {
     updatedAt DateTime @updatedAt
 
     @@map("user_admins")
+}
+
+model UserEmpresa {
+    id  String @id @map("_id") @default(auto()) @db.ObjectId
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    username String @unique
+    email String @unique
+    password String
+    bio String?
+    image String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("user_empresas")
 }
 
 /** 
@@ -233,6 +245,60 @@ model Entrada {
     @@map("entradas")
 }
 
+/**
+*   Modelos Ventas, Merchandising, Pagos, CategoriasMerchandising
+*/
+
+model Venta {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    /* Relacion con Usuario */
+    userId String @db.ObjectId
+    user User @relation(fields: [userId], references: [id])
+
+    /* Relación con Pagos */
+    pagos Pagos[]
+
+    total Float
+    fecha DateTime @default(now())
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("ventas")
+}
+
+model Merchandising {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    nombre String
+    descripcion String?
+    precio Float
+    stock Int
+    imagen String?
+
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("merchandising")
+}
+
+model Pagos {
+    id String @id @map("_id") @default(auto()) @db.ObjectId
+    ventaId String @db.ObjectId
+    venta Venta @relation(fields: [ventaId], references: [id])
+    metodo String
+    monto Float
+    fecha DateTime @default(now())
+
+    status Status @default(ACCEPTED)
+    is_active Boolean @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("pagos")
+}
 /** 
 *   Comentarios Model
 */
