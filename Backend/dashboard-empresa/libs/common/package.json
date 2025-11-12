@@ -1,0 +1,14 @@
+{
+  "name": "@app/common",
+  "version": "0.0.1",
+  "description": "Common library - DTOs, Guards, Interfaces",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "nest build common"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED"
+}
