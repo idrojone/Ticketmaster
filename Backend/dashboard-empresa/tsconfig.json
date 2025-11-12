@@ -26,6 +26,8 @@
       "@app/messaging": ["libs/messaging/src"],
       "@app/common/*": ["libs/common/src/*"],
       "@app/messaging/*": ["libs/messaging/src/*"]
-    }
-  }
+    },
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "include": ["src/**/*", "src/types/**/*.d.ts"],
 }

@@ -193,4 +193,6 @@ dist
 
 package-lock.json
 
+prisma-client/
+
 # End of https://www.toptal.com/developers/gitignore/api/node,angular,visualstudiocode

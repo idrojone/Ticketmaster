@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../libs/common/src/prisma/prisma.service';
+
 
 @Injectable()
 export class AuthService {
-  constructor() {}
+  constructor(
+    private readonly prisma: PrismaService
+  ) {}
 
   // Placeholder methods
   register(data: any) {
@@ -19,5 +23,9 @@ export class AuthService {
 
   getProfile(userId: string) {
     return { message: 'Getting user profile', userId };
+  }
+
+  async findByEmail(email: string) {
+    return this.prisma.userEmpresa.findFirst({ where: { email } });
   }
 }
