@@ -1,6 +1,11 @@
-generator client {
+generator fastify {
     provider = "prisma-client-js"
-    output   = "../prisma-client"
+    output   = "../DashboardAdmin/node_modules/.prisma/client"
+}
+
+generator nestjs {
+    provider = "prisma-client-js"
+    output   = "../dashboard-empresa/node_modules/.prisma/client"
 }
 
 datasource db {

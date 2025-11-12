@@ -17,6 +17,7 @@
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
+  "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
@@ -29,5 +30,5 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*", "src/types/**/*.d.ts"],
+  "include": ["src/**/*", "src/types/**/*.d.ts"]
 }
