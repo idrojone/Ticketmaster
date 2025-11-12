@@ -11,7 +11,8 @@
     "start:dev": "NODE_ENV=development ts-node-dev --respawn src/server.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prisma" : "prisma --schema ../prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
