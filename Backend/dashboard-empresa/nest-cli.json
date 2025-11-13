@@ -37,6 +37,15 @@
         "tsConfigPath": "apps/merchandise-service/tsconfig.app.json"
       }
     },
+    "merch-service": {
+      "type": "application",
+      "root": "apps/merch-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/merch-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/merch-service/tsconfig.app.json"
+      }
+    },
     "common": {
       "type": "library",
       "root": "libs/common",
