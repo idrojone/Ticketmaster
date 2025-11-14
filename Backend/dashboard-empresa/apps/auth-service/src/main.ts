@@ -1,4 +1,5 @@
-import 'reflect-metadata';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AuthModule } from './auth.module';
@@ -11,10 +12,10 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  const port = process.env.PORT || 3031;
+  const port = process.env.AUTH_PORT || 3031;
   await app.listen(port);
 
-  console.log(`🔐 Auth Service running on port ${port}`);
+  console.log(`Auth Service running on port ${port}`);
 }
 
 bootstrap();
