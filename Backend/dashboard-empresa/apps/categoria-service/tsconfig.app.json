@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "../../dist/apps/categoria-service",
+    "paths": {
+      "@app/common": ["../../libs/common/src"],
+      "@app/messaging": ["../../libs/messaging/src"],
+      "@app/common/*": ["../../libs/common/src/*"],
+      "@app/messaging/*": ["../../libs/messaging/src/*"]
+    },
+    "typeRoots": ["../../node_modules/@types", "../../src/types"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}
