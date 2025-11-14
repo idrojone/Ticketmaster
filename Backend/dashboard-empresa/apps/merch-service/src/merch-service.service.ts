@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@app/common';
+import { PrismaService } from 'libs/common/src/prisma';
+
 import {
   CreateMerchandisingDto,
   MerchandisingResponseDto,

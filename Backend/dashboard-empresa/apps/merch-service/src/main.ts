@@ -3,6 +3,10 @@ import { MerchServiceModule } from './merch-service.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
+
+// Cargar variables de entorno
+dotenv.config();
 
 async function bootstrap() {
   // const app = await NestFactory.createMicroservice<MicroserviceOptions>(

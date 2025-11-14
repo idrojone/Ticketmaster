@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MerchServiceController } from './merch-service.controller';
 import { MerchServiceService } from './merch-service.service';
-import { PrismaModule } from '@app/common';
+import { PrismaModule } from 'libs/common/src/prisma';
+
 
 @Module({
   imports: [PrismaModule],

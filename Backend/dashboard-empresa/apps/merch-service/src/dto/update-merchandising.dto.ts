@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, IsPositive, Min, IsBoolean, IsEnum } from 'class-validator';
-import { Status } from '@app/common';
 import { ApiProperty } from '@nestjs/swagger';
+import { Status } from '@prisma/client';
 
 export class UpdateMerchandisingDto {
   @ApiProperty({ example: 'Camiseta Oficial', description: 'Nombre del merchandising' })
