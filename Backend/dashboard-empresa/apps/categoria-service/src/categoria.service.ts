@@ -1,37 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { PrismaService } from '@app/common';
-import { CreateCategoriaMerchandisingDto, UpdateCategoriaMerchandisingDto, CategoriaMerchandisingResponseDto } from './dto';
+import { PrismaService } from 'libs/common/src/prisma';
+
+import {
+  CreateCategoriaMerchandisingDto,
+  UpdateCategoriaMerchandisingDto,
+  CategoriaMerchandisingResponseDto,
+} from './dto';
 
 @Injectable()
 export class CategoriaMerchandisingService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<CategoriaMerchandisingResponseDto[]> {
-    const data = await this.prisma.categoriaMerchandising.findMany();
-    return plainToInstance(CategoriaMerchandisingResponseDto, data);
+    const categorias = await this.prisma.categoriaMerchandising.findMany();
+    return categorias;
   }
 
-  async findOne(id: string): Promise<CategoriaMerchandisingResponseDto> {
-    const data = await this.prisma.categoriaMerchandising.findUnique({
+  async findOne(id: string): Promise<CategoriaMerchandisingResponseDto | null> {
+    return this.prisma.categoriaMerchandising.findUnique({
       where: { id },
     });
-    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 
-  async create(createDto: CreateCategoriaMerchandisingDto): Promise<CategoriaMerchandisingResponseDto> {
-    const data = await this.prisma.categoriaMerchandising.create({
+  async create(
+    createDto: CreateCategoriaMerchandisingDto,
+  ): Promise<CategoriaMerchandisingResponseDto> {
+    const newCategoria = await this.prisma.categoriaMerchandising.create({
       data: {
         nombre: createDto.nombre,
         descripcion: createDto.descripcion,
         imagen: createDto.imagen,
       },
     });
-    return plainToInstance(CategoriaMerchandisingResponseDto, data);
+    return newCategoria;
   }
 
-  async update(id: string, updateDto: UpdateCategoriaMerchandisingDto): Promise<CategoriaMerchandisingResponseDto> {
-    const data = await this.prisma.categoriaMerchandising.update({
+  async update(
+    id: string,
+    updateDto: UpdateCategoriaMerchandisingDto,
+  ): Promise<CategoriaMerchandisingResponseDto | null> {
+    return this.prisma.categoriaMerchandising.update({
       where: { id },
       data: {
         nombre: updateDto.nombre,
@@ -41,13 +49,13 @@ export class CategoriaMerchandisingService {
         is_active: updateDto.is_active,
       },
     });
-    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 
-  async remove(id: string): Promise<CategoriaMerchandisingResponseDto> {
-    const data = await this.prisma.categoriaMerchandising.delete({
+  async remove(
+    id: string,
+  ): Promise<CategoriaMerchandisingResponseDto | null> {
+    return this.prisma.categoriaMerchandising.delete({
       where: { id },
     });
-    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 }
