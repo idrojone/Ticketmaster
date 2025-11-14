@@ -16,13 +16,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload) {
 
-    if (payload.rol !== 'empresa') {
+    if (payload.role !== 'empresa') {
       throw new UnauthorizedException('Acceso denegado');
     }
 
     const { username } = payload;
     const user = await this.prisma.userEmpresa.findUnique({ where: { username } });
     if (!user) return null;
-    return { username: user.username, email: user.email, rol: payload.rol };
+    return { username: user.username, email: user.email, role: payload.role };
   }
 }

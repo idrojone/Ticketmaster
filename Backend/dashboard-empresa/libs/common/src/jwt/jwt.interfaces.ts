@@ -1,5 +1,5 @@
 export interface JwtPayload {
-  rol: 'empresa';
+  role: 'empresa';
   email: string;
   username: string;
   iat?: number;

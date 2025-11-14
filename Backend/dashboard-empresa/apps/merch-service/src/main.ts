@@ -25,6 +25,7 @@ async function bootstrap() {
     .setTitle('Merchandising Service')
     .setDescription('API para la gestión de merchandising')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
