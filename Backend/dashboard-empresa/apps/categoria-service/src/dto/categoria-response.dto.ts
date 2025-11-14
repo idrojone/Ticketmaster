@@ -2,27 +2,27 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Status } from '@app/common';
 
 export class CategoriaMerchandisingResponseDto {
-  @ApiProperty({ description: 'ID unico de la categoria' })
+  @ApiProperty({ example: 'cat-123', description: 'ID único de la categoría' })
   id: string;
 
-  @ApiProperty({ description: 'Nombre de la categoria' })
+  @ApiProperty({ example: 'Ropa', description: 'Nombre de la categoría' })
   nombre: string;
 
-  @ApiProperty({ description: 'Descripcion de la categoria', required: false })
-  descripcion?: string;
+  @ApiProperty({ example: 'Categoría de ropa y vestimenta', description: 'Descripción de la categoría' })
+  descripcion: string | null;
 
-  @ApiProperty({ description: 'URL de imagen de la categoria', required: false })
-  imagen?: string;
+  @ApiProperty({ example: 'https://example.com/imagen.jpg', description: 'URL de imagen de la categoría' })
+  imagen: string | null;
 
-  @ApiProperty({ description: 'Estado de la categoria' })
+  @ApiProperty({ example: 'ACCEPTED', description: 'Estado de la categoría' })
   status: Status;
 
-  @ApiProperty({ description: 'Indica si la categoria esta activa' })
+  @ApiProperty({ example: true, description: 'Indica si la categoría está activa' })
   is_active: boolean;
 
-  @ApiProperty({ description: 'Fecha de creacion' })
+  @ApiProperty({ example: '2024-01-01T00:00:00.000Z', description: 'Fecha de creación' })
   createdAt: Date;
 
-  @ApiProperty({ description: 'Fecha de ultima actualizacion' })
+  @ApiProperty({ example: '2024-01-02T00:00:00.000Z', description: 'Fecha de última actualización' })
   updatedAt: Date;
 }

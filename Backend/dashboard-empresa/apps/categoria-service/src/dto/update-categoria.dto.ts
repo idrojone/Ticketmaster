@@ -1,4 +1,5 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsEnum } from 'class-validator';
+import { Status } from '@app/common';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCategoriaMerchandisingDto {
@@ -16,4 +17,14 @@ export class UpdateCategoriaMerchandisingDto {
   @IsOptional()
   @IsString()
   imagen?: string;
+
+  @ApiProperty({ example: 'ACCEPTED', description: 'Estado de la categoría' })
+  @IsOptional()
+  @IsEnum(Status)
+  status?: Status;
+  
+  @ApiProperty({ example: true, description: 'Indica si la categoría está activa' })
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
 }

@@ -1,0 +1,379 @@
+{
+  "info": {
+    "name": "Dashboard Empresa - Microservicios",
+    "description": "Colección completa de endpoints para el sistema de Dashboard Empresa con microservicios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:3030",
+      "type": "string"
+    },
+    {
+      "key": "auth_url",
+      "value": "http://localhost:3031",
+      "type": "string"
+    },
+    {
+      "key": "merch_url",
+      "value": "http://localhost:3032",
+      "type": "string"
+    },
+    {
+      "key": "category_url",
+      "value": "http://localhost:3033",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "API Gateway",
+      "item": [
+        {
+          "name": "Hello World",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/",
+              "host": ["{{gateway_url}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/health",
+              "host": ["{{gateway_url}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.access_token) {",
+                  "        pm.collectionVariables.set('access_token', jsonData.access_token);",
+                  "        console.log('Token guardado: ' + jsonData.access_token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"empresa@test.com\",\n  \"password\": \"password123\",\n  \"name\": \"Empresa Test\",\n  \"role\": \"empresa\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/auth/register",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.access_token) {",
+                  "        pm.collectionVariables.set('access_token', jsonData.access_token);",
+                  "        console.log('Token guardado: ' + jsonData.access_token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"empresa@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{auth_url}}/auth/login",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{auth_url}}/auth/profile",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Empresa by Email",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{auth_url}}/auth/empresa/empresa@test.com",
+              "host": ["{{auth_url}}"],
+              "path": ["auth", "empresa", "empresa@test.com"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Merchandising Service",
+      "item": [
+        {
+          "name": "Get All Merchandising",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{merch_url}}/merchandising",
+              "host": ["{{merch_url}}"],
+              "path": ["merchandising"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Merchandising by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{merch_url}}/merchandising/:id",
+              "host": ["{{merch_url}}"],
+              "path": ["merchandising", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Merchandising",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Camiseta Oficial\",\n  \"description\": \"Camiseta oficial del concierto 2025\",\n  \"price\": 29.99,\n  \"stock\": 100,\n  \"categoryId\": \"1\",\n  \"imageUrl\": \"https://example.com/tshirt.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{merch_url}}/merchandising",
+              "host": ["{{merch_url}}"],
+              "path": ["merchandising"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Merchandising",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Camiseta Oficial - Edición Limitada\",\n  \"price\": 34.99,\n  \"stock\": 50\n}"
+            },
+            "url": {
+              "raw": "{{merch_url}}/merchandising/:id",
+              "host": ["{{merch_url}}"],
+              "path": ["merchandising", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category Service",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{category_url}}/categories",
+              "host": ["{{category_url}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{category_url}}/categories/:id",
+              "host": ["{{category_url}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ropa\",\n  \"description\": \"Categoría de ropa y vestimenta\"\n}"
+            },
+            "url": {
+              "raw": "{{category_url}}/categories",
+              "host": ["{{category_url}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ropa y Accesorios\",\n  \"description\": \"Categoría de ropa, vestimenta y accesorios\"\n}"
+            },
+            "url": {
+              "raw": "{{category_url}}/categories/:id",
+              "host": ["{{category_url}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{category_url}}/categories/:id",
+              "host": ["{{category_url}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

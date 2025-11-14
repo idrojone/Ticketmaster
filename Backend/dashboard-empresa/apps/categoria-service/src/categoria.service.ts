@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { PrismaService } from '@app/common';
 import { CreateCategoriaMerchandisingDto, UpdateCategoriaMerchandisingDto, CategoriaMerchandisingResponseDto } from './dto';
 
@@ -9,14 +9,14 @@ export class CategoriaMerchandisingService {
 
   async findAll(): Promise<CategoriaMerchandisingResponseDto[]> {
     const data = await this.prisma.categoriaMerchandising.findMany();
-    return plainToClass(CategoriaMerchandisingResponseDto, data);
+    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 
   async findOne(id: string): Promise<CategoriaMerchandisingResponseDto> {
     const data = await this.prisma.categoriaMerchandising.findUnique({
       where: { id },
     });
-    return plainToClass(CategoriaMerchandisingResponseDto, data);
+    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 
   async create(createDto: CreateCategoriaMerchandisingDto): Promise<CategoriaMerchandisingResponseDto> {
@@ -27,7 +27,7 @@ export class CategoriaMerchandisingService {
         imagen: createDto.imagen,
       },
     });
-    return plainToClass(CategoriaMerchandisingResponseDto, data);
+    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 
   async update(id: string, updateDto: UpdateCategoriaMerchandisingDto): Promise<CategoriaMerchandisingResponseDto> {
@@ -37,15 +37,17 @@ export class CategoriaMerchandisingService {
         nombre: updateDto.nombre,
         descripcion: updateDto.descripcion,
         imagen: updateDto.imagen,
+        status: updateDto.status,
+        is_active: updateDto.is_active,
       },
     });
-    return plainToClass(CategoriaMerchandisingResponseDto, data);
+    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 
   async remove(id: string): Promise<CategoriaMerchandisingResponseDto> {
     const data = await this.prisma.categoriaMerchandising.delete({
       where: { id },
     });
-    return plainToClass(CategoriaMerchandisingResponseDto, data);
+    return plainToInstance(CategoriaMerchandisingResponseDto, data);
   }
 }
