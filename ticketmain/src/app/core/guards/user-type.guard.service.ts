@@ -23,11 +23,15 @@ export class UserTypeGuard implements CanActivate {
                 const userType = decodedToken.role;
 
                 const isAdmin = this.userTypeService.getUserType() === 'admin';
+                const isEmpresa = this.userTypeService.getUserType() === 'empresa';
 
                 console.log(userType, isAdmin);
 
                 if(userType === 'admin' && isAdmin) {
                     console.log('User is admin, access granted.');
+                    return true;
+                } else if (userType === 'empresa' && isEmpresa) {
+                    console.log('User is empresa, access granted.');
                     return true;
                 } else {
                     this.router.navigateByUrl('/auth/login');

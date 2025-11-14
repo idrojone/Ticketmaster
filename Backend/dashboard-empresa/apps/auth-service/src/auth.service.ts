@@ -2,10 +2,7 @@ import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { RegisterDto, LoginDto } from './dto';
-import { randomUUID } from 'crypto';
 import { PrismaService } from '../../../libs/common/src/prisma/prisma.service';
-import { TokensDto } from '../../../libs/common/src/jwt/jwt.interfaces';
-import e from 'express';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +33,7 @@ export class AuthService {
 
     const accessToken= await this.generateAccessToken(user.username, user.email);
 
-    return { user: { username: user.username, email: user.email, bio: user.bio, image: user.image }, accessToken};
+    return { user: { username: user.username, email: user.email, bio: user.bio, image: user.image, accessToken }};
   }
 
   async login(data: LoginDto) {
@@ -49,7 +46,7 @@ export class AuthService {
 
     const accessToken= await this.generateAccessToken(user.username, user.email);
 
-    return { user: { username: user.username, email: user.email, bio: user.bio, image: user.image }, accessToken };
+    return { user: { username: user.username, email: user.email, bio: user.bio, image: user.image, accessToken }};
   }
 
   async getProfile(email: string) {
@@ -61,11 +58,11 @@ export class AuthService {
   async findByEmail(email: string) {
     const empresa = await this.prisma.userEmpresa.findFirst({ where: { email } });
     if (!empresa) throw new BadRequestException('Empresa no encontrada');
-    return {username: empresa.username, email: empresa.email, bio: empresa.bio, image: empresa.image };
+    return { username: empresa.username, email: empresa.email, bio: empresa.bio, image: empresa.image };
   }
 
   private async generateAccessToken(username: string, email: string): Promise<string> {
-    const payload = { rol: 'empresa', username, email };
+    const payload = { role: 'empresa', username, email };
     return this.jwtService.signAsync(payload);
   }
 }

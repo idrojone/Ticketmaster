@@ -61,6 +61,18 @@ export class UserService {
                     this.setAuth(adminUser);
                     this.userTypeService.setUserType('admin');
                     this.isPopulating = false;
+                } else if (accessTokenDecoded.role === 'empresa') {
+                    console.log('Empresa detectada en token');
+                    const empresaUser: User = {
+                        username: accessTokenDecoded.username,
+                        email: accessTokenDecoded.email,
+                        accessToken: accessToken,
+                        bio: '',
+                        image: ''
+                    };
+                    this.setAuth(empresaUser);
+                    this.userTypeService.setUserType('empresa');
+                    this.isPopulating = false;
                 } else {
                     // Para usuarios regulares, obtener datos del endpoint
                     this.apiService.get("/api/user").subscribe({
@@ -125,6 +137,16 @@ export class UserService {
                                     console.log('Usuario admin autenticado:', adminData);
                                     this.setAuth(adminData.user);
                                     this.userTypeService.setUserType('admin');
+                                }
+                            });
+                    } else if (data.rol && data.rol === 'empresa') {
+                        console.log('Intentando autenticación como empresa:', data);
+                        this.apiService.post(`/auth/login`, credentials,  true, "empresa")
+                            .subscribe({
+                                next: (empresaData) => {
+                                    console.log('Usuario empresa autenticado:', empresaData);
+                                    this.setAuth(empresaData.user);
+                                    this.userTypeService.setUserType('empresa');
                                 }
                             });
                     } else {

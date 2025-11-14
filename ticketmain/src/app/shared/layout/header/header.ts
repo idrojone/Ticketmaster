@@ -80,6 +80,9 @@ export class Header implements OnInit {
         }else if (type === null || type === "USER") {
           this.user_type_signal.set(false);
           console.log("El signal esta acutalmente " + this.user_type_signal());
+        } else if (type === 'empresa') {
+          this.user_type_signal.set(true);
+          console.log("El signal esta acutalmente " + this.user_type_signal());
         }
       }
     });

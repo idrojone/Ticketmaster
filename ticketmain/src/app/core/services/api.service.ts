@@ -46,9 +46,10 @@ export class ApiService {
         console.log(body);
         console.log(server);    
         if(server==="dashboard"){
-            // console.log(' llamando a dashboard API:', `${environment.dashboard_url}${path}`);
             return this.http.post(`${environment.dashboard_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
-        }else{
+        } else if (server==="empresa"){
+            return this.http.post(`${environment.empresa_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        } else{
             return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
         }
     }

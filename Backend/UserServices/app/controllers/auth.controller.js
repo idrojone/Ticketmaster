@@ -1,5 +1,6 @@
 const User=require('../models/user.model');
 const UserAdmin=require('../models/admin.model');
+const UserEmpresa=require('../models/empresa.model');   
 const refreshTokenStore= require('../models/refreshTokenStore.model');
 const asyncHandler=require('express-async-handler');
 const argon2 = require('argon2');
@@ -78,7 +79,13 @@ const loginUser= asyncHandler( async (req,res) => {
 
     if (!encontrarUsuario) {
         const encontrarUsuarioAdmin = await UserAdmin.findOne({email: user.email});
-        if (!encontrarUsuarioAdmin) return res.status(431).json({ message: "Email no encontrado en la base de datos" });
+        if (!encontrarUsuarioAdmin)  {
+            const encontrarUsuarioEmpresa = await UserEmpresa.findOne({email: user.email});
+            if (!encontrarUsuarioEmpresa) {
+                return res.status(431).json({ message: "Email no encontrado en la base de datos" });
+            }
+            return res.status(200).json({ rol: 'empresa' });
+        }     
         return res.status(200).json({ rol: 'admin' });
     }
 
