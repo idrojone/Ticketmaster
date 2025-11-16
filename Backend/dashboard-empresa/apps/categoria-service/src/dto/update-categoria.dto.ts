@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsBoolean, IsEnum } from 'class-validator';
-import { Status } from '@app/common';
+import { Status } from 'libs/common/src/prisma';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCategoriaMerchandisingDto {

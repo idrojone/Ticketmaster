@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Status } from '@app/common';
+import { Status } from 'libs/common/src/prisma';
 
 export class CategoriaMerchandisingResponseDto {
   @ApiProperty({ example: 'cat-123', description: 'ID único de la categoría' })
