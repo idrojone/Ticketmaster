@@ -5,11 +5,29 @@ import { RegisterDto, LoginDto, AuthResponseDto } from './dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 import type { Request } from 'express';
+import { MessagePattern } from '@nestjs/microservices';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
+
+  @MessagePattern({ cmd: 'test' })
+  testMessage() {
+    return 'test';
+  }
+
+  @MessagePattern({ cmd: 'register' })
+  handleRegister(data: RegisterDto) {
+    return this.authService.register(data);
+  }
+
+  @MessagePattern({ cmd: 'login' })
+  handleLogin(data: LoginDto) {
+    return this.authService.login(data);
+  }
 
   @Post('register')
   @ApiOperation({ summary: 'Registro de usuario empresa' })
