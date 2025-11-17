@@ -2,7 +2,7 @@ import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { RegisterDto, LoginDto } from './dto';
-import { PrismaService } from '../../../libs/common/src/prisma/prisma.service';
+import { PrismaService } from '@lib/common/';
 
 @Injectable()
 export class AuthService {
