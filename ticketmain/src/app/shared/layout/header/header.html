@@ -39,11 +39,18 @@
                     <z-dropdown-menu-item (click)="logout()">
                         <i class="fas fa-sign-out-alt"></i> Log out
                     </z-dropdown-menu-item>
-                    @if(user_type_signal()){
+                    @if(user_type_signal() !== 'USER'){
                         <z-dropdown-menu-label>Dashboard</z-dropdown-menu-label>
-                        <z-dropdown-menu-item [routerLink]="['/dashboard']">
-                        <i class="fas fa-crown"></i>Dashboard
-                        </z-dropdown-menu-item>
+                        @if(user_type_signal() === 'admin'){
+                            <z-dropdown-menu-item [routerLink]="['/dashboard']">
+                                <i class="fas fa-crown"></i>Dashboard Admin
+                            </z-dropdown-menu-item>
+                        }
+                        @if(user_type_signal() === 'empresa'){
+                            <z-dropdown-menu-item [routerLink]="['/dashboard-empresa']">
+                                <i class="fas fa-briefcase"></i>Dashboard Empresa
+                            </z-dropdown-menu-item>
+                        }
                     }
                 </z-dropdown-menu-content>
             </div>

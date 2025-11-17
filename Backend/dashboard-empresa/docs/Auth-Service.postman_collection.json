@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "auth-service-collection",
+		"name": "Dashboard Empresa - Auth Service",
+		"description": "Colección para probar los endpoints de autenticación del API Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Gateway Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway_url}}",
+					"host": [
+						"{{gateway_url}}"
+					]
+				},
+				"description": "Verificar que el API Gateway está funcionando"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Test Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway_url}}/auth/test",
+					"host": [
+						"{{gateway_url}}"
+					],
+					"path": [
+						"auth",
+						"test"
+					]
+				},
+				"description": "Probar la conexión con el servicio de autenticación"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 201 || pm.response.code === 200) {",
+							"    const jsonData = pm.response.json();",
+							"    if (jsonData.user && jsonData.user.accessToken) {",
+							"        pm.environment.set('access_token', jsonData.user.accessToken);",
+							"        pm.environment.set('user_email', jsonData.user.email);",
+							"        pm.environment.set('username', jsonData.user.username);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"empresa_demo\",\n    \"email\": \"empresa@demo.com\",\n    \"password\": \"Demo123!\",\n    \"bio\": \"Empresa de demostración para pruebas\",\n    \"image\": \"https://ejemplo.com/logo-empresa.png\"\n}"
+				},
+				"url": {
+					"raw": "{{gateway_url}}/auth/register",
+					"host": [
+						"{{gateway_url}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				},
+				"description": "Registrar un nuevo usuario empresa. Guarda automáticamente el token JWT."
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    const jsonData = pm.response.json();",
+							"    if (jsonData.user && jsonData.user.accessToken) {",
+							"        pm.environment.set('access_token', jsonData.user.accessToken);",
+							"        pm.environment.set('user_email', jsonData.user.email);",
+							"        pm.environment.set('username', jsonData.user.username);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"empresa@demo.com\",\n    \"password\": \"Demo123!\"\n}"
+				},
+				"url": {
+					"raw": "{{gateway_url}}/auth/login",
+					"host": [
+						"{{gateway_url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Iniciar sesión con credenciales. Guarda automáticamente el token JWT."
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login (Usuario existente)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    const jsonData = pm.response.json();",
+							"    if (jsonData.user && jsonData.user.accessToken) {",
+							"        pm.environment.set('access_token', jsonData.user.accessToken);",
+							"        pm.environment.set('user_email', jsonData.user.email);",
+							"        pm.environment.set('username', jsonData.user.username);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@empresa.com\",\n    \"password\": \"Test123!\"\n}"
+				},
+				"url": {
+					"raw": "{{gateway_url}}/auth/login",
+					"host": [
+						"{{gateway_url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Login con el usuario de prueba creado anteriormente"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Register (Error - Email duplicado)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"otro_nombre\",\n    \"email\": \"test@empresa.com\",\n    \"password\": \"Test123!\",\n    \"bio\": \"Intento con email duplicado\",\n    \"image\": \"https://ejemplo.com/logo.png\"\n}"
+				},
+				"url": {
+					"raw": "{{gateway_url}}/auth/register",
+					"host": [
+						"{{gateway_url}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				},
+				"description": "Probar el manejo de error cuando se intenta registrar un email que ya existe"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login (Error - Credenciales inválidas)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@empresa.com\",\n    \"password\": \"PasswordIncorrecto123!\"\n}"
+				},
+				"url": {
+					"raw": "{{gateway_url}}/auth/login",
+					"host": [
+						"{{gateway_url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Probar el manejo de error con contraseña incorrecta"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "gateway_url",
+			"value": "http://localhost:3030",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_email",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

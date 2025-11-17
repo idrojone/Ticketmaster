@@ -59,6 +59,11 @@ export class GatewayController {
     return this.merchClient.send({ cmd: 'update-merchandising' }, { id, ...updateMerchandisingDto });
   }
 
+  @Delete('merchandising/:id')
+  async deleteMerchandising(@Param('id') id: string) {
+    return this.merchClient.send({ cmd: 'delete-merchandising' }, { id });
+  }
+
   // Categories endpoints
   @Get('categories')
   async getAllCategories() {

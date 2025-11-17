@@ -1,0 +1,25 @@
+<div class="dashboard-wrapper">
+  <!-- Sidebar -->
+  <aside class="dashboard-sidebar">
+    <nav class="sidebar-nav">
+      <h3>Dashboard Empresa</h3>
+      <ul>
+        <li>
+          <a routerLink="categorias" routerLinkActive="active" class="nav-link">
+            Categorías
+          </a>
+        </li>
+        <li>
+          <a routerLink="merchandising" routerLinkActive="active" class="nav-link">
+            Merchandising
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

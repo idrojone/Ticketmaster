@@ -45,16 +45,15 @@ export class MerchServiceService {
     return this.prisma.merchandising.update({
       where: { id },
       data: {
-        nombre: updateDto.nombre,
-        descripcion: updateDto.descripcion,
-        precio: updateDto.precio,
-        stock: updateDto.stock,
-        imagen: updateDto.imagen,
-        categoriaId: updateDto.categoriaId,
-        status: updateDto.status,
-        is_active: updateDto.is_active,
+        ...(updateDto.nombre !== undefined && { nombre: updateDto.nombre }),
+        ...(updateDto.descripcion !== undefined && { descripcion: updateDto.descripcion }),
+        ...(updateDto.precio !== undefined && { precio: updateDto.precio }),
+        ...(updateDto.stock !== undefined && { stock: updateDto.stock }),
+        ...(updateDto.imagen !== undefined && { imagen: updateDto.imagen }),
+        ...(updateDto.categoriaId !== undefined && { categoriaId: updateDto.categoriaId }),
+        ...(updateDto.status !== undefined && { status: updateDto.status }),
+        ...(updateDto.is_active !== undefined && { is_active: updateDto.is_active }),
         updatedAt: new Date(),
-        createdAt: new Date(),
       },
     });
   }

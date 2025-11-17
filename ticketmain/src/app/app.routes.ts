@@ -36,5 +36,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/DashboardAdmin/dashboard').then(m => m.Dashboard),
         loadChildren: () => import('./pages/DashboardAdmin/dashboard.routes').then(m => m.dashboardRoutes),
         canActivate: [ UserTypeGuard ]
+    },
+    {
+        path: 'dashboard-empresa',
+        loadComponent: () => import('./pages/DashboardEmpresa/dashboard-empresa').then(m => m.DashboardEmpresa),
+        loadChildren: () => import('./pages/DashboardEmpresa/dashboard-empresa.routes').then(m => m.dashboardEmpresaRoutes),
+        canActivate: [ UserTypeGuard ]
     }
 ];

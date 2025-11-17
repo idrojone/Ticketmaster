@@ -23,7 +23,7 @@ import { UserTypeService } from 'src/app/core/services/user-type.service';
 })
 export class Header implements OnInit {
 
-  public user_type_signal= signal(false);
+  public user_type_signal = signal<string>('USER');
   private user_type= inject(UserTypeService);
 
   private userService = inject(UserService);
@@ -75,14 +75,14 @@ export class Header implements OnInit {
       next: (type) => {
         console.log('Tipo de usuario en header:', type);
         if (type === 'admin') {
-          this.user_type_signal.set(true);
-          console.log("El signal esta acutalmente " + this.user_type_signal());
+          this.user_type_signal.set('admin');
+          console.log("El signal esta actualmente " + this.user_type_signal());
         }else if (type === null || type === "USER") {
-          this.user_type_signal.set(false);
-          console.log("El signal esta acutalmente " + this.user_type_signal());
+          this.user_type_signal.set('USER');
+          console.log("El signal esta actualmente " + this.user_type_signal());
         } else if (type === 'empresa') {
-          this.user_type_signal.set(true);
-          console.log("El signal esta acutalmente " + this.user_type_signal());
+          this.user_type_signal.set('empresa');
+          console.log("El signal esta actualmente " + this.user_type_signal());
         }
       }
     });

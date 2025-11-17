@@ -1,4 +1,4 @@
-import {Controller,Get,Param,Post,Body,Patch,} from '@nestjs/common';
+import {Controller,Get,Param,Post,Body,Patch,Delete,} from '@nestjs/common';
 import { ApiTags,ApiCreatedResponse, ApiBadRequestResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { MerchServiceService } from './merch-service.service';
@@ -48,6 +48,15 @@ export class MerchServiceController {
       return plainToInstance(MerchandisingResponseDto, result);
     }
 
+    @Delete(':id')
+    @ApiCreatedResponse({ description: 'Merchandising deleted successfully' })
+    @ApiBadRequestResponse({ description: 'Bad Request' })
+    @ApiNotFoundResponse({ description: 'Merchandising not found' })
+    async DeleteMerchandising(@Param('id') id: string): Promise<{ message: string }> {
+      await this.merchService.remove(id);
+      return { message: 'Merchandising deleted successfully' };
+    }
+
     // TCP Microservice patterns
     @MessagePattern({ cmd: 'get-all-merchandising' })
     async handleGetAllMerchandising() {
@@ -72,5 +81,11 @@ export class MerchServiceController {
       const { id, ...updateDto } = data;
       const result = await this.merchService.update(id, updateDto);
       return plainToInstance(MerchandisingResponseDto, result);
+    }
+
+    @MessagePattern({ cmd: 'delete-merchandising' })
+    async handleDeleteMerchandising(@Payload() data: { id: string }) {
+      await this.merchService.remove(data.id);
+      return { message: 'Merchandising deleted successfully' };
     }
 }

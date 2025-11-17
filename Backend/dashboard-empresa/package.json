@@ -15,7 +15,7 @@
     "start:merchandise:dev": "nest start merchandise-service --watch",
     "start:merch:dev": "nest start merch-service --watch",
     "start:categories:dev": "nest start categoria-service --watch",
-    "start:all:dev": "concurrently \"npm run start:gateway:dev\" \"npm run start:auth:dev\" \"npm run start:merchandise:dev\"",
+    "start:all:dev": "concurrently \"npm run start:gateway:dev\" \"npm run start:auth:dev\" \"npm run start:merch:dev\" \"npm run start:categories:dev\"",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
