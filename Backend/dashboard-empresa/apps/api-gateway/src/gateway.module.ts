@@ -12,6 +12,22 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           host: '127.0.0.1',
           port: 3032,
         },
+      },
+      {
+        name: 'MERCH_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: '127.0.0.1',
+          port: 3034,
+        },
+      },
+      {
+        name: 'CATEGORIA_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: '127.0.0.1',
+          port: 3035,
+        },
       }
     ])
   ],

@@ -9,17 +9,22 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function bootstrap() {
-  // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-  //   MerchServiceModule,
-  //   {
-  //     transport: Transport.TCP,
-  //   }
-  // );
-  // await app.listen();
-
   const app = await NestFactory.create(MerchServiceModule);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      host: '127.0.0.1',
+      port: 3034,
+    },
+  });
+
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+  });
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   const config = new DocumentBuilder()
     .setTitle('Merchandising Service')
@@ -31,7 +36,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3069);
-  console.log('Microservice is listening on port 3069');
+  await app.startAllMicroservices();
+
+  const port = process.env.MERCH_PORT || 3069;
+  await app.listen(port);
+
+  console.log(`Merch Service HTTP running on port ${port}`);
+  console.log(`Merch Service TCP running on port 3034`);
+  console.log(`Swagger UI: http://localhost:${port}/api`);
 }
 bootstrap();

@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
 import { ApiTags, ApiCreatedResponse, ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CategoriaMerchandisingService } from './categoria.service';
 import { CreateCategoriaMerchandisingDto, UpdateCategoriaMerchandisingDto, CategoriaMerchandisingResponseDto } from './dto';
 
@@ -44,5 +45,32 @@ export class CategoriaMerchandisingController {
   @ApiNotFoundResponse({ description: 'Categoria no encontrada' })
   remove(@Param('id') id: string): Promise<CategoriaMerchandisingResponseDto | null> {
     return this.categoriaMerchandisingService.remove(id);
+  }
+
+  // TCP Microservice patterns
+  @MessagePattern({ cmd: 'get-all-categories' })
+  async handleGetAllCategories() {
+    return this.categoriaMerchandisingService.findAll();
+  }
+
+  @MessagePattern({ cmd: 'get-category-by-id' })
+  async handleGetCategoryById(@Payload() data: { id: string }) {
+    return this.categoriaMerchandisingService.findOne(data.id);
+  }
+
+  @MessagePattern({ cmd: 'create-category' })
+  async handleCreateCategory(@Payload() createDto: CreateCategoriaMerchandisingDto) {
+    return this.categoriaMerchandisingService.create(createDto);
+  }
+
+  @MessagePattern({ cmd: 'update-category' })
+  async handleUpdateCategory(@Payload() data: { id: string } & UpdateCategoriaMerchandisingDto) {
+    const { id, ...updateDto } = data;
+    return this.categoriaMerchandisingService.update(id, updateDto);
+  }
+
+  @MessagePattern({ cmd: 'delete-category' })
+  async handleDeleteCategory(@Payload() data: { id: string }) {
+    return this.categoriaMerchandisingService.remove(data.id);
   }
 }

@@ -22,6 +22,10 @@ export class ApiService {
             console.log(' llamando a dashboard API:', `${environment.dashboard_url}${path}`);
             return this.http.get(`${environment.dashboard_url}${path}`, { params, withCredentials: credentialsRequired })
             .pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            console.log(' llamando a empresa API Gateway:', `${environment.gateway_url}${path}`);
+            return this.http.get(`${environment.gateway_url}${path}`, { params, withCredentials: credentialsRequired })
+            .pipe(catchError(this.formatErrors));
         }else{
             return this.http.get(`${environment.api_url}${path}`, { params, withCredentials: credentialsRequired })
             .pipe(catchError(this.formatErrors));
@@ -32,6 +36,11 @@ export class ApiService {
         if(server==="dashboard"){
             return this.http.put(
                 `${environment.dashboard_url}${path}`,
+                JSON.stringify(body)
+            ).pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            return this.http.put(
+                `${environment.gateway_url}${path}`,
                 JSON.stringify(body)
             ).pipe(catchError(this.formatErrors));
         }else{
@@ -48,7 +57,7 @@ export class ApiService {
         if(server==="dashboard"){
             return this.http.post(`${environment.dashboard_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
         } else if (server==="empresa"){
-            return this.http.post(`${environment.empresa_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+            return this.http.post(`${environment.gateway_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
         } else{
             return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
         }
@@ -58,6 +67,10 @@ export class ApiService {
         if(server==="dashboard"){
             return this.http.delete(
                 `${environment.dashboard_url}${path}`
+            ).pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            return this.http.delete(
+                `${environment.gateway_url}${path}`
             ).pipe(catchError(this.formatErrors));
         }else{
             return this.http.delete(
@@ -72,6 +85,12 @@ export class ApiService {
         if(server==="dashboard"){
             return this.http.patch(
                 `${environment.dashboard_url}${path}`,
+                body,
+                { headers, withCredentials: credentialsRequired }
+            ).pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            return this.http.patch(
+                `${environment.gateway_url}${path}`,
                 body,
                 { headers, withCredentials: credentialsRequired }
             ).pipe(catchError(this.formatErrors));
