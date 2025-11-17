@@ -33,8 +33,8 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard',
-        loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard),
-        loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.dashboardRoutes),
+        loadComponent: () => import('./pages/DashboardAdmin/dashboard').then(m => m.Dashboard),
+        loadChildren: () => import('./pages/DashboardAdmin/dashboard.routes').then(m => m.dashboardRoutes),
         canActivate: [ UserTypeGuard ]
     }
 ];
