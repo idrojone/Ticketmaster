@@ -9,62 +9,72 @@ generator nestjs {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
-/** 
-    TABLAS NUEVAS !!!!
-    - UserEmpresa, Entrada, Venta, Merchandaising, Pagos
-
-    
-*/
+/**
+ * TABLAS NUEVAS !!!!
+ * - UserEmpresa, Entrada, Venta, Merchandaising, Pagos
+ */
 
 /**
-*   Status Enum para todas las tablas
-*/ 
+ * Status Enum para todas las tablas
+ */
+
 enum Status {
     PENDING
     ACCEPTED
     REJECTED
 }
 
-
-/** 
-*   User Model
-*/
+/**
+ * User Model
+ */
 model User {
-    id  String @id @map("_id") @default(auto()) @db.ObjectId
-    status Status @default(ACCEPTED)
+    id        String  @id @default(auto()) @map("_id") @db.ObjectId
+    status    Status  @default(ACCEPTED)
     is_active Boolean @default(true)
-    role String @default("USER")
-    username String @unique
-    email String @unique
-    password String
-    bio String?
-    image String?
+    role      String  @default("USER")
+    username  String  @unique
+    email     String  @unique
+    password  String
+    bio       String?
+    image     String?
 
-    /* Relacion de tokens */
-    refreshToken RefreshTokenStore? // Relación uno a uno con RefreshTokenStore
+    /**
+     * Relacion de tokens
+     */
+    refreshToken    RefreshTokenStore? // Relación uno a uno con RefreshTokenStore
     blackListTokens BlackListToken[] // Relación uno a muchos con BlackListToken
 
-    /* Relaciones de seguimiento (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/self-relations) Many-to-many self relations */
-    followedBy User[] @relation("UserFollows", fields: [followedByIDs], references: [id])
+    /**
+     * Relaciones de seguimiento (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/self-relations) Many-to-many self relations
+     */
+    followedBy    User[]   @relation("UserFollows", fields: [followedByIDs], references: [id])
     followedByIDs String[] @db.ObjectId
-    follows User[] @relation("UserFollows", fields: [followsIDs], references: [id])
-    followsIDs String[] @db.ObjectId
+    follows       User[]   @relation("UserFollows", fields: [followsIDs], references: [id])
+    followsIDs    String[] @db.ObjectId
 
-    /* Relacion de likes */
-    likedConciertos Concierto[] @relation("UserLikes", fields: [likedConciertosIDs], references: [id])
-    likedConciertosIDs String[] @db.ObjectId
+    /**
+     * Relacion de likes
+     */
+    likedConciertos    Concierto[] @relation("UserLikes", fields: [likedConciertosIDs], references: [id])
+    likedConciertosIDs String[]    @db.ObjectId
 
-    /* Relación con entradas */
+    /**
+     * Relación con entradas
+     */
     entradas Entrada[]
 
-    /* Relación con ventas */
+    /**
+     * Relación con ventas
+     */
     ventas Venta[]
 
-    /* Relación con Comentarios */
+    /**
+     * Relación con Comentarios
+     */
     comentarios Comentario[]
 
     createdAt DateTime @default(now())
@@ -79,19 +89,19 @@ enum UserRole {
     EMPRESA
 }
 
-/** 
-*   UserAdmin Model 
-*/
+/**
+ * UserAdmin Model
+ */
 
 model UserAdmin {
-    id  String @id @map("_id") @default(auto()) @db.ObjectId
-    status Status @default(ACCEPTED)
+    id        String  @id @default(auto()) @map("_id") @db.ObjectId
+    status    Status  @default(ACCEPTED)
     is_active Boolean @default(true)
-    username String @unique
-    email String @unique
-    password String
-    bio String?
-    image String?
+    username  String  @unique
+    email     String  @unique
+    password  String
+    bio       String?
+    image     String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -100,14 +110,14 @@ model UserAdmin {
 }
 
 model UserEmpresa {
-    id  String @id @map("_id") @default(auto()) @db.ObjectId
-    status Status @default(ACCEPTED)
+    id        String  @id @default(auto()) @map("_id") @db.ObjectId
+    status    Status  @default(ACCEPTED)
     is_active Boolean @default(true)
-    username String @unique
-    email String @unique
-    password String
-    bio String?
-    image String?
+    username  String  @unique
+    email     String  @unique
+    password  String
+    bio       String?
+    image     String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -115,116 +125,129 @@ model UserEmpresa {
     @@map("user_empresas")
 }
 
-/** 
-*   Artistas  Model
-*/
+/**
+ * Artistas  Model
+ */
 
 /**
-    Ponemos artistas?
-
-    Ejemplo de referencia de tabla SQL:
-
-    CREATE TABLE artists (
-       id CHAR(36) PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        genre VARCHAR(50),
-        country VARCHAR(50),
-        description TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-*/
-
-/** 
-*   Lugares Model
-*/
+ * Ponemos artistas?
+ * Ejemplo de referencia de tabla SQL:
+ * CREATE TABLE artists (
+ * id CHAR(36) PRIMARY KEY,
+ * name VARCHAR(100) NOT NULL,
+ * genre VARCHAR(50),
+ * country VARCHAR(50),
+ * description TEXT,
+ * created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+ * );
+ */
 
 /**
-   
-    Ejemplo de referencia de tabla SQL:
+ * Lugares Model
+ */
 
-    CREATE TABLE venues (
-        id CHAR(36) PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        city VARCHAR(100),
-        country VARCHAR(100),
-        capacity INT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-*/
+/**
+ * Ejemplo de referencia de tabla SQL:
+ * CREATE TABLE venues (
+ * id CHAR(36) PRIMARY KEY,
+ * name VARCHAR(100) NOT NULL,
+ * city VARCHAR(100),
+ * country VARCHAR(100),
+ * capacity INT NOT NULL,
+ * created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+ * );
+ */
 
-
-/** 
-*   Generos Model
-*/
+/**
+ * Generos Model
+ */
 
 model Genero {
-  id          String      @id @map("_id") @default(auto()) @db.ObjectId
-  slug        String      @unique
-  name        String      @unique
-  img         String?
-  description String?
-  id_genero   String?     @unique
+    id          String  @id @default(auto()) @map("_id") @db.ObjectId
+    slug        String  @unique
+    name        String  @unique
+    img         String?
+    description String?
+    id_genero   String? @unique
 
-  // Relación uno a muchos con Concierto
-  Conciertos  Concierto[]
+    // Relación uno a muchos con Concierto
+    Conciertos Concierto[]
 
-  status      Status      @default(ACCEPTED)
-  is_active   Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  @@map("generos")
-}
-
-/** 
-*   Concierto Model
-*/
-
-model Concierto {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    slug String @unique
-    nombre String
-    fecha DateTime
-    artista String
-    lugar String
-    ciudad String
-    descripcion String?
-    latitud Float?
-    longitud Float?
-    precio Float
-    aforo Int
-    duracion Int? /** Duración en minutos */
-    imagenArtista String?
-    imagenesShow String[] @default([])
-
-    /* Relaciones de conciertos (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/one-to-many-relations) One-to-many relations self relations */
-    id_genero String
-    genero Genero @relation(fields: [id_genero], references: [id_genero])
-
-    /* Relación de likes con usuarios Many To Many */
-    likedBy User[] @relation("UserLikes", fields: [likedByIDs], references: [id])
-    likedByIDs String[] @db.ObjectId
-
-    /* Relación de entradas One To Many */
-    entradas Entrada[]
-
-    /* Relación con Ventas */
-    ventas Venta[]
-
-    /* Relación con Comentarios */
-    comentarios Comentario[]
-
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
+    status    Status   @default(ACCEPTED)
+    is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("generos")
+}
+
+/**
+ * Concierto Model
+ */
+
+model Concierto {
+    id            String   @id @default(auto()) @map("_id") @db.ObjectId
+    slug          String   @unique
+    nombre        String
+    fecha         DateTime
+    artista       String
+    lugar         String
+    ciudad        String
+    descripcion   String?
+    latitud       Float?
+    longitud      Float?
+    precio        Float
+    aforo         Int
+    duracion      Int? /** Duración en minutos */
+    imagenArtista String?
+    imagenesShow  String[] @default([])
+
+    /**
+     * Relaciones de conciertos (https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/one-to-many-relations) One-to-many relations self relations
+     */
+    id_genero String
+    genero    Genero @relation(fields: [id_genero], references: [id_genero])
+
+    /**
+     * Relación de likes con usuarios Many To Many
+     */
+    likedBy    User[]   @relation("UserLikes", fields: [likedByIDs], references: [id])
+    likedByIDs String[] @db.ObjectId
+
+    /**
+     * Relación de entradas One To Many
+     */
+    entradas Entrada[]
+
+    /**
+     * Relación con Ventas
+     */
+    ventas Venta[]
+
+    /**
+     * Relación con Comentarios
+     */
+    comentarios Comentario[]
+
+    /**
+     * Relación con Merchandising (Many-to-Many)
+     * NOTE: Se usa relación uno-a-muchos implícita desde Concierto hacia Merchandising.
+     * Si hace falta muchos-a-muchos explícito, crear una tabla intermedia 'ConciertoMerchandising'.
+     */
+    merchandising   Merchandising? @relation("ConciertoMerchandising", fields: [merchandisingId], references: [id])
+    merchandisingId String?        @db.ObjectId
+
+    status        Status         @default(ACCEPTED)
+    is_active     Boolean        @default(true)
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
 
     @@map("conciertos")
 }
 
-/** 
-*   Entradas Model
-*/
+/**
+ * Entradas Model
+ */
 
 enum TipoEntrada {
     GENERAL
@@ -233,53 +256,60 @@ enum TipoEntrada {
 }
 
 model Entrada {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    /* Relacion con Usuario */
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
+    /**
+     * Relacion con Usuario
+     */
     userId String @db.ObjectId
-    user User @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id])
 
-    /* Relacion con Concierto */
-    conciertoId String @db.ObjectId
-    concierto Concierto @relation(fields: [conciertoId], references: [id])
+    /**
+     * Relacion con Concierto
+     */
+    conciertoId String    @db.ObjectId
+    concierto   Concierto @relation(fields: [conciertoId], references: [id])
 
-    tipo TipoEntrada @default(GENERAL)
-    cantidad Int @default(1)
+    tipo          TipoEntrada @default(GENERAL)
+    cantidad      Int         @default(1)
     precio_compra Float
-    fecha_compra DateTime @default(now())
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    fecha_compra  DateTime    @default(now())
+    status        Status      @default(ACCEPTED)
+    is_active     Boolean     @default(true)
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
 
     @@map("entradas")
 }
 
 /**
-*   Modelos Ventas, Merchandising, Pagos, CategoriasMerchandising
-*/
+ * Modelos Ventas, Merchandising, Pagos, CategoriasMerchandising
+ */
 
 model Venta {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    /* Relacion con Usuario */
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
+    /**
+     * Relacion con Usuario
+     */
     userId String @db.ObjectId
-    user User @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id])
 
-    conciertoId String? @db.ObjectId
-    concierto Concierto? @relation(fields: [conciertoId], references: [id])
+    conciertoId String?    @db.ObjectId
+    concierto   Concierto? @relation(fields: [conciertoId], references: [id])
 
-    merchandisingId String? @db.ObjectId
-    merchandising Merchandising? @relation(fields: [merchandisingId], references: [id])
+    merchandisingId String?        @db.ObjectId
+    merchandising   Merchandising? @relation(fields: [merchandisingId], references: [id])
 
     // conciertoID, stock, merchandisingId
 
-
-    /* Relación con Pagos */
+    /**
+     * Relación con Pagos
+     */
     pagos Pagos[]
 
-    total Float
-    fecha DateTime @default(now())
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
+    total     Float
+    fecha     DateTime @default(now())
+    status    Status   @default(ACCEPTED)
+    is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -287,39 +317,48 @@ model Venta {
 }
 
 model Merchandising {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    nombre String
+    id          String  @id @default(auto()) @map("_id") @db.ObjectId
+    nombre      String
     descripcion String?
-    precio Float
-    stock Int
-    imagen String?
+    precio      Float
+    stock       Int
+    imagen      String?
+
+    /**
+     * Relación con Conciertos (One-to-Many)
+     * NOTE: Quitamos `fields` y `references` del lado lista para que sea la parte inversa de la relación.
+     */
+    conciertos   Concierto[] @relation("ConciertoMerchandising")
+    conciertoIDs String[]    @db.ObjectId
 
     // categoriaID
 
-    categoriaId String @db.ObjectId
-    categoria CategoriaMerchandising @relation(fields: [categoriaId], references: [id])
+    categoriaId String                 @db.ObjectId
+    categoria   CategoriaMerchandising @relation(fields: [categoriaId], references: [id])
 
-    /* Relación con Ventas */
+    /**
+     * Relación con Ventas
+     */
     ventas Venta[]
 
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    status     Status      @default(ACCEPTED)
+    is_active  Boolean     @default(true)
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
 
     @@map("merchandising")
 }
 
 model Pagos {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    ventaId String @db.ObjectId
-    venta Venta @relation(fields: [ventaId], references: [id])
-    metodo String
-    monto Float
-    fecha DateTime @default(now())
+    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+    ventaId String   @db.ObjectId
+    venta   Venta    @relation(fields: [ventaId], references: [id])
+    metodo  String
+    monto   Float
+    fecha   DateTime @default(now())
 
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
+    status    Status   @default(ACCEPTED)
+    is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -327,70 +366,76 @@ model Pagos {
 }
 
 model CategoriaMerchandising {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    nombre String @unique
-    descripcion String?
-    imagen String?
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    nombre        String          @unique
+    descripcion   String?
+    imagen        String?
     merchandising Merchandising[]
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    status        Status          @default(ACCEPTED)
+    is_active     Boolean         @default(true)
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
 
     @@map("categorias_merchandising")
 }
-/** 
-*   Comentarios Model
-*/
+
+/**
+ * Comentarios Model
+ */
 
 model Comentario {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    /* Relacion con Usuarios*/
+    /**
+     * Relacion con Usuarios
+     */
     userId String @db.ObjectId
-    user User @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id])
 
-    /* Relacion con Conciertos */
-    conciertoId String @db.ObjectId
-    concierto Concierto @relation(fields: [conciertoId], references: [id])
+    /**
+     * Relacion con Conciertos
+     */
+    conciertoId String    @db.ObjectId
+    concierto   Concierto @relation(fields: [conciertoId], references: [id])
 
     contenido String
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
+    status    Status   @default(ACCEPTED)
+    is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@map("comentarios")
 }
 
-/** 
-*   RefreshTokenStore Model
-*/
+/**
+ * RefreshTokenStore Model
+ */
 
 model RefreshTokenStore {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    user User @relation(fields: [userId], references: [id])
-    userId String @unique @db.ObjectId
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    user         User     @relation(fields: [userId], references: [id])
+    userId       String   @unique @db.ObjectId
     refreshToken String
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    status       Status   @default(ACCEPTED)
+    is_active    Boolean  @default(true)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 
     @@map("refresh_token_stores")
 }
 
-/** 
-*   BlackListToken Model
-*/
+/**
+ * BlackListToken Model
+ */
 model BlackListToken {
-    id String @id @map("_id") @default(auto()) @db.ObjectId
-    userId String @db.ObjectId
-    user User @relation(fields: [userId], references: [id])
-    token String
-    status Status @default(ACCEPTED)
-    is_active Boolean @default(true)
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId    String   @db.ObjectId
+    user      User     @relation(fields: [userId], references: [id])
+    token     String
+    status    Status   @default(ACCEPTED)
+    is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
     @@map("blacklist_tokens")
 }
