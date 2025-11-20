@@ -29,7 +29,7 @@ class ModelConciertos {
      * Crear un nuevo concierto
      * @param {CreateConciertoData} conciertoData - Datos del concierto a crear
      * @returns  {Promise<Concierto>}
-     */ 
+     */
     async createConcierto(conciertoData: Concierto) {
         try {
             const newConcierto = await this.prisma.concierto.create({
@@ -64,7 +64,7 @@ class ModelConciertos {
      * @param {string} slug - Slug del concierto a actualizar
      * @param {UpdateConciertoData} updateData - Datos a actualizar
      * @returns {Promise<Concierto>}
-     */ 
+     */
     async updateConcierto(slug: string, updateData: Concierto) {
         console.log('Updating concierto with data:', updateData);
         try {
@@ -160,7 +160,7 @@ class ModelConciertos {
      * @param {FastifyRequest<{ Params: { slug: string } }>} request - La solicitud Fastify
      * @returns {Promise<Concierto | void>}
      */
-    async onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>) { 
+    async onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>) {
         const { slug } = request.params;
         const concierto = await this.getConciertoBySlug(slug);
         if (!concierto) this.server.throwError(404, 'Concierto no encontrado');
@@ -209,9 +209,12 @@ class ModelConciertos {
         });
         if (!genero) {
             this.server.throwError(404, 'Género no encontrado');
-            return; 
+            return;
         }
 
+        const merchid = await this.server.axiosClient.get('/merch-random');
+        conciertoData.merchandisingId = merchid.data
+        
         /**
          * Crear concierto
          */
@@ -266,7 +269,7 @@ class ModelConciertos {
             });
             if (!genero) {
                 this.server.throwError(404, 'Género no encontrado');
-                return; 
+                return;
             }
             if (!genero.id_genero) {
                 this.server.throwError(400, 'El género no tiene un id_genero válido');
@@ -368,7 +371,7 @@ class ModelConciertos {
             this.server.throwError(404, 'Concierto no encontrado');
             return;
         }
-        
+
         return { concierto: updatedConcierto };
     }
 

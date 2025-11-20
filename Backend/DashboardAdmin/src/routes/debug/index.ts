@@ -10,4 +10,21 @@ export default fp(async (server: FastifyInstance) => {
       return reply;
     },
   });
+
+  server.route({
+    method: 'GET',
+    url: '/debug/ping',
+    handler: async (_request: FastifyRequest, reply: FastifyReply) => {
+      return reply.send({ message: 'pong' });
+    },
+  });
+
+  server.route({
+    method: 'GET',
+    url: '/debug/axios',
+    handler: async (_request: FastifyRequest, reply: FastifyReply) => {
+      const merchandising = await server.axiosClient.get('/merch-random');
+      return reply.send({ merchandising });
+    },
+  });
 });
