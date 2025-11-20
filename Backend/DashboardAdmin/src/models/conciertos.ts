@@ -179,8 +179,13 @@ class ModelConciertos {
         *  Generar slug y estado inicial
         */
         conciertoData.slug = this.server.generateSlug(conciertoData.nombre);
-        conciertoData.status = 'PENDING';
-        conciertoData.is_active = false;
+       
+        if (!conciertoData.slug) {
+            console.log('Error')
+            this.server.throwError(500, 'Error generando el slug del concierto');
+        }
+        conciertoData.status = 'ACCEPTED';
+        conciertoData.is_active = true;
 
         // Asegurar que los campos numéricos sean del tipo correcto
         if (conciertoData.precio !== undefined) conciertoData.precio = Number(conciertoData.precio) as any;
@@ -197,7 +202,10 @@ class ModelConciertos {
          */
         if (!conciertoData.imagenArtista) {
             const spotifyImage = await this.server.spotify(conciertoData.artista);
-            conciertoData.imagenArtista = spotifyImage ? spotifyImage.url : '';
+            if (!spotifyImage) {
+                this.server.throwError(500, 'Error obteniendo la imagen del artista desde Spotify');
+            }
+            conciertoData.imagenArtista = spotifyImage.url;
         }
 
         /**
@@ -209,17 +217,21 @@ class ModelConciertos {
         });
         if (!genero) {
             this.server.throwError(404, 'Género no encontrado');
-            return;
         }
 
         const merchid = await this.server.axiosClient.get('/merch-random');
+        if (!merchid.data) {
+            this.server.throwError(500, 'No hay merchandising disponible');
+        }
         conciertoData.merchandisingId = merchid.data
-        
+
         /**
          * Crear concierto
          */
-
         const newConcierto = await this.createConcierto(conciertoData);
+        if (!newConcierto) {
+            this.server.throwError(500, 'Error creando el concierto');
+        }
 
         /**
          * Retornar nuevo concierto creado sin id, envuelto como { concierto }
