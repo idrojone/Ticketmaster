@@ -28,7 +28,7 @@ export class MerchServiceService {
     }
     return merchandising;
   }
-
+  
   async create(
     createDto: CreateMerchandisingDto,
   ): Promise<MerchandisingResponseDto> {

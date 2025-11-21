@@ -29,7 +29,7 @@ class ModelConciertos {
      * Crear un nuevo concierto
      * @param {CreateConciertoData} conciertoData - Datos del concierto a crear
      * @returns  {Promise<Concierto>}
-     */ 
+     */
     async createConcierto(conciertoData: Concierto) {
         try {
             const newConcierto = await this.prisma.concierto.create({
@@ -64,7 +64,7 @@ class ModelConciertos {
      * @param {string} slug - Slug del concierto a actualizar
      * @param {UpdateConciertoData} updateData - Datos a actualizar
      * @returns {Promise<Concierto>}
-     */ 
+     */
     async updateConcierto(slug: string, updateData: Concierto) {
         console.log('Updating concierto with data:', updateData);
         try {
@@ -160,7 +160,7 @@ class ModelConciertos {
      * @param {FastifyRequest<{ Params: { slug: string } }>} request - La solicitud Fastify
      * @returns {Promise<Concierto | void>}
      */
-    async onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>) { 
+    async onGetBySlug(request: FastifyRequest<{ Params: { slug: string } }>) {
         const { slug } = request.params;
         const concierto = await this.getConciertoBySlug(slug);
         if (!concierto) this.server.throwError(404, 'Concierto no encontrado');
@@ -179,8 +179,13 @@ class ModelConciertos {
         *  Generar slug y estado inicial
         */
         conciertoData.slug = this.server.generateSlug(conciertoData.nombre);
-        conciertoData.status = 'PENDING';
-        conciertoData.is_active = false;
+       
+        if (!conciertoData.slug) {
+            console.log('Error')
+            this.server.throwError(500, 'Error generando el slug del concierto');
+        }
+        conciertoData.status = 'ACCEPTED';
+        conciertoData.is_active = true;
 
         // Asegurar que los campos numéricos sean del tipo correcto
         if (conciertoData.precio !== undefined) conciertoData.precio = Number(conciertoData.precio) as any;
@@ -197,7 +202,10 @@ class ModelConciertos {
          */
         if (!conciertoData.imagenArtista) {
             const spotifyImage = await this.server.spotify(conciertoData.artista);
-            conciertoData.imagenArtista = spotifyImage ? spotifyImage.url : '';
+            if (!spotifyImage) {
+                this.server.throwError(500, 'Error obteniendo la imagen del artista desde Spotify');
+            }
+            conciertoData.imagenArtista = spotifyImage.url;
         }
 
         /**
@@ -209,14 +217,21 @@ class ModelConciertos {
         });
         if (!genero) {
             this.server.throwError(404, 'Género no encontrado');
-            return; 
         }
+
+        const merchid = await this.server.axiosClient.get('/merch-random');
+        if (!merchid.data) {
+            this.server.throwError(500, 'No hay merchandising disponible');
+        }
+        conciertoData.merchandisingId = merchid.data
 
         /**
          * Crear concierto
          */
-
         const newConcierto = await this.createConcierto(conciertoData);
+        if (!newConcierto) {
+            this.server.throwError(500, 'Error creando el concierto');
+        }
 
         /**
          * Retornar nuevo concierto creado sin id, envuelto como { concierto }
@@ -266,7 +281,7 @@ class ModelConciertos {
             });
             if (!genero) {
                 this.server.throwError(404, 'Género no encontrado');
-                return; 
+                return;
             }
             if (!genero.id_genero) {
                 this.server.throwError(400, 'El género no tiene un id_genero válido');
@@ -368,7 +383,7 @@ class ModelConciertos {
             this.server.throwError(404, 'Concierto no encontrado');
             return;
         }
-        
+
         return { concierto: updatedConcierto };
     }
 

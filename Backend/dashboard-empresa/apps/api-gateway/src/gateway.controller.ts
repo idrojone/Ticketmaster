@@ -44,6 +44,11 @@ export class GatewayController {
     return this.merchClient.send({ cmd: 'get-all-merchandising' }, {});
   }
 
+  @Get('merch-random')
+  async getOneRandom() {
+    return this.merchClient.send({ cmd: 'merch-random' }, {});
+  }
+
   @Get('merchandising/:id')
   async getMerchById(@Param('id') id: string) {
     return this.merchClient.send({ cmd: 'get-merch-by-id' }, { id });

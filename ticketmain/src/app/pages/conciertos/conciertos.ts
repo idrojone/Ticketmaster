@@ -6,6 +6,7 @@ import { ConciertoAdmin } from 'src/app/core/models/dashboard-admin/ConciertosAd
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { ConciertosEditDialogComponent } from '@shared/conciertos-edit-dialog/conciertos-edit-dialog.component';
 import { AddConcierto } from '@shared/add-concierto/add-concierto';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-conciertos',
@@ -35,6 +36,11 @@ export class DashboardConciertos {
       },
       error: (error) => {
         console.error('Error loading ConciertosAdmin:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al cargar los conciertos.',
+        });
       }
     });       
   }
@@ -72,10 +78,20 @@ export class DashboardConciertos {
           this.ConciertosAdminService.PostConciertoAdmin(formData).subscribe({
             next: (data) => {
               console.log('Concierto creado:', data);
+              Swal.fire({
+                icon: 'success',
+                title: 'Concierto Creado',
+                text: 'El concierto ha sido creado exitosamente.',
+              });
               this.LoadConciertos();
             },
             error: (error) => {
               console.error('Error creando concierto:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Hubo un error al crear el concierto.',
+              });
             }
           });
         }
@@ -88,10 +104,20 @@ export class DashboardConciertos {
     this.ConciertosAdminService.PutConciertoAdmin(concierto.slug, concierto).subscribe({
       next: (data) => {
         console.log('Concierto actualizado:', data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Concierto Actualizado',
+          text: 'El concierto ha sido actualizado exitosamente.',
+        });
         this.LoadConciertos();
       },
       error: (error) => {
         console.error('Error actualizando concierto:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al actualizar el concierto.',
+        });
       }
     });
   }   
@@ -100,10 +126,20 @@ export class DashboardConciertos {
     this.ConciertosAdminService.PatchConciertoStatus(concierto.slug, status).subscribe({
       next: (data) => {
         console.log('Estado actualizado:', data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Estado Actualizado',
+          text: 'El estado del concierto ha sido actualizado exitosamente.',
+        });
         this.LoadConciertos();
       },
       error: (error) => {
         console.error('Error actualizando estado:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al actualizar el estado del concierto.',
+        });
       }
     });
   }
@@ -115,10 +151,20 @@ export class DashboardConciertos {
     this.ConciertosAdminService.PatchConciertoActivate(concierto.slug, newActiveState).subscribe({
       next: (data) => {
         console.log('Activación actualizada:', data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Activación Actualizada',
+          text: 'La activación del concierto ha sido actualizada exitosamente.',
+        });
         this.LoadConciertos();
       },
       error: (error) => {
         console.error('Error actualizando activación:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al actualizar la activación del concierto.',
+        });
       }
     });
   }
