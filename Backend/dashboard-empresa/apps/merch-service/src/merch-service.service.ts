@@ -13,13 +13,20 @@ export class MerchServiceService {
 
   async findAll(): Promise<MerchandisingResponseDto[]> {
     const merchandisings = await this.prisma.merchandising.findMany();
+    if (!merchandisings) {
+      return [];
+    }
     return merchandisings;
   }
 
   async findOne(id: string): Promise<MerchandisingResponseDto | null> {
-    return this.prisma.merchandising.findUnique({
+    const merchandising = this.prisma.merchandising.findUnique({
       where: { id },
     });
+    if (!merchandising) {
+      return null;
+    }
+    return merchandising;
   }
 
   async create(

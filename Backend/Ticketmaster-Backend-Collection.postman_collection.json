@@ -1,0 +1,1556 @@
+{
+	"info": {
+		"_postman_id": "ticketmaster-backend-collection",
+		"name": "Ticketmaster Backend - Colección Completa",
+		"description": "Colección completa de los tres servidores del backend: UserServices, DashboardAdmin y dashboard-empresa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. UserServices (Express - Puerto 3000)",
+			"item": [
+				{
+					"name": "Autenticación",
+					"item": [
+						{
+							"name": "Registrar Usuario",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"usuario_ejemplo\",\n  \"email\": \"usuario@example.com\",\n  \"password\": \"password123\",\n  \"nombre\": \"Juan Pérez\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/register",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "register"]
+								}
+							}
+						},
+						{
+							"name": "Login Usuario",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"usuario@example.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/login",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "login"]
+								}
+							}
+						},
+						{
+							"name": "Refresh Token",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"refreshToken\": \"your-refresh-token\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/refresh",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "refresh"]
+								}
+							}
+						},
+						{
+							"name": "Logout Usuario",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/logout",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "logout"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Usuario Autenticado",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "user"]
+								}
+							}
+						},
+						{
+							"name": "Actualizar Usuario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Juan Actualizado\",\n  \"bio\": \"Nueva biografía\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "user"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Usuario por Username",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/:username",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "user", ":username"],
+									"variable": [
+										{
+											"key": "username",
+											"value": "usuario_ejemplo"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Conciertos",
+					"item": [
+						{
+							"name": "Obtener Todos los Conciertos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/conciertos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "conciertos"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Concierto por Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/conciertos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "conciertos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Obtener Conciertos por Género",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/conciertos/genero/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "conciertos", "genero", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "rock"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Obtener Ciudades",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/ciudades",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "ciudades"]
+								}
+							}
+						},
+						{
+							"name": "Like Concierto",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/conciertos/like/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "conciertos", "like", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Unlike Concierto",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/conciertos/unlike/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "conciertos", "unlike", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Géneros",
+					"item": [
+						{
+							"name": "Obtener Todos los Géneros",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/generos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "generos"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Género por Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/generos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "generos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "rock"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Crear Género",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Rock\",\n  \"descripcion\": \"Género musical rock\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/generos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "generos"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Carousel",
+					"item": [
+						{
+							"name": "Géneros para Carousel",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/carousel/generos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "carousel", "generos"]
+								}
+							}
+						},
+						{
+							"name": "Conciertos para Carousel",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/carousel/conciertos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "carousel", "conciertos"]
+								}
+							}
+						},
+						{
+							"name": "Concierto Carousel por Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/carousel/conciertos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": ["api", "carousel", "conciertos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Comentarios",
+					"item": [
+						{
+							"name": "Añadir Comentario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"comentario\": \"¡Excelente concierto!\",\n  \"rating\": 5\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/:slug/comentarios",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":slug", "comentarios"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Obtener Comentarios",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/:slug/comentarios",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":slug", "comentarios"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Borrar Comentario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/:slug/comentarios/:id",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":slug", "comentarios", ":id"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										},
+										{
+											"key": "id",
+											"value": "comentario-id"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Perfiles",
+					"item": [
+						{
+							"name": "Obtener Perfil",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/:username",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":username"],
+									"variable": [
+										{
+											"key": "username",
+											"value": "usuario_ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Comentarios del Usuario",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/:username/user/comentarios",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":username", "user", "comentarios"],
+									"variable": [
+										{
+											"key": "username",
+											"value": "usuario_ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Likes del Usuario",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/:username/user/likes",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":username", "user", "likes"],
+									"variable": [
+										{
+											"key": "username",
+											"value": "usuario_ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Seguir Usuario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/:username/user/follow",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":username", "user", "follow"],
+									"variable": [
+										{
+											"key": "username",
+											"value": "usuario_a_seguir"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Dejar de Seguir Usuario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/:username/user/unfollow",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3000",
+									"path": [":username", "user", "unfollow"],
+									"variable": [
+										{
+											"key": "username",
+											"value": "usuario_a_dejar"
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "2. DashboardAdmin (Fastify - TypeScript)",
+			"item": [
+				{
+					"name": "Autenticación",
+					"item": [
+						{
+							"name": "Login Admin",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/auth/login",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["auth", "login"]
+								}
+							}
+						},
+						{
+							"name": "Register Admin (Solo Desarrollo)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"admin\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\",\n  \"role\": \"admin\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/auth/register",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["auth", "register"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Usuario por Username",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/auth/user/:username",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["auth", "user", ":username"],
+									"variable": [
+										{
+											"key": "username",
+											"value": "admin"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Conciertos",
+					"item": [
+						{
+							"name": "Obtener Todos los Conciertos",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/conciertos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["conciertos"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Concierto por Slug",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/conciertos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["conciertos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-ejemplo"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Crear Concierto",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"titulo\": \"Concierto Rock 2024\",\n  \"descripcion\": \"Gran concierto de rock\",\n  \"fecha\": \"2024-12-31T20:00:00Z\",\n  \"lugar\": \"Estadio Nacional\",\n  \"ciudad\": \"Madrid\",\n  \"precio\": 45.50,\n  \"genero_slug\": \"rock\",\n  \"imagen\": \"https://example.com/imagen.jpg\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/conciertos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["conciertos"]
+								}
+							}
+						},
+						{
+							"name": "Actualizar Concierto",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"titulo\": \"Concierto Rock 2024 - Actualizado\",\n  \"precio\": 50.00\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/conciertos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["conciertos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-rock-2024"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Activar/Desactivar Concierto",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/conciertos/:slug/activate",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["conciertos", ":slug", "activate"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-rock-2024"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Cambiar Estado Concierto",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"PUBLISHED\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/conciertos/:slug/status",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["conciertos", ":slug", "status"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-rock-2024"
+										}
+									]
+								},
+								"description": "Estados disponibles: DRAFT, PUBLISHED, CANCELLED"
+							}
+						},
+						{
+							"name": "Eliminar Concierto",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/conciertos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["conciertos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "concierto-rock-2024"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Géneros",
+					"item": [
+						{
+							"name": "Obtener Todos los Géneros",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/generos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["generos"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Género por Slug",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/generos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["generos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "rock"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Crear Género",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Rock\",\n  \"descripcion\": \"Género musical rock\",\n  \"imagen\": \"https://example.com/rock.jpg\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/generos",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["generos"]
+								}
+							}
+						},
+						{
+							"name": "Actualizar Género",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Rock Alternativo\",\n  \"descripcion\": \"Subgénero rock alternativo\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/generos/:slug",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["generos", ":slug"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "rock"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Activar/Desactivar Género",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/generos/:slug/activate",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["generos", ":slug", "activate"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "rock"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Cambiar Estado Género",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"PUBLISHED\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/generos/:slug/status",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["generos", ":slug", "status"],
+									"variable": [
+										{
+											"key": "slug",
+											"value": "rock"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Obtener Géneros por ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminAccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{dashboardAdminPort}}/generos/id_genero",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "{{dashboardAdminPort}}",
+									"path": ["generos", "id_genero"]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "3. dashboard-empresa (NestJS - Puerto 3030)",
+			"item": [
+				{
+					"name": "Sistema",
+					"item": [
+						{
+							"name": "Hello World",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030"
+								}
+							}
+						},
+						{
+							"name": "Health Check",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/health",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["health"]
+								}
+							}
+						},
+						{
+							"name": "Test Auth Service",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/auth/test",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["auth", "test"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Autenticación",
+					"item": [
+						{
+							"name": "Registrar Empresa",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"empresa@example.com\",\n  \"password\": \"empresa123\",\n  \"nombre\": \"Empresa Ejemplo S.L.\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3030/auth/register",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["auth", "register"]
+								}
+							}
+						},
+						{
+							"name": "Login Empresa",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"empresa@example.com\",\n  \"password\": \"empresa123\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3030/auth/login",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["auth", "login"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Merchandising",
+					"item": [
+						{
+							"name": "Obtener Todo el Merchandising",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/merchandising",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["merchandising"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Merchandising por ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/merchandising/:id",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["merchandising", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "uuid-merchandising"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Crear Merchandising",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Camiseta Tour 2024\",\n  \"descripcion\": \"Camiseta oficial del tour 2024\",\n  \"precio\": 25.99,\n  \"stock\": 100,\n  \"categoria_id\": \"uuid-categoria\",\n  \"imagen\": \"https://example.com/camiseta.jpg\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3030/merchandising",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["merchandising"]
+								}
+							}
+						},
+						{
+							"name": "Actualizar Merchandising",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"precio\": 29.99,\n  \"stock\": 150\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3030/merchandising/:id",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["merchandising", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "uuid-merchandising"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Eliminar Merchandising",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/merchandising/:id",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["merchandising", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "uuid-merchandising"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Categorías",
+					"item": [
+						{
+							"name": "Obtener Todas las Categorías",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/categories",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["categories"]
+								}
+							}
+						},
+						{
+							"name": "Obtener Categoría por ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/categories/:id",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["categories", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "uuid-categoria"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Crear Categoría",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Ropa\",\n  \"descripcion\": \"Categoría de ropa y textil\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3030/categories",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["categories"]
+								}
+							}
+						},
+						{
+							"name": "Actualizar Categoría",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nombre\": \"Textil y Ropa\",\n  \"descripcion\": \"Categoría actualizada de productos textiles\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3030/categories/:id",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["categories", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "uuid-categoria"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Eliminar Categoría",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3030/categories/:id",
+									"protocol": "http",
+									"host": ["localhost"],
+									"port": "3030",
+									"path": ["categories", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "uuid-categoria"
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "userAccessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "adminAccessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "empresaAccessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "dashboardAdminPort",
+			"value": "5000",
+			"type": "string"
+		}
+	]
+}
