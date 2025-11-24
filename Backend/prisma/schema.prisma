@@ -77,8 +77,9 @@ model User {
      */
     comentarios Comentario[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    carritos  Carrito[]
 
     @@map("users")
 }
@@ -237,10 +238,11 @@ model Concierto {
     merchandising   Merchandising? @relation("ConciertoMerchandising", fields: [merchandisingId], references: [id])
     merchandisingId String?        @db.ObjectId
 
-    status        Status         @default(ACCEPTED)
-    is_active     Boolean        @default(true)
-    createdAt     DateTime       @default(now())
-    updatedAt     DateTime       @updatedAt
+    status    Status    @default(ACCEPTED)
+    is_active Boolean   @default(true)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    carritos  Carrito[]
 
     @@map("conciertos")
 }
@@ -341,10 +343,11 @@ model Merchandising {
      */
     ventas Venta[]
 
-    status     Status      @default(ACCEPTED)
-    is_active  Boolean     @default(true)
-    createdAt  DateTime    @default(now())
-    updatedAt  DateTime    @updatedAt
+    status    Status    @default(ACCEPTED)
+    is_active Boolean   @default(true)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    carritos  Carrito[]
 
     @@map("merchandising")
 }
@@ -377,6 +380,25 @@ model CategoriaMerchandising {
     updatedAt     DateTime        @updatedAt
 
     @@map("categorias_merchandising")
+}
+
+model Carrito {
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
+    userId String @db.ObjectId
+    user   User   @relation(fields: [userId], references: [id])
+
+    conciertoId String    @db.ObjectId
+    concierto   Concierto @relation(fields: [conciertoId], references: [id])
+
+    merchandisingId String        @db.ObjectId
+    merchandising   Merchandising @relation(fields: [merchandisingId], references: [id])
+
+    status    Status   @default(ACCEPTED)
+    is_active Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("carritos")
 }
 
 /**
