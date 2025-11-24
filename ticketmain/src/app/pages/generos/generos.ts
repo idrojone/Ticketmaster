@@ -6,6 +6,7 @@ import { GeneroAdmin } from 'src/app/core/models/dashboard-admin/GenerosAdmin.mo
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { GenerosEditDialogComponent } from '@shared/generos-edit-dialog/generos-edit-dialog.component';
 import { AddGenero } from '@shared/add-genero/add-genero';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-generos',
@@ -35,6 +36,11 @@ export class DashboardGeneros {
       },
       error: (error) => {
         console.error('Error loading GenerosAdmin:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron cargar los géneros. Inténtalo de nuevo más tarde.'
+        })
       }
     });       
   }
@@ -65,11 +71,21 @@ export class DashboardGeneros {
       zOkText: 'Crear',
       zOnOk: (instance: any) => {
         const formData = instance.form?.value;
+        console.log('Formulario de nuevo género:', formData);
         if (formData) {
           this.GenerosAdminService.PostGeneroAdmin(formData).subscribe({
             next: (data) => {
               console.log('Género creado:', data);
               this.LoadGeneros();
+              Swal.fire('Éxito', 'Género creado correctamente.', 'success');
+            },
+            error: (error) => {
+              console.error('Error creando género:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'No se pudo crear el género. Inténtalo de nuevo más tarde.'
+              })
             }
           });
         }
@@ -83,9 +99,15 @@ export class DashboardGeneros {
       next: (data) => {
         console.log('Género actualizado:', data);
         this.LoadGeneros();
+        Swal.fire('Éxito', 'Género actualizado correctamente.', 'success');
       },
       error: (error) => {
         console.error('Error actualizando género:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo actualizar el género. Inténtalo de nuevo más tarde.'
+        });
       }
     });
   }   
@@ -95,9 +117,15 @@ export class DashboardGeneros {
       next: (data) => {
         console.log('Estado actualizado:', data);
         this.LoadGeneros();
+        Swal.fire('Éxito', 'Estado actualizado correctamente.', 'success');
       },
       error: (error) => {
         console.error('Error actualizando estado:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo actualizar el estado. Inténtalo de nuevo más tarde.'
+        });
       }
     });
   }
@@ -110,9 +138,15 @@ export class DashboardGeneros {
       next: (data) => {
         console.log('Activación actualizada:', data);
         this.LoadGeneros();
+        Swal.fire('Éxito', `El género ha sido ${newActiveState ? 'activado' : 'desactivado'}.`, 'success');
       },
       error: (error) => {
         console.error('Error actualizando activación:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo actualizar la activación. Inténtalo de nuevo más tarde.'
+        });
       }
     });
   }
@@ -122,9 +156,15 @@ export class DashboardGeneros {
       next: (data) => {
         console.log('Género eliminado:', data);
         this.LoadGeneros();
+        Swal.fire('Éxito', 'Género eliminado correctamente.', 'success');
       },
       error: (error) => {
         console.error('Error eliminando género:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo eliminar el género. Inténtalo de nuevo más tarde.'
+        });
       }
     });
   }

@@ -5,6 +5,7 @@ import { Merchandising } from 'src/app/core/models/dashboard-empresa/Merchandisi
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { MerchandisingEditDialogComponent } from '@shared/merchandising-edit-dialog/merchandising-edit-dialog.component';
 import { AddMerchandising } from '@shared/add-merchandising/add-merchandising';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-merchandising-empresa',
@@ -39,6 +40,11 @@ export class MerchandisingEmpresa implements OnInit {
         this.errorMessage.set('Error al cargar el merchandising');
         this.isLoading.set(false);
         console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al cargar el merchandising.',
+        });
       }
     });
   }
@@ -56,10 +62,20 @@ export class MerchandisingEmpresa implements OnInit {
             next: (data) => {
               console.log('Producto creado:', data);
               this.loadMerchandising();
+              Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'El producto ha sido creado exitosamente.',
+              });
             },
             error: (error) => {
               this.errorMessage.set('Error al crear el producto');
               console.error('Error:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Hubo un error al crear el producto.',
+              });
             }
           });
         }
@@ -90,10 +106,20 @@ export class MerchandisingEmpresa implements OnInit {
       next: (data) => {
         console.log('Producto actualizado:', data);
         this.loadMerchandising();
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'El producto ha sido actualizado exitosamente.',
+        });
       },
       error: (error) => {
         this.errorMessage.set('Error al actualizar el producto');
         console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al actualizar el producto.',
+        });
       }
     });
   }
@@ -103,10 +129,20 @@ export class MerchandisingEmpresa implements OnInit {
       this.merchandisingService.DeleteMerchandisingEmpresa(id).subscribe({
         next: () => {
           this.loadMerchandising();
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'El producto ha sido eliminado exitosamente.',
+          });
         },
         error: (error) => {
           this.errorMessage.set('Error al eliminar el producto');
           console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Hubo un error al eliminar el producto.',
+          });
         }
       });
     }
@@ -127,10 +163,20 @@ export class MerchandisingEmpresa implements OnInit {
     this.merchandisingService.PatchMerchandisingStatus(id, newStatus).subscribe({
       next: () => {
         this.loadMerchandising();
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: `El estado del producto ha sido cambiado a ${newStatus}.`,
+        });
       },
       error: (error) => {
         this.errorMessage.set('Error al cambiar el estado');
         console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al cambiar el estado.',
+        });
       }
     });
   }
@@ -139,10 +185,20 @@ export class MerchandisingEmpresa implements OnInit {
     this.merchandisingService.PatchMerchandisingActivate(id, !currentActive).subscribe({
       next: () => {
         this.loadMerchandising();
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: `El producto ha sido ${!currentActive ? 'activado' : 'desactivado'} exitosamente.`,
+        });
       },
       error: (error) => {
         this.errorMessage.set('Error al activar/desactivar');
         console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Hubo un error al activar/desactivar el producto.',
+        });
       }
     });
   }

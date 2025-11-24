@@ -1,9 +1,30 @@
-/* Estilos del formulario de añadir género */
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #333333 !important;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
 
-form {
-  padding: 0;
-  display: grid;
-  gap: 1.5rem;
+input {
+  border: 1px solid #333333 !important;
+}
+
+.form-group input, textarea {
+  border: 1px solid #333333 !important;
+}
+
+.form-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  outline: none;
+}
+
+.form-input:hover {
+  border-color: #555555;
 }
 
 .grid {
@@ -36,7 +57,7 @@ textarea[z-input] {
   width: 100%;
   font-size: 0.875rem;
   padding: 0.75rem;
-  border: 1px solid #e0e0e0;
+  border: 2px solid #333333;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   box-sizing: border-box;
@@ -58,14 +79,15 @@ textarea[z-input] {
   resize: vertical;
   min-height: 100px;
   font-family: inherit;
+  border: 2px solid #333333;
 }
 
-/* Estilos para formularios reactivos */
+
 [formControlName] {
   width: 100%;
   font-size: 0.875rem;
   padding: 0.75rem;
-  border: 1px solid #e0e0e0;
+  border: 2px solid #333333;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   box-sizing: border-box;
@@ -85,9 +107,9 @@ textarea[z-input] {
 textarea[formControlName] {
   resize: vertical;
   min-height: 100px;
+  border: 2px solid #333333;
 }
 
-/* Estados de validación */
 .ng-invalid.ng-touched {
   border-color: #e74c3c;
 }

@@ -85,6 +85,7 @@ export class Carousel implements OnInit {
 			(data) => {
 				// this.item_generos = data as GeneroCarrousel[];
 				this.item_generos_secundario = data as GeneroCarrouselSecundario[];
+				console.log("Carousel Géneros Secundario: ", this.item_generos_secundario);
 			},
 			(error) => {
 				console.error('Error fetching carousel data:', error);

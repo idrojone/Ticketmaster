@@ -5,6 +5,7 @@ import { CategoriaMerchandising } from 'src/app/core/models/dashboard-empresa/Ca
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { CategoriasEditDialogComponent } from '@shared/categorias-edit-dialog/categorias-edit-dialog.component';
 import { AddCategoria } from '@shared/add-categoria/add-categoria';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-categorias-empresa',
@@ -39,6 +40,7 @@ export class CategoriasEmpresa implements OnInit {
         this.errorMessage.set('Error al cargar las categorías');
         this.isLoading.set(false);
         console.error('Error:', error);
+        Swal.fire('Error', 'No se pudieron cargar las categorías. Inténtalo de nuevo más tarde.', 'error');
       }
     });
   }
@@ -56,10 +58,16 @@ export class CategoriasEmpresa implements OnInit {
             next: (data) => {
               console.log('Categoría creada:', data);
               this.loadCategorias();
+              Swal.fire('Éxito', 'Categoría creada correctamente.', 'success');
             },
             error: (error) => {
               this.errorMessage.set('Error al crear la categoría');
               console.error('Error:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'No se pudo crear la categoría. Inténtalo de nuevo más tarde.'
+              })
             }
           });
         }
@@ -90,10 +98,16 @@ export class CategoriasEmpresa implements OnInit {
       next: (data) => {
         console.log('Categoría actualizada:', data);
         this.loadCategorias();
+        Swal.fire('Éxito', 'Categoría actualizada correctamente.', 'success');
       },
       error: (error) => {
         this.errorMessage.set('Error al actualizar la categoría');
         console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo actualizar la categoría. Inténtalo de nuevo más tarde.'
+        });
       }
     });
   }
@@ -103,10 +117,16 @@ export class CategoriasEmpresa implements OnInit {
       this.categoriasService.DeleteCategoriaEmpresa(id).subscribe({
         next: () => {
           this.loadCategorias();
+          Swal.fire('Éxito', 'Categoría eliminada correctamente.', 'success');
         },
         error: (error) => {
           this.errorMessage.set('Error al eliminar la categoría');
           console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'No se pudo eliminar la categoría. Inténtalo de nuevo más tarde.'
+          });
         }
       });
     }
@@ -127,10 +147,16 @@ export class CategoriasEmpresa implements OnInit {
     this.categoriasService.PatchCategoriaStatus(id, newStatus).subscribe({
       next: () => {
         this.loadCategorias();
+        Swal.fire('Éxito', `El estado de la categoría ha sido cambiado a ${newStatus}.`, 'success');
       },
       error: (error) => {
         this.errorMessage.set('Error al cambiar el estado');
         console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo cambiar el estado. Inténtalo de nuevo más tarde.'
+        });
       }
     });
   }
@@ -139,10 +165,16 @@ export class CategoriasEmpresa implements OnInit {
     this.categoriasService.PatchCategoriaActivate(id, !currentActive).subscribe({
       next: () => {
         this.loadCategorias();
+        Swal.fire('Éxito', `La categoría ha sido ${!currentActive ? 'activada' : 'desactivada'}.`, 'success');
       },
       error: (error) => {
         this.errorMessage.set('Error al activar/desactivar');
         console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'No se pudo cambiar el estado de activación. Inténtalo de nuevo más tarde.'
+        });
       }
     });
   }

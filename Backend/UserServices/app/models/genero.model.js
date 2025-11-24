@@ -54,15 +54,15 @@ genero_schema.pre('validate', function (next) {
 });
 
 genero_schema.methods.slugify = function () {
-    if (this.nombre && typeof this.nombre === 'string') {
-        this.slug = slug(this.nombre) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
+    if (this.name && typeof this.name === 'string') {
+        this.slug = slug(this.name) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
     }
 };
 
 genero_schema.methods.toGeneroResponse = function() {
     return {
         slug: this.slug,
-        nombre: this.nombre,
+        name: this.name,
         img: this.img,
         descripcion: this.descripcion,
         id_genero: this.id_genero,
@@ -76,8 +76,8 @@ genero_schema.methods.toGeneroResponse = function() {
 genero_schema.methods.toGeneroCarouselResponse = function() {
     return {
         slug: this.slug,
-        nombre: this.nombre,
-        img: this.img
+        name: this.name,
+        img: this.img,
     };
 }
 

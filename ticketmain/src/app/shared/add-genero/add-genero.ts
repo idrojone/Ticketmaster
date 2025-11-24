@@ -6,19 +6,8 @@ import { PostGeneroAdmin } from 'src/app/core/models/dashboard-admin/GenerosAdmi
 
 @Component({
   selector: 'app-add-genero',
-  template: `
-    <form [formGroup]="form" class="grid gap-6">
-      <div class="grid gap-3">
-        <label for="name" class="text-sm font-medium">Nombre del Género</label>
-        <input z-input formControlName="name" id="name" />
-      </div>
-
-      <div class="grid gap-3 col-span-2">
-        <label for="description" class="text-sm font-medium">Descripción</label>
-        <textarea z-input formControlName="description" id="description" rows="4"></textarea>
-      </div>
-    </form>
-  `,
+  templateUrl: './add-genero.html',
+  styleUrls: ['./add-genero.css'],
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -27,7 +16,8 @@ export class AddGenero implements OnInit {
 
   form = new FormGroup({
     name: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required)
+    description: new FormControl('', Validators.required),
+    img: new FormControl('', Validators.required)
   });
 
   ngOnInit() {

@@ -19,8 +19,7 @@ class ModelGeneros {
         try {
             return await this.prisma.genero.findMany();
         } catch (error) {
-            console.error('Error fetching generos:', error);
-            throw error;
+            this.server.throwError(500, 'Error fetching all generos', error);
         }
     }
 
@@ -37,7 +36,7 @@ class ModelGeneros {
                 },
             });
         } catch (error) {
-            this.server.throwError(500, 'Error fetching generos by id_genero');
+            this.server.throwError(500, 'Error fetching generos by id_genero', error);
         }
     }
 
@@ -52,7 +51,7 @@ class ModelGeneros {
                 where: { slug : slug, }
             });
         } catch (error) {
-            this.server.throwError(500, 'Error buscando genero por slug');
+            this.server.throwError(500, 'Error buscando genero por slug', error);
         }
     }
 
@@ -67,8 +66,7 @@ class ModelGeneros {
                 data: NuevoGenero,
             });
         } catch (error) {
-            console.error('Error creating genero:', error);
-            throw error;
+            this.server.throwError(400, 'Nuevos datos ya en uso', error);
         }
     }
 
@@ -85,8 +83,7 @@ class ModelGeneros {
                 data: { id_genero: newIdGenero },
             });
         } catch (error) {
-            console.error('Error updating conciertos with new id_genero:', error);
-            throw error;
+            this.server.throwError(500, 'Error updating conciertos genero id', error);
         }
     }
 
@@ -103,8 +100,7 @@ class ModelGeneros {
                 data: updatedData,
             });
         } catch (error) {
-            console.error('Error al actualizar el género:', error);
-            throw error;
+            this.server.throwError(400, 'Nuevos datos ya en uso o no existe', error);
         }
     }
 
@@ -119,8 +115,7 @@ class ModelGeneros {
                 where: { slug : slug, }
             });
         } catch (error) {
-            console.error('Error checking slug existence:', error);
-            throw error;
+            this.server.throwError(500, 'Error checking slug existence', error);
         }
     }
     
@@ -135,8 +130,7 @@ class ModelGeneros {
                 where: { id_genero : id_genero, }
             });
         } catch (error) {
-            console.error('Error checking id_genero existence:', error);
-            throw error;
+            this.server.throwError(500, 'Error checking id_genero existence', error);
         }
     }
 
@@ -152,8 +146,7 @@ class ModelGeneros {
                 where: { id_genero : id_genero, }
             });
         } catch (error) {
-            console.error('Error fetching genero by id_genero:', error);
-            throw error;
+            this.server.throwError(500, 'Error fetching genero by id_genero', error);
         }
     }
 
@@ -168,8 +161,7 @@ class ModelGeneros {
                 where: { name : name }
             });
         } catch (error) {
-            console.error('Error fetching genero by name:', error);
-            throw error;
+            this.server.throwError(500, 'Error fetching genero by name', error);
         }
     }
 
@@ -202,8 +194,11 @@ class ModelGeneros {
          */
 
         generoData.slug = this.server.generateSlug(generoData.name);
-        generoData.status = 'PENDING';
-        generoData.is_active = false;
+        if (!generoData.slug) {
+            this.server.throwError(500, 'Error generando el slug');
+        }
+        generoData.status = 'ACCEPTED';
+        generoData.is_active = true;
 
         /**
          * Asignar imagen por defecto si no se proporciona ninguna
@@ -216,14 +211,14 @@ class ModelGeneros {
          * Generar id_genero único
          */
         generoData.id_genero = this.server.generateSlug(generoData.name);
+        if (!generoData.id_genero) {
+            this.server.throwError(500, 'Error generando el id del género');
+        }
 
         /**
          * Crear el nuevo género
          */
         const newGenero = await this.createGenero(generoData);
-        if (!newGenero) {
-            this.server.throwError(400, 'Error creating genero');
-        }
         return newGenero;
     }
 
