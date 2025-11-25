@@ -1,8 +1,8 @@
-const User=require('../models/user.model');
-const UserAdmin=require('../models/admin.model');
-const UserEmpresa=require('../models/empresa.model');   
-const refreshTokenStore= require('../models/refreshTokenStore.model');
-const asyncHandler=require('express-async-handler');
+const User = require('../models/user.model');
+const UserAdmin = require('../models/admin.model');
+const UserEmpresa = require('../models/empresa.model');
+const refreshTokenStore = require('../models/refreshTokenStore.model');
+const asyncHandler = require('express-async-handler');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const BlackListToken = require('../models/blackListToken');
@@ -21,13 +21,13 @@ const BlackListToken = require('../models/blackListToken');
  * - getDetailsUser
  */
 
-const registerUser= asyncHandler( async (req,res) => {
+const registerUser = asyncHandler(async (req, res) => {
 
-    const { user }=req.body;
+    const { user } = req.body;
 
     //Se asegura de que todos los campos esten llenos
-    if(!user || !user.username || !user.email || !user.password){
-        return res.status(400).json({message: "Asegurese de tener todos los campos"});
+    if (!user || !user.username || !user.email || !user.password) {
+        return res.status(400).json({ message: "Asegurese de tener todos los campos" });
     }
 
     //Asegura que el email no este en uso
@@ -45,7 +45,7 @@ const registerUser= asyncHandler( async (req,res) => {
     const hashedPassword = await argon2.hash(user.password);
 
     //Definimos el objeto de Usuario
-    const userObject={
+    const userObject = {
         "username": user.username,
         "email": user.email,
         "password": hashedPassword
@@ -54,17 +54,17 @@ const registerUser= asyncHandler( async (req,res) => {
     //Crear el usuario
     const crearUsuario = await User.create(userObject);
 
-    if(crearUsuario){
+    if (crearUsuario) {
         return res.status(201).json({
             user: await crearUsuario.toUserResponse(),
         });
-    }else {
-        return res.status(400).json({message: "Error al crear el usuario"});
+    } else {
+        return res.status(400).json({ message: "Error al crear el usuario" });
     }
-    
+
 });
 
-const loginUser= asyncHandler( async (req,res) => {
+const loginUser = asyncHandler(async (req, res) => {
     //Comprueba si estan todos los campos
     const { user } = req.body;
 
@@ -78,14 +78,14 @@ const loginUser= asyncHandler( async (req,res) => {
     const encontrarUsuario = await User.findOne({ email: user.email });
 
     if (!encontrarUsuario) {
-        const encontrarUsuarioAdmin = await UserAdmin.findOne({email: user.email});
-        if (!encontrarUsuarioAdmin)  {
-            const encontrarUsuarioEmpresa = await UserEmpresa.findOne({email: user.email});
+        const encontrarUsuarioAdmin = await UserAdmin.findOne({ email: user.email });
+        if (!encontrarUsuarioAdmin) {
+            const encontrarUsuarioEmpresa = await UserEmpresa.findOne({ email: user.email });
             if (!encontrarUsuarioEmpresa) {
                 return res.status(431).json({ message: "Email no encontrado en la base de datos" });
             }
             return res.status(200).json({ rol: 'empresa' });
-        }     
+        }
         return res.status(200).json({ rol: 'admin' });
     }
 
@@ -124,11 +124,11 @@ const loginUser= asyncHandler( async (req,res) => {
     });
 });
 
-const logoutUser= asyncHandler( async (req,res) => {
+const logoutUser = asyncHandler(async (req, res) => {
     //Se lo pasamos por las cookies
     const { refreshToken } = req.cookies;
-    if(!refreshToken){
-        return res.status(400).json({message: "No se ha recibido el refresh token"});
+    if (!refreshToken) {
+        return res.status(400).json({ message: "No se ha recibido el refresh token" });
     }
 
     //Eliminamos el refresh token de la base de datos
@@ -139,14 +139,14 @@ const logoutUser= asyncHandler( async (req,res) => {
         path: '/',
     });
 
-    res.status(200).json({message: "Logout exitoso"});
+    res.status(200).json({ message: "Logout exitoso" });
 });
 
 //Acciones una vez autenticado --> Pasar por el middleware de autenticación
 
-const getUserData= asyncHandler( async (req,res) => {
+const getUserData = asyncHandler(async (req, res) => {
 
-    if(req.blacklisted == true){
+    if (req.blacklisted == true) {
         return res.status(403).json({ message: "Token en la blacklist" });
     }
 
@@ -155,12 +155,12 @@ const getUserData= asyncHandler( async (req,res) => {
 
     console.log('Email decodificado del token:', email);
 
-    const encontrarUsuario= await User.findOne( {email} ).exec();
+    const encontrarUsuario = await User.findOne({ email }).exec();
 
-    if(!encontrarUsuario){
-        const encontrarUsuarioAdmin = await UserAdmin.findOne({email});
-        if (!encontrarUsuarioAdmin) return res.status(404).json({message: "Email del Usuario no encontrado"});
-        return res.status(200).json({rol: 'admin'});
+    if (!encontrarUsuario) {
+        const encontrarUsuarioAdmin = await UserAdmin.findOne({ email });
+        if (!encontrarUsuarioAdmin) return res.status(404).json({ message: "Email del Usuario no encontrado" });
+        return res.status(200).json({ rol: 'admin' });
     }
 
     res.status(200).json({
@@ -169,58 +169,58 @@ const getUserData= asyncHandler( async (req,res) => {
 
 });
 
-const updateUser= asyncHandler( async (req,res) => {
+const updateUser = asyncHandler(async (req, res) => {
 
-    if(req.blacklisted == true){
+    if (req.blacklisted == true) {
         return res.status(403).json({ message: "Token en la blacklist" });
     }
 
     //Confirmar que tenemos un objeto para actualizar valido
-    const { username,email,password,image,bio }=req.body.user;
+    const { username, email, password, image, bio } = req.body.user;
 
-    if(!username && !email){
-        return res.status(400).json({message: "No puedes dejar el email y el usuario vacio"});
+    if (!username && !email) {
+        return res.status(400).json({ message: "No puedes dejar el email y el usuario vacio" });
     }
 
     //Si los datos para actualizar son validos
     const emailDecoded = req.email;
 
-    const encontrarUsuario= await User.findOne( {email: emailDecoded} ).exec();
+    const encontrarUsuario = await User.findOne({ email: emailDecoded }).exec();
 
-    if(!encontrarUsuario){
-        return res.status(404).json({message: "No se puede actualizar un usuario que no existe"});
+    if (!encontrarUsuario) {
+        return res.status(404).json({ message: "No se puede actualizar un usuario que no existe" });
     }
 
     //Verificar que el nuevo email no esté en uso por otro usuario
-    if(email && email !== emailDecoded){
+    if (email && email !== emailDecoded) {
         const emailExist = await User.findOne({ email: email });
-        if(emailExist){
-            return res.status(409).json({message: "El email ya está en uso por otro usuario"});
+        if (emailExist) {
+            return res.status(409).json({ message: "El email ya está en uso por otro usuario" });
         }
-        encontrarUsuario.email=email;
+        encontrarUsuario.email = email;
     }
 
     //Verificar que el nuevo username no esté en uso por otro usuario
-    if(username && username !== encontrarUsuario.username){
+    if (username && username !== encontrarUsuario.username) {
         const usernameExist = await User.findOne({ username: username });
-        if(usernameExist){
-            return res.status(409).json({message: "El username ya está en uso por otro usuario"});
+        if (usernameExist) {
+            return res.status(409).json({ message: "El username ya está en uso por otro usuario" });
         }
-        encontrarUsuario.username=username;
+        encontrarUsuario.username = username;
     }
 
-    if(password){
+    if (password) {
         //Hashear la contraseña
-        const hashedPassword= await argon2.hash(password);
-        encontrarUsuario.password=hashedPassword;
+        const hashedPassword = await argon2.hash(password);
+        encontrarUsuario.password = hashedPassword;
     }
 
-    if(typeof image !== 'undefined'){
-        encontrarUsuario.image=image;
+    if (typeof image !== 'undefined') {
+        encontrarUsuario.image = image;
     }
 
-    if(typeof bio !== 'undefined'){
-        encontrarUsuario.bio=bio;
+    if (typeof bio !== 'undefined') {
+        encontrarUsuario.bio = bio;
     }
 
     await encontrarUsuario.save();
@@ -230,22 +230,22 @@ const updateUser= asyncHandler( async (req,res) => {
     });
 });
 
-const getDetailsUser= asyncHandler( async (req,res) => {
+const getDetailsUser = asyncHandler(async (req, res) => {
 
-    if(req.blacklisted == true){
+    if (req.blacklisted == true) {
         return res.status(403).json({ message: "Token en la blacklist" });
     }
 
-    const username=req.params.username;
+    const username = req.params.username;
 
-    if(!username){
-        return res.status(400).json({message: "No se ha especificado el username del usuario"});
+    if (!username) {
+        return res.status(400).json({ message: "No se ha especificado el username del usuario" });
     }
 
-    const encontrarUsuario= await User.findOne( {username: username.toLowerCase()} ).exec();
+    const encontrarUsuario = await User.findOne({ username: username.toLowerCase() }).exec();
 
-    if(!encontrarUsuario){
-        return res.status(404).json({message: "No se ha encontrado el usuario"});
+    if (!encontrarUsuario) {
+        return res.status(404).json({ message: "No se ha encontrado el usuario" });
     }
 
     res.status(200).json({
@@ -256,12 +256,12 @@ const getDetailsUser= asyncHandler( async (req,res) => {
 //Acciones JWT
 
 //Verificar Refresh Token
-const verifyRefreshToken= asyncHandler( async (req, res) => {
+const verifyRefreshToken = asyncHandler(async (req, res) => {
     const { refreshToken } = req.cookies;
-    
-    if(!refreshToken){
+
+    if (!refreshToken) {
         console.log('❌ No hay refreshToken en cookies');
-        return res.status(401).json({message: "No autorizado, no hay refresh token"});
+        return res.status(401).json({ message: "No autorizado, no hay refresh token" });
     }
 
     //Comprobamos si el refresh token existe en la base de datos
@@ -274,84 +274,84 @@ const verifyRefreshToken= asyncHandler( async (req, res) => {
         return res.status(403).json({ message: "Refresh token en la blacklist" });
     }
 
-    if(!storedToken){
+    if (!storedToken) {
         console.log('❌ Refresh token no encontrado en BD');
-        return res.status(403).json({message: "Refresh token no valido"});
+        return res.status(403).json({ message: "Refresh token no valido" });
     }
 
     //Verificamos el token
     jwt.verify(
         refreshToken,
         process.env.JWT_SECRET,
-        { ignoreExpiration: true }, 
+        { ignoreExpiration: true },
         async (err, decoded) => {
-        // Si el token está expirado, añadir a blacklist
-        if(err && err.name === 'TokenExpiredError'){
-            // Decodificar para obtener el id del usuario
-            const decodedExpired = jwt.decode(refreshToken) || {};
-            const userIdFromExpired = decodedExpired.id || decodedExpired._id || null;
+            // Si el token está expirado, añadir a blacklist
+            if (err && err.name === 'TokenExpiredError') {
+                // Decodificar para obtener el id del usuario
+                const decodedExpired = jwt.decode(refreshToken) || {};
+                const userIdFromExpired = decodedExpired.id || decodedExpired._id || null;
 
-            if (userIdFromExpired) {
-                try {
-                    const blackListToken = new BlackListToken({
-                        userId: userIdFromExpired,
-                        token: refreshToken
-                    });
-                    await blackListToken.save();
-                } catch (e) {
-                    console.warn('No se pudo guardar BlackListToken (expired):', e.message);
+                if (userIdFromExpired) {
+                    try {
+                        const blackListToken = new BlackListToken({
+                            userId: userIdFromExpired,
+                            token: refreshToken
+                        });
+                        await blackListToken.save();
+                    } catch (e) {
+                        console.warn('No se pudo guardar BlackListToken (expired):', e.message);
+                    }
+                } else {
+                    console.warn('Decoded token tiene no contiene id; no se añade a blacklist (expired).');
                 }
-            } else {
-                console.warn('Decoded token tiene no contiene id; no se añade a blacklist (expired).');
+
+                await refreshTokenStore.deleteOne({ refreshToken });
+
+                return res.status(401).json({ message: "Refresh token caducado y agregado a blacklist" });
             }
 
-            await refreshTokenStore.deleteOne({ refreshToken });
+            // Verificación adicional de expiración (por si ignoreExpiration está activo)
+            const isExpired = !decoded || (decoded.exp && (Date.now() >= decoded.exp * 1000));
+            if (isExpired) {
+                const userIdFromDecoded = decoded && (decoded.id || decoded._id) || null;
 
-            return res.status(401).json({ message: "Refresh token caducado y agregado a blacklist" });
-        }
-
-        // Verificación adicional de expiración (por si ignoreExpiration está activo)
-        const isExpired = !decoded || (decoded.exp && (Date.now() >= decoded.exp * 1000));
-        if (isExpired) {
-            const userIdFromDecoded = decoded && (decoded.id || decoded._id) || null;
-
-            if (userIdFromDecoded) {
-                try {
-                    const blackListToken = new BlackListToken({
-                        userId: userIdFromDecoded,
-                        token: refreshToken
-                    });
-                    await blackListToken.save();
-                } catch (e) {
-                    console.warn('No se pudo guardar BlackListToken (isExpired):', e.message);
+                if (userIdFromDecoded) {
+                    try {
+                        const blackListToken = new BlackListToken({
+                            userId: userIdFromDecoded,
+                            token: refreshToken
+                        });
+                        await blackListToken.save();
+                    } catch (e) {
+                        console.warn('No se pudo guardar BlackListToken (isExpired):', e.message);
+                    }
+                } else {
+                    console.warn('Decoded token no contiene id; no se añade a blacklist (isExpired).');
                 }
-            } else {
-                console.warn('Decoded token no contiene id; no se añade a blacklist (isExpired).');
+
+                await refreshTokenStore.deleteOne({ refreshToken });
+
+                return res.status(401).json({ message: "Refresh token caducado y agregado a blacklist" });
+            }
+            // //Si es valido, comprobamos que el usuario existe
+            const userId = decoded.id;
+            const user = await User.findById(userId);
+
+            if (!user) {
+                refreshTokenStore.deleteOne({ refreshToken });
+                return res.status(401).json({ message: "Usuario no valido para este refresh token" });
             }
 
-            await refreshTokenStore.deleteOne({ refreshToken });
+            //Si el token es valido, generamos un nuevo access token
+            const newAccessToken = await generateAccessToken(user);
+            // const newRefreshToken = await generateRefreshToken(user);
 
-            return res.status(401).json({ message: "Refresh token caducado y agregado a blacklist" });
-        }
-        // //Si es valido, comprobamos que el usuario existe
-        const userId = decoded.id;
-        const user = await User.findById(userId);
-
-        if(!user){
-            refreshTokenStore.deleteOne({ refreshToken });
-            return res.status(401).json({message: "Usuario no valido para este refresh token"});
-        }
-
-        //Si el token es valido, generamos un nuevo access token
-        const newAccessToken = await generateAccessToken(user);
-        // const newRefreshToken = await generateRefreshToken(user);
-
-        res.status(200).json({ accessToken: newAccessToken });
-    });
+            res.status(200).json({ accessToken: newAccessToken });
+        });
 });
 
 //Access 1h
-const generateAccessToken= asyncHandler( async (user) => {
+const generateAccessToken = asyncHandler(async (user) => {
     //Definimos la estructura del payload
     const payload = {
         id: user.id,
@@ -361,21 +361,21 @@ const generateAccessToken= asyncHandler( async (user) => {
     };
 
     //Generamos el token, recordar añadir ACCESS_TOKEN_EXPIRATION a .env
-    const accessToken = await jwt.sign(payload, process.env.JWT_SECRET, 
+    const accessToken = await jwt.sign(payload, process.env.JWT_SECRET,
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 
     return accessToken;
 });
 
 //Refresh 7d
-const generateRefreshToken= asyncHandler( async (user) => {
+const generateRefreshToken = asyncHandler(async (user) => {
     //Definimos la estructura del payload
     const payload = {
         id: user.id,
     };
 
     //Generamos el token, recordar añadir REFRESH_TOKEN_EXPIRATION a .env
-    const refreshToken = await jwt.sign(payload, process.env.JWT_SECRET, 
+    const refreshToken = await jwt.sign(payload, process.env.JWT_SECRET,
         { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
 
     return refreshToken;
