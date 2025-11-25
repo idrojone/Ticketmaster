@@ -47,18 +47,13 @@ async function createCarrito(req, res) {
             }
         }
 
-
-        user.carritos.push({
-            conciertos: conciertosData,
-            merchandising: merchandisingData,
-            precio: precioTotal
-        });
-
         const carrito = await Carrito.create({
             userId,
             conciertos: conciertosData,
             merchandising: merchandisingData,
-            precio: precioTotal
+            precio: precioTotal,
+            status: "PENDING",
+            is_active: true
         });
 
         return res.status(201).json(carrito);
