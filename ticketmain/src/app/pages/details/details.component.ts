@@ -13,6 +13,7 @@ import { ArticleComments } from "@shared/article-comments/article-comments";
 import { UserService } from "src/app/core/services/user.service";
 import { ProfileService } from "src/app/core/services/profile.service";
 import Swal from 'sweetalert2';
+import { CartService } from "src/app/core/services/cart.service";
 
 
 @Component({
@@ -46,6 +47,7 @@ export class DetailsComponent {
     private router = inject(Router);
     private conciertoService = inject(ConciertosService);
     private userService = inject(UserService);
+    private cartService = inject(CartService);
 
     constructor() {
         this.slug = this.route.snapshot.paramMap.get('slug');
@@ -177,6 +179,24 @@ export class DetailsComponent {
             showConfirmButton: false,
             timer: 2000
         });
+    }
+
+    añadirCarrito(): void {
+        //Luego hacemos un select para ver si existe
+        this.cartService.getCarrito().subscribe({
+            next: (res) => {
+                console.log(res);
+                this.carrito.set(res);
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        })  
+        //Si existe hacemos un update
+
+        //Si al hacer el select no existe creamos uno
+
+        //Para finalizar un sweet alert de que nos diga si queremos seguir compranddo "redirect a shop" o ir al carrito "redirect a la page carrito"
     }
 
 }

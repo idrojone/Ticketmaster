@@ -1,7 +1,6 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-total-carrito',
@@ -10,14 +9,11 @@ import { CartService } from 'src/app/core/services/cart.service';
   styleUrl: './total-carrito.css'
 })
 export class TotalCarrito {
-  private cartService = inject(CartService);
-
-  // Signals computadas para los cálculos
-  subtotal = computed(() => this.cartService.getTotal());
-  descuento = signal(0); // Puede implementarse lógica de descuentos
+  // TODO: Integrar con el nuevo CartService basado en API
+  subtotal = signal(0);
+  descuento = signal(0);
   gastosGestion = computed(() => {
     const subtotalValue = this.subtotal();
-    // 2% de gastos de gestión
     return subtotalValue * 0.02;
   });
   
@@ -26,8 +22,7 @@ export class TotalCarrito {
   });
 
   procederAlPago(): void {
-    // Implementar lógica de pago
     console.log('Procediendo al pago...');
-    // TODO: Redirigir a página de checkout
+    // TODO: Implementar lógica de pago con API
   }
 }

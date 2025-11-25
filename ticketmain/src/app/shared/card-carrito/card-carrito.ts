@@ -1,7 +1,6 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItem } from 'src/app/core/models/cart-item.model';
-import { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-card-carrito',
@@ -11,28 +10,19 @@ import { CartService } from 'src/app/core/services/cart.service';
 })
 export class CardCarrito {
   @Input() producto!: CartItem;
-  
-  private cartService = inject(CartService);
 
   incrementarCantidad(): void {
-    this.cartService.updateQuantity(
-      this.producto.id, 
-      this.producto.type, 
-      this.producto.cantidad + 1
-    );
+    // TODO: Implementar con el nuevo CartService que usa API
+    console.log('Incrementar cantidad:', this.producto.id);
   }
 
   decrementarCantidad(): void {
-    if (this.producto.cantidad > 1) {
-      this.cartService.updateQuantity(
-        this.producto.id, 
-        this.producto.type, 
-        this.producto.cantidad - 1
-      );
-    }
+    // TODO: Implementar con el nuevo CartService que usa API
+    console.log('Decrementar cantidad:', this.producto.id);
   }
 
   eliminarProducto(): void {
-    this.cartService.removeItem(this.producto.id, this.producto.type);
+    // TODO: Implementar con el nuevo CartService que usa API
+    console.log('Eliminar producto:', this.producto.id);
   }
 }

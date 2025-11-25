@@ -31,25 +31,20 @@ export class ListCarrito {
 
   //Cargamos los productos del carrito
   private async LoadCarrito() {
-    this.loading.set(true);
-    
-    // Suscribirse a los cambios del carrito
-    this.cartService.cartItems$.subscribe(items => {
-      this.carrito.set(items);
-      this.calcularPrecioTotal(items);
-      this.loading.set(false);
-    });
-    
-    // Cargar items iniciales
-    const items = this.cartService.getCartItems();
-    this.carrito.set(items);
-    this.calcularPrecioTotal(items);
-    this.loading.set(false);
+    // this.loading.set(true);
+    this.cartService.getCarrito().subscribe({
+      next: (res) => {
+        console.log(res);
+        this.carrito.set(res);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
   }
 
   private async calcularPrecioTotal(carrito: CartItem[]){
-    const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    this.precioTotal.set(total);
+
   }
   
 }
