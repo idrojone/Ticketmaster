@@ -13,8 +13,8 @@ dotenv.config();
 //Habilita CORS para todas las rutas
 const corsOptions = {
     origin: ['http://localhost:3000', 'http://localhost:4200'],
-    credentials:true,
-    optionsSuccessStatus:200
+    credentials: true,
+    optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
@@ -47,8 +47,9 @@ require('../routes/carousel.routes.js')(app);
 require('../routes/auth.routes.js')(app);
 require('../routes/comentarios.routes.js')(app);
 require('../routes/profile.routes.js')(app);
+require('../routes/carrito.routes.js')(app);
 ////////////////////////
 
 app.listen(PORT, BIND_HOST, () => {
-     console.log(`Servidor Express escuchando en http://${BIND_HOST}:${PORT}`);
+    console.log(`Servidor Express escuchando en http://${BIND_HOST}:${PORT}`);
 });
