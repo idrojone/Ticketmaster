@@ -1,6 +1,7 @@
 const Carrito = require('../models/carrito.model');
 const Concierto = require('../models/concierto.model');
 const Merchandising = require('../models/merchandising.model');
+const User = require('../models/user.model');
 
 async function createCarrito(req, res) {
     console.log(req.id);
@@ -8,6 +9,11 @@ async function createCarrito(req, res) {
     try {
         const { conciertos = [], merchandising = [] } = req.body;
         const userId = req.id;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
 
         let precioTotal = 0;
         const conciertosData = [];
@@ -40,6 +46,13 @@ async function createCarrito(req, res) {
                 });
             }
         }
+
+
+        user.carritos.push({
+            conciertos: conciertosData,
+            merchandising: merchandisingData,
+            precio: precioTotal
+        });
 
         const carrito = await Carrito.create({
             userId,
@@ -115,10 +128,54 @@ async function updateCarrito(req, res) {
 }
 
 async function getCarrito(req, res) {
-    console.log(req.id);
+    try {
+        console.log(req.id);
+        const user = await User.findById(req.id);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        const carrito = await Carrito.findOne({ userId: req.id, is_active: true, status: 'PENDING' });
+        if (!carrito) {
+            return res.status(404).json({ error: 'Carrito no encontrado o inactivo' });
+        }
+        return res.status(200).json(carrito);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+async function updateStatus(req, res) {
+    const STATUS = ['PENDING', 'ACCEPTED', 'REJECTED'];
+    try {
+
+        if (!STATUS.includes(req.body.status)) {
+            return res.status(400).json({ error: 'Estado no válido' });
+        }
+
+        const carrito = await Carrito.findById(req.params.id);
+        if (!carrito) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+        carrito.status = req.body.status;
+        const carritoActualizado = await carrito.save();
+        return res.status(200).json(carritoActualizado);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+async function updateActive(req, res) {
     try {
         const carrito = await Carrito.findById(req.params.id);
-        return res.status(200).json(carrito);
+        if (!carrito) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+        carrito.is_active = req.body.is_active;
+        const carritoActualizado = await carrito.save();
+        return res.status(200).json(carritoActualizado);
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: error.message });
@@ -128,5 +185,7 @@ async function getCarrito(req, res) {
 module.exports = {
     createCarrito,
     getCarrito,
-    updateCarrito
+    updateCarrito,
+    updateActive,
+    updateStatus
 };
