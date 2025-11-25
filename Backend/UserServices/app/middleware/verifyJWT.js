@@ -47,9 +47,9 @@ const verifyJWT = async (req, res, next) => {
 
             if (!refreshToken) {
                 console.warn('Access token expirado/blacklist y no hay refresh token en cookies');
-                return res.status(401).json({ 
+                return res.status(401).json({
                     message: "Access token expirado. No hay refresh token disponible.",
-                    error: "no_refresh_token" 
+                    error: "no_refresh_token"
                 });
             }
 
@@ -58,9 +58,9 @@ const verifyJWT = async (req, res, next) => {
 
             if (!storedRefreshToken) {
                 console.warn('Refresh token no encontrado en BD');
-                return res.status(401).json({ 
+                return res.status(401).json({
                     message: "Refresh token no válido",
-                    error: "invalid_refresh" 
+                    error: "invalid_refresh"
                 });
             }
 
@@ -68,9 +68,9 @@ const verifyJWT = async (req, res, next) => {
             const isRefreshBlacklisted = await BlackListToken.findOne({ token: refreshToken });
             if (isRefreshBlacklisted) {
                 console.warn('Refresh token está en blacklist');
-                return res.status(401).json({ 
+                return res.status(401).json({
                     message: "Refresh token en blacklist",
-                    error: "refresh_blacklisted" 
+                    error: "refresh_blacklisted"
                 });
             }
 
@@ -83,20 +83,20 @@ const verifyJWT = async (req, res, next) => {
                     // Error de firma o formato del refresh token
                     if (refreshErr && refreshErr.name !== 'TokenExpiredError') {
                         console.warn('Refresh token inválido (firma/formato):', refreshErr.message);
-                        return res.status(401).json({ 
+                        return res.status(401).json({
                             message: "Refresh token inválido",
-                            error: "refresh_invalid_signature" 
+                            error: "refresh_invalid_signature"
                         });
                     }
 
                     // Refresh token está expirado
                     if (refreshErr && refreshErr.name === 'TokenExpiredError') {
                         console.warn('Refresh token expirado');
-                        
+
                         // Marcar el refresh token como expirado (agregar a blacklist)
                         const decodedRefreshExpired = jwt.decode(refreshToken) || {};
                         const userIdFromRefreshExpired = decodedRefreshExpired.id || null;
-                        
+
                         if (userIdFromRefreshExpired) {
                             try {
                                 await BlackListToken.create({
@@ -109,9 +109,9 @@ const verifyJWT = async (req, res, next) => {
                             }
                         }
 
-                        return res.status(401).json({ 
+                        return res.status(401).json({
                             message: "Refresh token expirado. Por favor, inicie sesión nuevamente.",
-                            error: "refresh_expired" 
+                            error: "refresh_expired"
                         });
                     }
 
@@ -119,7 +119,7 @@ const verifyJWT = async (req, res, next) => {
                     const isRefreshExpired = refreshDecoded && (Date.now() >= refreshDecoded.exp * 1000);
                     if (isRefreshExpired) {
                         console.warn('Refresh token expirado (verificación manual)');
-                        
+
                         const userIdFromRefreshDecoded = refreshDecoded && (refreshDecoded.id || null);
                         if (userIdFromRefreshDecoded) {
                             try {
@@ -133,9 +133,9 @@ const verifyJWT = async (req, res, next) => {
                             }
                         }
 
-                        return res.status(401).json({ 
+                        return res.status(401).json({
                             message: "Refresh token expirado. Por favor, inicie sesión nuevamente.",
-                            error: "refresh_expired" 
+                            error: "refresh_expired"
                         });
                     }
 
@@ -147,21 +147,21 @@ const verifyJWT = async (req, res, next) => {
                         user = await User.findById(userId);
                     } catch (e) {
                         console.warn('Error buscando usuario por ID:', e.message);
-                        return res.status(401).json({ 
+                        return res.status(401).json({
                             message: "Usuario no válido",
-                            error: "invalid_user" 
+                            error: "invalid_user"
                         });
                     }
 
                     if (!user) {
                         console.warn('Usuario no encontrado para el refresh token');
                         await RefreshTokenStore.deleteOne({ refreshToken });
-                        return res.status(401).json({ 
+                        return res.status(401).json({
                             message: "Usuario no encontrado",
-                            error: "user_not_found" 
+                            error: "user_not_found"
                         });
                     }
-                    
+
                     // Generar nuevo access token
                     try {
                         const newAccessToken = jwt.sign(
@@ -188,9 +188,9 @@ const verifyJWT = async (req, res, next) => {
                         next();
                     } catch (e) {
                         console.error('Error generando nuevo access token:', e.message);
-                        return res.status(500).json({ 
+                        return res.status(500).json({
                             message: "Error regenerando token",
-                            error: "token_generation_error" 
+                            error: "token_generation_error"
                         });
                     }
                 }
