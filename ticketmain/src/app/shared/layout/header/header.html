@@ -26,6 +26,15 @@
         </nav>
 
         @if(loggedIn) {
+            @if(user_type_signal() === 'USER') {
+                <div class="items-center">
+                    <!-- Aqui va la entrada del carret -->
+                    <button class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2" [routerLink]="['/cart']">
+                        <i class="fas fa-shopping-cart"></i>
+                        Carrito
+                    </button>
+                </div>
+            }
             <div class="items-center">
                 <button z-dropdown [zDropdownMenu]="menu" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2">
                     Bienvenido {{ currentUser?.username }}

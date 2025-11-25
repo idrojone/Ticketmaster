@@ -1,0 +1,25 @@
+/* Página principal del carrito */
+.cart-page {
+  @apply min-h-screen bg-gray-50;
+}
+
+.cart-header {
+  @apply bg-white shadow-sm border-b border-gray-200;
+  @apply py-6;
+}
+
+.cart-header-content {
+  @apply max-w-7xl mx-auto px-4;
+}
+
+.cart-titulo {
+  @apply text-3xl font-bold text-gray-900;
+}
+
+.cart-subtitulo {
+  @apply text-sm text-gray-600 mt-1;
+}
+
+.cart-body {
+  @apply max-w-7xl mx-auto px-4 py-8;
+}
