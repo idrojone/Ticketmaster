@@ -55,6 +55,65 @@ async function createCarrito(req, res) {
     }
 }
 
+async function updateCarrito(req, res) {
+    console.log(req.id);
+    try {
+        const { conciertos = [], merchandising = [] } = req.body;
+
+        const carrito = await Carrito.findById(req.params.id);
+        if (!carrito) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+
+        if (carrito.userId.toString() !== req.id) {
+            return res.status(403).json({ error: 'No tienes permiso para editar este carrito' });
+        }
+
+        let precioTotal = 0;
+        const conciertosData = [];
+        const merchandisingData = [];
+
+        if (conciertos.length > 0) {
+            for (const item of conciertos) {
+                const concierto = await Concierto.findOne({ slug: item.slug });
+                if (!concierto) {
+                    return res.status(404).json({ error: `Concierto no encontrado: ${item.slug}` });
+                }
+                precioTotal += concierto.precio * item.cantidad;
+                conciertosData.push({
+                    conciertoId: concierto._id,
+                    cantidad: item.cantidad
+                });
+            }
+        }
+
+        if (merchandising.length > 0) {
+            for (const item of merchandising) {
+                const merch = await Merchandising.findById(item.merchandisingId);
+                if (!merch) {
+                    return res.status(404).json({ error: `Merchandising no encontrado: ${item.merchandisingId}` });
+                }
+                precioTotal += merch.precio * item.cantidad;
+                merchandisingData.push({
+                    merchandisingId: item.merchandisingId,
+                    cantidad: item.cantidad
+                });
+            }
+        }
+
+        carrito.conciertos = conciertosData;
+        carrito.merchandising = merchandisingData;
+        carrito.precio = precioTotal;
+
+        const carritoActualizado = await carrito.save();
+
+        return res.status(200).json(carritoActualizado);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 async function getCarrito(req, res) {
     console.log(req.id);
     try {
@@ -68,5 +127,6 @@ async function getCarrito(req, res) {
 
 module.exports = {
     createCarrito,
-    getCarrito
+    getCarrito,
+    updateCarrito
 };
