@@ -1,0 +1,49 @@
+/* Lista de productos del carrito */
+.list-productos {
+  @apply space-y-4;
+}
+
+/* Resumen del carrito */
+.resumen-carrito {
+  @apply mt-6;
+}
+
+/* Contenedor principal del carrito */
+.carrito-container {
+  @apply max-w-7xl mx-auto px-4 py-8;
+}
+
+.carrito-grid {
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.carrito-productos-section {
+  @apply lg:col-span-2;
+}
+
+.carrito-resumen-section {
+  @apply lg:col-span-1;
+}
+
+/* Estado vacío */
+.carrito-vacio {
+  @apply text-center py-12;
+}
+
+.carrito-vacio-icono {
+  @apply text-6xl text-gray-300 mb-4;
+}
+
+.carrito-vacio-titulo {
+  @apply text-2xl font-semibold text-gray-800 mb-2;
+}
+
+.carrito-vacio-mensaje {
+  @apply text-gray-600 mb-6;
+}
+
+.btn-seguir-comprando {
+  @apply px-6 py-3 bg-primary text-primary-foreground rounded-lg;
+  @apply hover:opacity-90 transition-opacity;
+  @apply font-semibold;
+}

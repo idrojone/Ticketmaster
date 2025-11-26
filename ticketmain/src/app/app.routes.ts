@@ -42,5 +42,9 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/DashboardEmpresa/dashboard-empresa').then(m => m.DashboardEmpresa),
         loadChildren: () => import('./pages/DashboardEmpresa/dashboard-empresa.routes').then(m => m.dashboardEmpresaRoutes),
         canActivate: [ UserTypeGuard ]
+    },
+    {
+        path: 'cart',
+        loadComponent: () => import('./pages/cart/cart').then(m => m.Cart)
     }
 ];
