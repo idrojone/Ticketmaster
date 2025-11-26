@@ -181,22 +181,37 @@ export class DetailsComponent {
         });
     }
 
-    añadirCarrito(): void {
-        //Luego hacemos un select para ver si existe
-        this.cartService.getCarrito().subscribe({
+    async anadirCarrito(): Promise<void> {
+        console.log("Añadiendo al carrito");
+        this.cartService.carritoMaster(
+            [
+                {
+                    "slug": this.slug!,
+                    "cantidad": 1
+                }
+            ]
+        ).subscribe({
             next: (res) => {
                 console.log(res);
-                // this.carrito.set(res);
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Concierto añadido al carrito!',
+                    text: '¿Quieres seguir comprando o ir al carrito?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ir al carrito',
+                    cancelButtonText: 'Seguir comprando'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.router.navigate(['/cart']);
+                    } else {
+                        this.router.navigate(['/shop']);
+                    }
+                });
             },
             error: (err) => {
                 console.log(err);
             }
-        })  
-        //Si existe hacemos un update
-
-        //Si al hacer el select no existe creamos uno
-
-        //Para finalizar un sweet alert de que nos diga si queremos seguir compranddo "redirect a shop" o ir al carrito "redirect a la page carrito"
+        })
     }
 
 }

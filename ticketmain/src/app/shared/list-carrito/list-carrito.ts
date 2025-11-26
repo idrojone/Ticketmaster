@@ -6,6 +6,7 @@ import { CartItem } from 'src/app/core/models/cart-item.model';
 import { CardCarrito } from '../card-carrito/card-carrito';
 import { TotalCarrito } from '../total-carrito/total-carrito';
 
+
 @Component({
   selector: 'app-list-carrito',
   imports: [
@@ -20,6 +21,8 @@ import { TotalCarrito } from '../total-carrito/total-carrito';
 export class ListCarrito {
   public carrito = signal<CartItem[]>([]);
   public precioTotal = signal<number | null>(null);
+  public conciertos = signal([]);
+  public merchandising = signal([]);
 
   public loading= signal(false)
 
@@ -36,15 +39,12 @@ export class ListCarrito {
       next: (res) => {
         console.log(res);
         this.carrito.set(res);
+        this.conciertos.set(res.conciertos);
+        this.merchandising.set(res.merchandising);
       },
       error: (err) => {
         console.log(err);
       }
     })
   }
-
-  private async calcularPrecioTotal(carrito: CartItem[]){
-
-  }
-  
 }

@@ -15,11 +15,15 @@ export class CartService {
     }
 
     updateCarrito(id:string):Observable<any>{
-        return this.ApiService.get('/carrito/:id');
+        return this.ApiService.put('/carrito/:id');
     }
 
-    createCarrito():Observable<any>{
-        return this.ApiService.get('/carrito');
+    createCarrito(data:any):Observable<any>{
+        return this.ApiService.post('/carrito',data);
+    }
+
+    carritoMaster(conciertos: any[] = [], merchandising: any[] = []): Observable<any> {
+        return this.ApiService.post('/carrito/master', { conciertos, merchandising });
     }
 
 }
