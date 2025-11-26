@@ -186,7 +186,7 @@ export class DetailsComponent {
         this.cartService.getCarrito().subscribe({
             next: (res) => {
                 console.log(res);
-                this.carrito.set(res);
+                // this.carrito.set(res);
             },
             error: (err) => {
                 console.log(err);
