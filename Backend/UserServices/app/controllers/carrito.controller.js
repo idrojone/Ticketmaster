@@ -21,6 +21,11 @@ async function createCarrito(req, res) {
 
         if (conciertos.length > 0) {
             for (const item of conciertos) {
+
+
+                if (item.cantidad < 1) {
+                    return res.status(400).json({ error: 'Cantidad debe ser mayor a 0' });
+                }
                 const concierto = await Concierto.findOne({ slug: item.slug });
                 if (!concierto) {
                     return res.status(404).json({ error: `Concierto no encontrado: ${item.slug}` });
@@ -35,6 +40,10 @@ async function createCarrito(req, res) {
 
         if (merchandising.length > 0) {
             for (const item of merchandising) {
+
+                if (item.cantidad < 1) {
+                    return res.status(400).json({ error: 'Cantidad debe ser mayor a 0' });
+                }
                 const merch = await Merchandising.findById(item.merchandisingId);
                 if (!merch) {
                     return res.status(404).json({ error: `Merchandising no encontrado: ${item.merchandisingId}` });
@@ -68,7 +77,7 @@ async function updateCarrito(req, res) {
     try {
         const { conciertos = [], merchandising = [] } = req.body;
 
-        const carrito = await Carrito.findById(req.params.id);
+        const carrito = await Carrito.findOne({ userId: req.id, is_active: true, status: 'PENDING' });
         if (!carrito) {
             return res.status(404).json({ error: 'Carrito no encontrado' });
         }
@@ -83,6 +92,9 @@ async function updateCarrito(req, res) {
 
         if (conciertos.length > 0) {
             for (const item of conciertos) {
+                if (item.cantidad < 1) {
+                    return res.status(400).json({ error: 'Cantidad debe ser mayor a 0' });
+                }
                 const concierto = await Concierto.findOne({ slug: item.slug });
                 if (!concierto) {
                     return res.status(404).json({ error: `Concierto no encontrado: ${item.slug}` });
@@ -97,6 +109,9 @@ async function updateCarrito(req, res) {
 
         if (merchandising.length > 0) {
             for (const item of merchandising) {
+                if (item.cantidad < 1) {
+                    return res.status(400).json({ error: 'Cantidad debe ser mayor a 0' });
+                }
                 const merch = await Merchandising.findById(item.merchandisingId);
                 if (!merch) {
                     return res.status(404).json({ error: `Merchandising no encontrado: ${item.merchandisingId}` });
