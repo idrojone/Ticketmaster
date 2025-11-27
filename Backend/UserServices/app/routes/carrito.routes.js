@@ -7,4 +7,6 @@ module.exports = (app) => {
     app.get('/carrito/get', verifyJWT, carritoController.getCarrito);
     app.put('/carrito/:id/status', verifyJWT, carritoController.updateStatus);
     app.put('/carrito/:id/active', verifyJWT, carritoController.updateActive);
+    app.post('/carrito/master', verifyJWT, carritoController.carritoMaster);
+
 }
