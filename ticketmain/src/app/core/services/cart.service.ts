@@ -9,17 +9,17 @@ export class CartService {
 
     private ApiService = inject(ApiService);
 
-    getCarrito():Observable<any>{
+    getCarrito(): Observable<any> {
         console.log("Llamando a carrito get");
         return this.ApiService.get('/carrito/get');
     }
-
-    updateCarrito(id:string):Observable<any>{
+    // -> este no se usa
+    updateCarrito(id: string): Observable<any> {
         return this.ApiService.put('/carrito/:id');
     }
-
-    createCarrito(data:any):Observable<any>{
-        return this.ApiService.post('/carrito',data);
+    // este no
+    createCarrito(data: any): Observable<any> {
+        return this.ApiService.post('/carrito', data);
     }
 
     carritoMaster(conciertos: any[] = [], merchandising: any[] = []): Observable<any> {

@@ -230,7 +230,22 @@ async function updateStatus(req, res) {
 }
 
 async function updateActive(req, res) {
-
+    const user = await User.findById(req.id);
+    if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    const carrito = await Carrito.findOne({ userId: req.id, is_active: true, status: 'PENDING' });
+    if (!carrito) {
+        return res.status(404).json({ error: 'Carrito no encontrado o inactivo' });
+    }
+    carrito.is_active = req.body.is_active;
+    try {
+        const carritoActualizado = await carrito.save();
+        return res.status(200).json(carritoActualizado);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    }
 }
 
 module.exports = {
