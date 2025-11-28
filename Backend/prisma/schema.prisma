@@ -222,11 +222,6 @@ model Concierto {
     entradas Entrada[]
 
     /**
-     * Relación con Ventas
-     */
-    ventas Venta[]
-
-    /**
      * Relación con Comentarios
      */
     comentarios Comentario[]
@@ -284,41 +279,6 @@ model Entrada {
     @@map("entradas")
 }
 
-/**
- * Modelos Ventas, Merchandising, Pagos, CategoriasMerchandising
- */
-
-model Venta {
-    id     String @id @default(auto()) @map("_id") @db.ObjectId
-    /**
-     * Relacion con Usuario
-     */
-    userId String @db.ObjectId
-    user   User   @relation(fields: [userId], references: [id])
-
-    conciertoId String?    @db.ObjectId
-    concierto   Concierto? @relation(fields: [conciertoId], references: [id])
-
-    merchandisingId String?        @db.ObjectId
-    merchandising   Merchandising? @relation(fields: [merchandisingId], references: [id])
-
-    // conciertoID, stock, merchandisingId
-
-    /**
-     * Relación con Pagos
-     */
-    pagos Pagos[]
-
-    total     Float
-    fecha     DateTime @default(now())
-    status    Status   @default(ACCEPTED)
-    is_active Boolean  @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("ventas")
-}
-
 model Merchandising {
     id          String  @id @default(auto()) @map("_id") @db.ObjectId
     nombre      String
@@ -339,11 +299,6 @@ model Merchandising {
     categoriaId String                 @db.ObjectId
     categoria   CategoriaMerchandising @relation(fields: [categoriaId], references: [id])
 
-    /**
-     * Relación con Ventas
-     */
-    ventas Venta[]
-
     status    Status   @default(ACCEPTED)
     is_active Boolean  @default(true)
     createdAt DateTime @default(now())
@@ -354,19 +309,53 @@ model Merchandising {
 }
 
 model Pagos {
-    id      String   @id @default(auto()) @map("_id") @db.ObjectId
-    ventaId String   @db.ObjectId
-    venta   Venta    @relation(fields: [ventaId], references: [id])
-    metodo  String
-    monto   Float
-    fecha   DateTime @default(now())
-
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    ventaId   String   @db.ObjectId
+    venta     Venta    @relation(fields: [ventaId], references: [id])
+    metodo    String
+    monto     Float
+    fecha     DateTime @default(now())
     status    Status   @default(ACCEPTED)
     is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@map("pagos")
+}
+
+/**
+ * Modelos Ventas, Merchandising, Pagos, CategoriasMerchandising
+ */
+
+model Venta {
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
+    /**
+     * Relacion con Usuario
+     */
+    userId String @db.ObjectId
+    user   User   @relation(fields: [userId], references: [id])
+
+    // conciertoID, stock, merchandisingId
+
+    carritoId String  @db.ObjectId
+    carrito   Carrito @relation(fields: [carritoId], references: [id])
+
+    conciertos    CarritoConcierto[]
+    merchandising CarritoMerchandising[]
+
+    /**
+     * Relación con Pagos
+     */
+    pagos Pagos[]
+
+    total     Float
+    fecha     DateTime @default(now())
+    status    Status   @default(ACCEPTED)
+    is_active Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("ventas")
 }
 
 model CategoriaMerchandising {
@@ -401,12 +390,13 @@ model Carrito {
     conciertos    CarritoConcierto[]
     merchandising CarritoMerchandising[]
 
-    precio Float
+    precio Float // redundante
 
     status    Status   @default(PENDING)
     is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    ventas    Venta[]
 
     @@map("carritos")
 }
