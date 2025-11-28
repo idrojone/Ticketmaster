@@ -1,41 +1,41 @@
-// async function createOrder(req, res) {
-//     const userId = req.userId;
-//     const { carritoId, conciertos, merchandising } = req.body;
+const User = require('../models/user.model');
+const Cart = require('../models/carrito.model');
+const axios = require('axios');
+
+async function createOrder(req, res) {
+
+    const userId = req.id;
 
 
-// }
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'Usuario no encontrado'
+        });
+    }
 
-// module.exports = {
-//     createOrder
-// }
+    const cart = await Cart.findById(req.body.cartId);
+    if (!cart) {
+        return res.status(404).json({
+            success: false,
+            message: 'Carrito no encontrado'
+        });
 
-// model Venta {
-//     id     String @id @default (auto()) @map("_id") @db.ObjectId
-//     /**
-//      * Relacion con Usuario
-//      */
-//     userId String @db.ObjectId
-//     user   User @relation(fields: [userId], references: [id])
+    }
 
-//     // conciertoID, stock, merchandisingId
+    const response = await axios.post('http://localhost:3010/order', {
+        cartId: req.body.cartId
+    });
 
-//     carritoId String @db.ObjectId
-//     carrito   Carrito @relation(fields: [carritoId], references: [id])
+    return res.status(200).json({
+        success: true,
+        message: 'Orden creada exitosamente',
+        data: response.data
+    });
+}
 
-//     conciertos    CarritoConcierto[]
-//     merchandising CarritoMerchandising[]
 
-//     /**
-//      * Relación con Pagos
-//      */
-//     pagos Pagos[]
-
-//     total     Float
-//     fecha     DateTime @default (now())
-//     status    Status @default (ACCEPTED)
-//     is_active Boolean @default (true)
-//     createdAt DateTime @default (now())
-//     updatedAt DateTime @updatedAt
-
-//     @@map("ventas")
-// }
+module.exports = {
+    createOrder
+}

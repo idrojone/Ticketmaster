@@ -48,8 +48,8 @@ require('../routes/auth.routes.js')(app);
 require('../routes/comentarios.routes.js')(app);
 require('../routes/profile.routes.js')(app);
 require('../routes/carrito.routes.js')(app);
-// require('../routes/order.routes.js')(app);
-// require('../routes/merchandising.routes.js')(app);
+require('../routes/order.routes.js')(app);
+require('../routes/merchandising.routes.js')(app);
 ////////////////////////
 
 app.listen(PORT, BIND_HOST, () => {
