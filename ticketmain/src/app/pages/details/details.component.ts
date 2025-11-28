@@ -216,7 +216,8 @@ export class DetailsComponent {
     }
 
     async dialogMerch() {
-
+        // const dialogRef = this.dialogService.openDialog(DialogMerchComponent);
+        // const result = await dialogRef.afterClosed().toPromise();
     }
 
 }
