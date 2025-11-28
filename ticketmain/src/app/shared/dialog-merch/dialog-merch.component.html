@@ -1,0 +1,43 @@
+<!-- Contenido del diálogo de merchandising -->
+<div class="merch-container">
+  
+  <!-- Descripción -->
+  <p class="descripcion">
+    ¡Llévate un recuerdo especial del concierto!
+  </p>
+  
+  <!-- Grid de productos usando z-input style -->
+  <div class="productos-grid">
+    
+    <!-- Cada producto -->
+    <div 
+      *ngFor="let producto of productos" 
+      class="producto-card"
+      (click)="seleccionarProducto(producto)"
+    >
+      
+      <!-- Emoji del producto -->
+      <div class="producto-emoji">
+        {{ producto.emoji }}
+      </div>
+      
+      <!-- Info del producto -->
+      <div class="producto-info">
+        <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+        <p class="producto-descripcion">{{ producto.descripcion }}</p>
+        <p class="producto-precio">{{ producto.precio }}€</p>
+      </div>
+      
+      <!-- Botón para añadir -->
+      <button 
+        class="btn-seleccionar"
+        type="button"
+      >
+        🛒 Añadir
+      </button>
+      
+    </div>
+    
+  </div>
+  
+</div>

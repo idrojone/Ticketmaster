@@ -1,0 +1,103 @@
+/* Estilos del diálogo de merchandising */
+
+.merch-container {
+  padding: 10px;
+}
+
+/* Descripción */
+.descripcion {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+/* Grid de productos - Horizontal para hacer el diálogo más ancho y menos alto */
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 productos en una fila */
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+/* Tarjeta de cada producto - Más compacta */
+.producto-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: white;
+}
+
+.producto-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #007bff;
+}
+
+/* Emoji del producto - Más pequeño */
+.producto-emoji {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+/* Info del producto - Más compacto */
+.producto-info {
+  margin-bottom: 10px;
+}
+
+.producto-nombre {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.producto-descripcion {
+  font-size: 13px;
+  color: #777;
+  margin: 0 0 10px 0;
+}
+
+.producto-precio {
+  font-size: 20px;
+  font-weight: bold;
+  color: #4CAF50;
+  margin: 5px 0;
+}
+
+/* Botón seleccionar */
+.btn-seleccionar {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.btn-seleccionar:hover {
+  background-color: #0056b3;
+}
+
+.btn-seleccionar:active {
+  transform: scale(0.98);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .productos-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .productos-grid {
+    grid-template-columns: 1fr; /* 1 columna en móviles */
+  }
+}

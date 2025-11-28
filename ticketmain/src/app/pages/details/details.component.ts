@@ -14,6 +14,7 @@ import { UserService } from "src/app/core/services/user.service";
 import { ProfileService } from "src/app/core/services/profile.service";
 import Swal from 'sweetalert2';
 import { CartService } from "src/app/core/services/cart.service";
+import { DialogMerchComponent } from "@shared/dialog-merch/dialog-merch.component";
 
 
 @Component({
@@ -212,6 +213,10 @@ export class DetailsComponent {
                 console.log(err);
             }
         })
+    }
+
+    async dialogMerch() {
+
     }
 
 }

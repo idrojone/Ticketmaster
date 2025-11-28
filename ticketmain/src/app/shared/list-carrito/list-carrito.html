@@ -26,15 +26,19 @@
       <!-- Lista de productos -->
       <div class="lg:col-span-2">
         <div class="space-y-4">
-          @for(producto of carrito(); track producto.id) {
+          <!-- @for(producto of conciertos(); track producto.slug) {
             <app-card-carrito [producto]="producto"></app-card-carrito>
-          }
+          } -->
+            @for(concierto of conciertos(); track concierto.slug){
+              <app-card-carrito [concierto]="concierto" (carritoActualizado)="LoadCarrito()"></app-card-carrito>
+            }
         </div>
       </div>
 
+      
       <!-- Resumen del carrito -->
       <div class="lg:col-span-1">
-        <app-total-carrito></app-total-carrito>
+        <!-- <app-total-carrito></app-total-carrito> -->
       </div>
     </div>
   }

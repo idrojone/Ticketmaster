@@ -16,3 +16,12 @@ export interface Concierto {
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
     is_active: boolean;
 }
+
+export interface ConciertoCarrito {
+    slug:String;
+    nombre:String;
+    precio:number;
+    cantidad:number;
+    fecha:String;
+    imagenArtista:String;
+}

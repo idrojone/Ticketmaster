@@ -5,7 +5,7 @@ import { CartService } from 'src/app/core/services/cart.service';
 import { CartItem } from 'src/app/core/models/cart-item.model';
 import { CardCarrito } from '../card-carrito/card-carrito';
 import { TotalCarrito } from '../total-carrito/total-carrito';
-
+import { ConciertoCarrito } from 'src/app/core/models/conciertos.model';
 
 @Component({
   selector: 'app-list-carrito',
@@ -21,7 +21,7 @@ import { TotalCarrito } from '../total-carrito/total-carrito';
 export class ListCarrito {
   public carrito = signal<CartItem[]>([]);
   public precioTotal = signal<number | null>(null);
-  public conciertos = signal([]);
+  public conciertos = signal<ConciertoCarrito[]>([]);
   public merchandising = signal([]);
 
   public loading= signal(false)
@@ -33,7 +33,7 @@ export class ListCarrito {
   }
 
   //Cargamos los productos del carrito
-  private async LoadCarrito() {
+  public async LoadCarrito() {
     // this.loading.set(true);
     this.cartService.getCarrito().subscribe({
       next: (res) => {
@@ -46,5 +46,12 @@ export class ListCarrito {
         console.log(err);
       }
     })
+  }
+
+  public precioTotalEmmiter(): any{
+    
+    // this.precioTotal.set( 
+
+    // );
   }
 }
