@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    command: [ "mongod", "--replSet", "rs0", "--bind_ip_all" ]
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - mongo-network
+    healthcheck:
+      test: mongosh --eval "db.adminCommand('ping')" --quiet || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  mongo-init:
+    image: mongo:7.0
+    container_name: mongo-init
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - mongo-network
+    entrypoint:
+      - bash
+      - -c
+      - |
+        echo '===== Inicializando ReplicaSet ====='
+        mongosh --host mongodb:27017 --eval '
+          try {
+            rs.status();
+            print("✓ ReplicaSet ya está inicializado");
+          } catch(err) {
+            print("⚙ Inicializando ReplicaSet...");
+            rs.initiate({
+              _id: "rs0",
+              members: [{ _id: 0, host: "mongodb:27017" }]
+            });
+            print("✓ ReplicaSet inicializado correctamente");
+            print("Esperando 10 segundos...");
+          }
+        '
+        sleep 10
+        mongosh --host mongodb:27017 --eval 'rs.status()'
+    restart: "no"
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+
+
+networks:
+  mongo-network:
+    driver: bridge
