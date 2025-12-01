@@ -1,21 +1,24 @@
-import fastify, { FastifyInstance } from "fastify";
+import { FastifyInstance } from "fastify";
 import { prisma } from "../plugins/prisma";
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from 'uuid';
 
+
 class ModelOrder {
-    private prisma: PrismaClient;
     private server: FastifyInstance;
 
-    constructor(prismaClient: PrismaClient, server: FastifyInstance) {
-        this.prisma = prismaClient;
+    constructor(server: FastifyInstance) {
         this.server = server;
     }
 
     async createOrder(request: any) {
         const { cartId } = request;
 
-        const cart = await this.prisma.carrito.findUnique({
+        if (!cartId) {
+            throw new Error('cartId es requerido');
+        }
+
+        const cart = await prisma.carrito.findUnique({
             where: {
                 id: cartId
             }
@@ -26,55 +29,67 @@ class ModelOrder {
         }
 
         const paymentIntentIdempotencyKey = `pi-request-${uuidv4()}`;
+        const amountInCents = Math.round(cart.precio * 100);
+        const currency = 'eur';
 
-        const order = await this.prisma.$transaction(async tx => {
+        const paymentIntent = await this.server.stripe.paymentIntents.create(
+            {
+                amount: amountInCents,
+                currency: currency,
+                metadata: {
+                    cartId: cart.id,
+                    userId: cart.userId
+                },
+                automatic_payment_methods: {
+                    enabled: true,
+                },
+            },
+            { idempotencyKey: paymentIntentIdempotencyKey }
+        );
+
+        const result = await prisma.$transaction(async (tx) => {
             const order = await tx.order.create({
                 data: {
-                    carritoId: cartId,
                     userId: cart.userId,
-                    total: cart.precio,
-                    status: 'PENDING'
+                    carritoId: cart.id,
+                    totalAmount: cart.precio,
+                    status: 'PENDING',
+                    conciertos: cart.conciertos,
+                    merchandising: cart.merchandising,
                 }
             });
 
-            await tx.pagos.create({
+            const payment = await tx.payment.create({
                 data: {
                     orderId: order.id,
-                    metodo: 'Stripe',
-                    monto: cart.precio,
+                    method: 'Stripe', 
+                    amount: cart.precio,
+                    currency: currency,
+                    transactionRef: paymentIntent.id,
                     status: 'PENDING'
                 }
             });
 
-            return order;
+            return { order, payment };
         });
 
         try {
-            const paymentIntent = await this.server.stripe.paymentIntents.create(
-                {
-                    amount: Math.round(cart.precio * 100), // Convertir a céntimos
-                    currency: 'eur',
-                    metadata: {
-                        orderId: order.id
-                    }
-                },
-                { idempotencyKey: paymentIntentIdempotencyKey }
-            );
-
-            return {
-                order,
-                paymentIntent
-            };
-        } catch (error) {
-            await this.prisma.order.update({
-                where: { id: order.id },
-                data: { status: 'REJECTED' }
+            await this.server.stripe.paymentIntents.update(paymentIntent.id, { 
+                metadata: { orderId: result.order.id } 
             });
-            throw error;
+        } catch (stripeError) {
+            console.error('No se pudo actualizar metadata de PaymentIntent:', stripeError);
         }
+
+        return {
+            order: result.order,
+            payment: result.payment,
+            clientSecret: paymentIntent.client_secret,
+            paymentIntentId: paymentIntent.id
+        };
     }
 
 }
 
-export const modelOrder = (server: FastifyInstance) => new ModelOrder(prisma, server);
+export const modelOrder = (server: FastifyInstance) => new ModelOrder(server);
 
