@@ -29,6 +29,17 @@ enum Status {
     CANCELLED
 }
 
+enum OrderStatus {
+    PENDING
+    PAID
+    FAILED
+}
+
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+}
+
 /**
  * User Model
  */
@@ -71,7 +82,7 @@ model User {
     /**
      * Relación con ventas
      */
-    ventas Venta[]
+    orders Order[]
 
     /**
      * Relación con Comentarios
@@ -308,26 +319,27 @@ model Merchandising {
     @@map("merchandising")
 }
 
-model Pagos {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    ventaId   String   @db.ObjectId
-    venta     Venta    @relation(fields: [ventaId], references: [id])
-    metodo    String
-    monto     Float
-    fecha     DateTime @default(now())
-    status    Status   @default(ACCEPTED)
-    is_active Boolean  @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Payment {
+    id             String        @id @default(auto()) @map("_id") @db.ObjectId
+    orderId        String        @db.ObjectId
+    order          Order         @relation(fields: [orderId], references: [id])
+    method         String
+    amount         Float
+    transactionRef String?
+    currency       String?
+    paidAt         DateTime?
+    status         PaymentStatus @default(PENDING)
+    createdAt      DateTime      @default(now())
+    updatedAt      DateTime      @updatedAt
 
-    @@map("pagos")
+    @@map("payments")
 }
 
 /**
  * Modelos Ventas, Merchandising, Pagos, CategoriasMerchandising
  */
 
-model Venta {
+model Order {
     id     String @id @default(auto()) @map("_id") @db.ObjectId
     /**
      * Relacion con Usuario
@@ -346,16 +358,14 @@ model Venta {
     /**
      * Relación con Pagos
      */
-    pagos Pagos[]
+    payments Payment[]
 
-    total     Float
-    fecha     DateTime @default(now())
-    status    Status   @default(ACCEPTED)
-    is_active Boolean  @default(true)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    totalAmount Float
+    status      OrderStatus @default(PENDING)
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
 
-    @@map("ventas")
+    @@map("orders")
 }
 
 model CategoriaMerchandising {
@@ -396,7 +406,7 @@ model Carrito {
     is_active Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    ventas    Venta[]
+    ventas    Order[]
 
     @@map("carritos")
 }

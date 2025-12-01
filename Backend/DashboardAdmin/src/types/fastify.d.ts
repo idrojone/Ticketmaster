@@ -10,8 +10,9 @@ declare module 'fastify' {
     generateAccessToken(username: string, email: string, reply: FastifyReply): Promise<string>;
     // axiosClient: ReturnType<typeof axios.create>;
     axiosClient?: AxiosInstance;
-  // Lanza un error y no retorna (sirve para signalizar errores HTTP desde plugins/modelos)
-  throwError(statusCode: number, message: string, details?: any): never;
+    stripe: Stripe;
+    // Lanza un error y no retorna (sirve para signalizar errores HTTP desde plugins/modelos)
+    throwError(statusCode: number, message: string, details?: any): never;
     generateSlug(title: string): string;
     spotify: any;
     optionsEnv: {
