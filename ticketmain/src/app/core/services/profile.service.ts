@@ -48,4 +48,14 @@ export class ProfileService {
             ));
     }
 
+    getTicketsUsuario(username: string): Observable<any> {
+        return this.apiService.get(`/${username}/user/tickets`)
+            .pipe(map(
+                data => {
+                    console.log('Datos de tickets recibidos:', data);
+                    return data;
+                }
+            ));
+    }
+
 }

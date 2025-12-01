@@ -9,6 +9,7 @@ import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { CartService } from 'src/app/core/services/cart.service';
 import Swal from 'sweetalert2';
 import STRIPE_PK from 'src/environments/stripe';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-total-carrito',
@@ -26,15 +27,20 @@ export class TotalCarrito {
   cardMounted = false;
   cardComplete = false;
   processingPayment = false; 
-  paymentError = '';         
+  paymentError = '';    
+  
+  usuario: any;
 
   private cartService = inject(CartService);
   private router = inject(Router);
+  private userService = inject(UserService);
 
   async ngOnInit() {
     // this.stripe = await loadStripe('pk_test_51SUk4KQ3zmGQt5EBckMmmy6QZWk5hV4NF1wwpPKX5AH9B4ANk5NBIfAAeC6ENDtYbWkh707CKaDqvKX79WA1lPjn00s1m4b1C0');
     this.stripe = await loadStripe(STRIPE_PK);
-    
+    this.usuario = this.userService.getCurrentUser()
+    console.log(this.usuario);
+
     if (!this.stripe) {
       console.error('Error al cargar Stripe');
       this.paymentError = 'Error al cargar el sistema de pagos. Recarga la página.';
@@ -164,7 +170,7 @@ export class TotalCarrito {
             if (result.isConfirmed) {
               this.router.navigate(['/shop']);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              this.router.navigate(['/perfil']);
+              this.router.navigate(['/profile/me/' + this.usuario.email]);
             }
           });
         }

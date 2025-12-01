@@ -188,7 +188,20 @@ export class Profile implements OnInit, OnDestroy {
             this.loadComentariosUsuario();
         } else if (tab === 'favorites') {
             this.loadLikesUsuario();
+        } else if (tab === 'history') {
+            this.loadEntradasUsuario();
         }
+    }
+
+    loadEntradasUsuario(): void {
+        this.profileService.getTicketsUsuario(this.slug).subscribe({
+            next: (tickets) => {
+
+            },
+            error: (error) => {
+                
+            },
+        });
     }
 
     toggleFollowUser(): void {
