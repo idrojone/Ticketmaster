@@ -24,6 +24,7 @@ export class ListCarrito {
   public precioTotal = signal<number | null>(null);
   public conciertos = signal<ConciertoCarrito[]>([]);
   public merchandising = signal<MerchandisingCarrito[]>([]);
+  public idcarrito = signal<string | null>(null);
 
   public loading= signal(false)
 
@@ -41,6 +42,7 @@ export class ListCarrito {
         this.carrito.set(res);
         this.conciertos.set(res.conciertos);
         this.merchandising.set(res.merchandising);
+        this.idcarrito.set(res.carrito._id);
         },
       error: (err) => {
         console.log(err);

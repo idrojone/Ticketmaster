@@ -26,4 +26,8 @@ export class CartService {
         return this.ApiService.post('/carrito/master', { conciertos, merchandising });
     }
 
+    payCarrito(payload : any): Observable<any> {
+        return this.ApiService.post('/create-payment-intent', payload);
+    }
+
 }

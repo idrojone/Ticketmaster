@@ -4,6 +4,7 @@
 ### Angular ###
 ## Angular ##
 # compiled output
+stripe.js
 dist/
 tmp/
 app/**/*.js
