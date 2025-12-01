@@ -6,6 +6,7 @@ import { CartItem } from 'src/app/core/models/cart-item.model';
 import { CardCarrito } from '../card-carrito/card-carrito';
 import { TotalCarrito } from '../total-carrito/total-carrito';
 import { ConciertoCarrito } from 'src/app/core/models/conciertos.model';
+import { MerchandisingCarrito } from 'src/app/core/models/dashboard-empresa/Merchandising.model';
 
 @Component({
   selector: 'app-list-carrito',
@@ -22,7 +23,7 @@ export class ListCarrito {
   public carrito = signal<CartItem[]>([]);
   public precioTotal = signal<number | null>(null);
   public conciertos = signal<ConciertoCarrito[]>([]);
-  public merchandising = signal([]);
+  public merchandising = signal<MerchandisingCarrito[]>([]);
 
   public loading= signal(false)
 
@@ -32,7 +33,6 @@ export class ListCarrito {
     this.LoadCarrito();
   }
 
-  //Cargamos los productos del carrito
   public async LoadCarrito() {
     // this.loading.set(true);
     this.cartService.getCarrito().subscribe({
@@ -41,7 +41,7 @@ export class ListCarrito {
         this.carrito.set(res);
         this.conciertos.set(res.conciertos);
         this.merchandising.set(res.merchandising);
-      },
+        },
       error: (err) => {
         console.log(err);
       }

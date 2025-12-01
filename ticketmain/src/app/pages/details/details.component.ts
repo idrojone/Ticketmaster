@@ -15,6 +15,7 @@ import { ProfileService } from "src/app/core/services/profile.service";
 import Swal from 'sweetalert2';
 import { CartService } from "src/app/core/services/cart.service";
 import { DialogMerchComponent } from "@shared/dialog-merch/dialog-merch.component";
+import { MerchService } from "src/app/core/services/UserServices/merch.service";
 
 
 @Component({
@@ -42,6 +43,7 @@ export class DetailsComponent {
     public isFavorite = signal(false);
         
     slug: string | null = null;
+    merchandisingId: string | null = null;
     private map?: L.Map;
 
     private route = inject(ActivatedRoute);
@@ -49,6 +51,7 @@ export class DetailsComponent {
     private conciertoService = inject(ConciertosService);
     private userService = inject(UserService);
     private cartService = inject(CartService);
+    private merchService = inject(MerchService);
 
     constructor() {
         this.slug = this.route.snapshot.paramMap.get('slug');
@@ -59,6 +62,7 @@ export class DetailsComponent {
         this.isLoading.set(true);
         this.conciertoService.getConcierto(this.slug!).subscribe({
             next: (concierto) => {
+                this.merchandisingId = concierto.merchandisingId;
                 this.concierto.set(concierto);
                 this.isLoading.set(false);
                 this._loadMap(concierto);
@@ -215,9 +219,87 @@ export class DetailsComponent {
         })
     }
 
+    async anadirMerch(id: string) {
+        console.log("Añadiendo al carrito");
+        this.cartService.carritoMaster(
+            [
+
+            ],
+            [
+                { merchandisingId: id, cantidad: 1 },
+            ]
+        ).subscribe({
+            next: (res) => {
+                console.log(res);
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        })
+    }
+
     async dialogMerch() {
-        // const dialogRef = this.dialogService.openDialog(DialogMerchComponent);
-        // const result = await dialogRef.afterClosed().toPromise();
+        this.merchService.get_all_merch(this.merchandisingId!).subscribe({
+            next: (producto: any) => {
+                const productoHTML = `
+                <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px;">
+                    <img src="${producto.imagen}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;" />
+                    <div style="flex: 1; text-align: left;">
+                        <h4 style="margin: 0; color: #333;">${producto.nombre}</h4>
+                        <p style="margin: 5px 0; color: #666; font-size: 14px;">${producto.descripcion}</p>
+                        <p style="margin: 0; color: #4CAF50; font-weight: bold;">${producto.precio}€</p>
+                        <button id="${producto._id}" style="margin-top: 10px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;" ">Añadir al carrito</button>
+                    </div>
+                </div>`;
+
+                const button = document.getElementById(producto._id);
+
+                if (button) {
+                    button.addEventListener('click', () => {
+                        this.anadirMerch(producto._id);
+                    });
+                }
+
+                Swal.fire({
+                    title: '¿Quieres añadir merchandising?',
+                    html: `
+                        <div style="text-align: left;">
+                            <p style="color: #666; margin-bottom: 20px;">Un bonito recuerdo del concierto</p>
+                            ${productoHTML}
+                        </div>
+                    `,
+                    width: 600,
+                    showCancelButton: true,
+                    confirmButtonText: 'Añadir al carrito',
+                    cancelButtonText: 'No, gracias',
+                    confirmButtonColor: '#4CAF50',
+                    cancelButtonColor: '#d33',
+                    didOpen: () => {
+                        const button = document.getElementById(producto._id);
+                        if (button && button.textContent === 'Añadir al carrito') {
+                            button.addEventListener('click', () => {
+                                this.anadirMerch(producto._id);
+                                button.textContent = 'Añadido al carrito';
+                                button.hidden = true;
+                            });
+                        }
+                    }
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.anadirCarrito();
+                    }
+                });
+            },
+            error: (err) => {
+                console.log(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo cargar el merchandising'
+                });
+            }
+        });
     }
 
 }

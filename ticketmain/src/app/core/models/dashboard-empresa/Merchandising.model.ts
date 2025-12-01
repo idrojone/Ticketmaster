@@ -39,3 +39,12 @@ export interface PatchMerchandisingActivate {
 export interface PatchMerchandisingStatus {
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
 }
+
+export interface MerchandisingCarrito {
+  _id: string;
+  slug: string;
+  nombre: string;
+  precio: number;
+  cantidad: number;
+  imagen: string;
+}

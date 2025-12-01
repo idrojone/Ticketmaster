@@ -32,13 +32,20 @@
             @for(concierto of conciertos(); track concierto.slug){
               <app-card-carrito [concierto]="concierto" (carritoActualizado)="LoadCarrito()"></app-card-carrito>
             }
+
+            @for(producto of merchandising(); track producto.slug){
+              <app-card-carrito [merchandising]="producto" (carritoActualizado)="LoadCarrito()"></app-card-carrito>
+            }
         </div>
       </div>
 
       
       <!-- Resumen del carrito -->
       <div class="lg:col-span-1">
-        <!-- <app-total-carrito></app-total-carrito> -->
+        <app-total-carrito 
+          [conciertos]="conciertos()" 
+          [merchandising]="merchandising()">
+        </app-total-carrito>
       </div>
     </div>
   }

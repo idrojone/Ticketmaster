@@ -1,7 +1,24 @@
-<!-- <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 sticky top-24">
+<div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 sticky top-24">
   <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-4 border-b border-gray-200">Resumen del pedido</h2>
 
   <div class="space-y-3 mb-6">
+    <!-- Cantidad de items -->
+    <div class="flex justify-between items-center text-sm pb-3 border-b border-gray-100">
+      <span class="text-gray-600">Items en carrito</span>
+      <div class="flex gap-2 text-xs">
+        @if(cantidadConciertos() > 0) {
+          <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+            {{ cantidadConciertos() }} {{ cantidadConciertos() === 1 ? 'concierto' : 'conciertos' }}
+          </span>
+        }
+        @if(cantidadMerchandising() > 0) {
+          <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full">
+            {{ cantidadMerchandising() }} {{ cantidadMerchandising() === 1 ? 'producto' : 'productos' }}
+          </span>
+        }
+      </div>
+    </div>
+
     <div class="flex justify-between items-center text-sm">
       <span class="text-gray-600">Subtotal</span>
       <span class="text-gray-800 font-medium">{{ subtotal() | currency:'EUR':'symbol':'1.2-2' }}</span>
@@ -37,4 +54,4 @@
     [routerLink]="['/']">
     Continuar comprando
   </button>
-</div> -->
+</div>

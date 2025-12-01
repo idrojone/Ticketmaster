@@ -15,6 +15,7 @@ export interface Concierto {
     imagenesShow?: string[];
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
     is_active: boolean;
+    merchandisingId: string;
 }
 
 export interface ConciertoCarrito {

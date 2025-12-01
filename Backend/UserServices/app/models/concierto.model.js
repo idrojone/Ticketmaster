@@ -105,7 +105,7 @@ const ConciertoSchema = new mongoose.Schema({
     comentarios: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comentario'
-    }]
+    }],
 }, { timestamps: true });
 
 ConciertoSchema.plugin(uniqueValidator, { message: 'ya esta en uso' });
