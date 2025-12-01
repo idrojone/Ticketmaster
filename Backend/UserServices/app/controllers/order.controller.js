@@ -24,15 +24,31 @@ async function createOrder(req, res) {
 
     }
 
-    const response = await axios.post('http://localhost:3010/order', {
-        cartId: req.body.cartId
-    });
+    const cartIdString = cart._id.toString();
+    // console.log('Enviando a DashboardAdmin:', { cartId: cartIdString });
 
-    return res.status(200).json({
-        success: true,
-        message: 'Orden creada exitosamente',
-        data: response.data
-    });
+    try {
+        const response = await axios.post('http://localhost:3010/order', {
+            cartId: cartIdString
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Orden creada exitosamente',
+            data: response.data
+        });
+    } catch (error) {
+        console.error('Error llamando a DashboardAdmin:', error.response?.data || error.message);
+        return res.status(error.response?.status || 500).json({
+            success: false,
+            message: 'Error creando orden',
+            error: error.response?.data || error.message
+        });
+    }
 }
 
 
