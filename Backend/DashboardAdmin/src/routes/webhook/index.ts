@@ -3,7 +3,10 @@ import { prisma } from "../../plugins/prisma";
 
 async function webhookRoutes(server: FastifyInstance) {
 
-    server.addContentTypeParser('application/json', { parseAs: 'buffer' }, function (req, body, done) {
+    // Register a custom content type parser for this route only
+    // This preserves the raw body needed for Stripe signature verification
+    server.removeContentTypeParser('application/json');
+    server.addContentTypeParser('application/json', { parseAs: 'buffer' }, function (req, body: Buffer, done) {
         done(null, body);
     });
 
@@ -21,7 +24,10 @@ async function webhookRoutes(server: FastifyInstance) {
         let event;
 
         try {
-            event = server.stripe.webhooks.constructEvent(request.body as Buffer, sig, webhookSecret);
+            // Use request.body which should be a Buffer due to our content type parser
+            const rawBody = request.body as Buffer;
+            console.log('Body recibido (tipo):', typeof rawBody, 'es Buffer:', Buffer.isBuffer(rawBody));
+            event = server.stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
         } catch (err: any) {
             console.error('Webhook signature verification failed.', err.message);
             return reply.status(400).send(`Webhook Error: ${err.message}`);
@@ -32,7 +38,7 @@ async function webhookRoutes(server: FastifyInstance) {
             const transactionRef = pi.id;
             const orderId = pi.metadata?.orderId;
 
-            console.log(`Processing payment_intent.succeeded for order ${orderId}`);
+            console.log(orderId, transactionRef)
 
             try {
                 await prisma.$transaction(async (tx) => {
@@ -48,7 +54,7 @@ async function webhookRoutes(server: FastifyInstance) {
                         if (!orderId) {
                             throw new Error('Payment not found and orderId missing in metadata');
                         }
-                        
+
                         // Crear el payment
                         payment = await tx.payment.create({
                             data: {
@@ -139,6 +145,7 @@ async function webhookRoutes(server: FastifyInstance) {
                             is_active: false
                         }
                     });
+                    console.log(`Carrito ${order.carritoId} actualizado correctamente`);
                 });
 
                 console.log(`Orden ${orderId} completada correctamente`);
