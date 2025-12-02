@@ -30,4 +30,8 @@ export class CartService {
         return this.ApiService.post('/create-payment-intent', payload);
     }
 
+    getEstadoOrden(orderID : string): Observable<any> {
+        return this.ApiService.get('/carrito/estado/' + orderID);
+    }
+
 }
