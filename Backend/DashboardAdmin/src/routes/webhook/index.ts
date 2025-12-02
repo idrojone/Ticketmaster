@@ -143,22 +143,6 @@ async function webhookRoutes(server: FastifyInstance) {
                         }
                     }
 
-                    // 4. Verificar stock para Merchandising
-                    for (const item of order.merchandising) {
-                        const merch = await tx.merchandising.findUnique({ where: { id: item.merchandisingId } });
-
-                        if (!merch) throw new Error(`Merchandising ${item.merchandisingId} not found`);
-                        if (merch.stock < item.cantidad) {
-                            throw new Error(`Stock insuficiente para merchandising ${merch.nombre}`);
-                        }
-
-                        // Decrementar stock
-                        await tx.merchandising.update({
-                            where: { id: merch.id },
-                            data: { stock: { decrement: item.cantidad } }
-                        });
-                    }
-
                     // 5. Marcar orden como PAID
                     await tx.order.update({
                         where: { id: order.id },

@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const Cart = require('../models/carrito.model');
+const Order = require('../models/order.model');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 
@@ -57,7 +58,65 @@ async function createOrder(req, res) {
     }
 }
 
+async function getOrderById(req, res) {
+    try {
+        const orderId = req.params.id;
+        const userId = req.id;
+
+        if (!orderId || !userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Parámetros inválidos'
+            });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: 'Orden no encontrada'
+            });
+        }
+
+        if (order.userId.toString() !== userId) {
+            return res.status(403).json({
+                success: false,
+                message: 'No autorizado para ver esta orden'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Orden encontrada exitosamente',
+            data: order.status
+        });
+
+    } catch (error) {
+        console.error('Error en getOrderById:', error);
+
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                success: false,
+                message: 'ID inválido'
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor'
+        });
+    }
+}
 
 module.exports = {
-    createOrder
+    createOrder,
+    getOrderById
 }
