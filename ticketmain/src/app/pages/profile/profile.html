@@ -179,42 +179,79 @@
                     </div>
                 } @else {
                     @for(item of ticketsUsuario(); track $index){
-                        <div class="ticket-card">
-                            <div class="ticket-content">
-                                <!-- Icono del ticket -->
-                                <div class="ticket-icon-wrapper">
-                                    <i class="fas fa-ticket-alt ticket-icon"></i>
+                        <div class="ticket-card-premium">
+                            <!-- Header del ticket con gradiente -->
+                            <div class="ticket-header-premium" [ngClass]="'ticket-type-' + item.tipo.toLowerCase()">
+                                <div class="ticket-type-icon">
+                                    <i class="fas fa-ticket-alt"></i>
                                 </div>
-                                
-                                <!-- Información del ticket -->
-                                <div class="ticket-info">
-                                    <!-- Header con ID y tipo -->
-                                    <div class="ticket-header">
-                                        <h4 class="ticket-id">
-                                            <i class="fas fa-hashtag" style="font-size: 0.9rem; color: #6b7280;"></i>
-                                            {{ item.conciertoId }}
-                                        </h4>
-                                        <span class="ticket-type-badge" [ngClass]="item.tipo.toLowerCase()">
-                                            <i class="fas fa-star"></i>
-                                            {{ item.tipo }}
-                                        </span>
-                                    </div>
-                                    
-                                    <!-- Detalles del ticket -->
-                                    <div class="ticket-details">
-                                        <div class="ticket-detail-item">
-                                            <i class="fas fa-layer-group"></i>
-                                            <span class="ticket-detail-label">Cantidad:</span>
-                                            <span class="ticket-detail-value">{{ item.cantidad }}</span>
+                                <div class="ticket-type-info">
+                                    <span class="ticket-type-label">{{ item.tipo }}</span>
+                                    <span class="ticket-quantity">{{ item.cantidad }} {{ item.cantidad === 1 ? 'Ticket' : 'Tickets' }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Cuerpo del ticket -->
+                            <div class="ticket-body-premium">
+                                <!-- Nombre del concierto - Elemento principal -->
+                                <h3 class="concert-name-premium">
+                                    <i class="fas fa-guitar concert-icon"></i>
+                                    {{ item.concierto?.nombre || 'Concierto #' + item.conciertoId }}
+                                </h3>
+
+                                <!-- Información del evento -->
+                                <div class="event-info-premium">
+                                    @if(item.concierto?.fecha) {
+                                        <div class="event-detail-premium event-date">
+                                            <div class="event-icon-wrapper">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </div>
+                                            <div class="event-text">
+                                                <span class="event-label">Fecha del evento</span>
+                                                <span class="event-value">{{ item.concierto!.fecha | date:'EEEE, dd MMMM yyyy' }}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    
-                                    <!-- Fecha de compra -->
-                                    <div class="ticket-date">
-                                        <i class="fas fa-calendar-check"></i>
+                                    }
+
+                                    @if(item.concierto?.lugar) {
+                                        <div class="event-detail-premium event-location">
+                                            <div class="event-icon-wrapper">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="event-text">
+                                                <span class="event-label">Ubicación</span>
+                                                <span class="event-value">{{ item.concierto!.lugar }}</span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- Separador decorativo -->
+                                <div class="ticket-divider">
+                                    <div class="divider-dot"></div>
+                                    <div class="divider-line"></div>
+                                    <div class="divider-dot"></div>
+                                </div>
+
+                                <!-- Footer con fecha de compra -->
+                                <div class="ticket-footer-premium">
+                                    <div class="purchase-info">
+                                        <i class="fas fa-receipt"></i>
                                         <span>Comprado el {{ item.fecha_compra | date:'dd/MM/yyyy' }} a las {{ item.fecha_compra | date:'HH:mm' }}</span>
                                     </div>
+                                    <div class="ticket-id-small">
+                                        #{{ item._id?.slice(-8) || 'N/A' }}
+                                    </div>
                                 </div>
+                            </div>
+
+                            <!-- Perforaciones decorativas -->
+                            <div class="ticket-perforations">
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
                             </div>
                         </div>
                     }

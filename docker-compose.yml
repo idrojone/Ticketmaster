@@ -1,10 +1,11 @@
-version: '3.8'
+version: "3.8"
 
 services:
+  # MongoDB Database
   mongodb:
     image: mongo:7.0
     container_name: mongodb
-    command: [ "mongod", "--replSet", "rs0", "--bind_ip_all" ]
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     ports:
       - "27018:27017"
     volumes:
@@ -19,6 +20,7 @@ services:
       retries: 5
       start_period: 20s
 
+  # MongoDB ReplicaSet Initializer
   mongo-init:
     image: mongo:7.0
     container_name: mongo-init
@@ -74,11 +76,23 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+  # Angular Frontend
+  ticketmain-frontend:
+    build:
+      context: ./ticketmain
+      dockerfile: Dockerfile
+    container_name: ticketmain-frontend
+    ports:
+      - "4200:80"
+    networks:
+      - mongo-network
+    restart: unless-stopped
+    depends_on:
+      - mongodb
 
 volumes:
   mongodb_data:
   mongodb_config:
-
 
 networks:
   mongo-network:
