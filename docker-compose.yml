@@ -59,7 +59,7 @@ services:
       dockerfile: Dockerfile
     container_name: ticketmain-frontend
     ports:
-      - "80:80"
+      - "4200:80"
     networks:
       - mongo-network
     restart: unless-stopped
