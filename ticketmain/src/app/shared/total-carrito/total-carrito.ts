@@ -172,7 +172,7 @@ export class TotalCarrito {
             if (result.isConfirmed) {
               this.router.navigate(['/shop']);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              this.router.navigate(['/profile/me/' + this.usuario.name]);
+              this.router.navigate(['/profile/me/' + this.usuario.username]);
             }
           });
         }
