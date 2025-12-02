@@ -84,8 +84,8 @@ class ModelAuth {
 
         const isValid = await this.server.hashCompare(Body.user.password, user.password);
         if (!isValid) {
-            this.server.throwError(401, 'Credenciales incorrectas');
-            return;
+            console.log('Credenciales incorrectas');
+            return this.server.throwError(67, 'Credenciales incorrectas');
         }
 
         const accessToken = await this.server.generateAccessToken(user.username, user.email, reply);
