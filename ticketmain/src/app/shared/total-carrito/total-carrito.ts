@@ -158,23 +158,7 @@ export class TotalCarrito {
             timer: 2000
           });
         } else if (result.paymentIntent.status === 'succeeded' ) {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Pago exitoso!',
-            text: '¿Qué deseas hacer ahora?',
-            showCancelButton: true,
-            confirmButtonText: 'Hacer otro pedido',
-            cancelButtonText: 'Ir a mi perfil',
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#6c757d',
-            allowOutsideClick: false
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['/shop']);
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-              this.router.navigate(['/profile/me/' + this.usuario.username]);
-            }
-          });
+          this.verificarEstadoOrden(res.data.order.id);
         }
       },
       error: (err) => {
@@ -189,5 +173,81 @@ export class TotalCarrito {
         });
       }
     });
+  }
+
+  async verificarEstadoOrden(orderID : string , intentos : number = 0, maxIntentos : number = 10){
+
+    try{
+
+      const status = await this.cartService.getEstadoOrden(orderID).toPromise();
+
+      console.log(status);
+
+      if(status.data === 'PAID'){
+
+        //SWAL FIRE CORRECTO
+        Swal.fire({
+          icon: 'success',
+          title: '¡Pago exitoso!',
+          text: '¿Qué deseas hacer ahora?',
+          showCancelButton: true,
+          confirmButtonText: 'Hacer otro pedido',
+          cancelButtonText: 'Ir a mi perfil',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#6c757d',
+          allowOutsideClick: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/shop']);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            this.router.navigate(['/profile/me/' + this.usuario.username]);
+          }
+        });
+
+      }else if(status.DATA === 'FAIL'){
+
+        //SWAL FIRE FALLIDO
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al procesar el pago, contacta con el soporte.',
+          showConfirmButton: false,
+          timer: 2000
+        });
+
+      }else if (intentos < maxIntentos){
+        
+        setTimeout(() => {
+          this.verificarEstadoOrden(orderID, intentos + 1, maxIntentos);
+        }, 1000);
+
+      }else{
+
+        //SWAL FIRE TU PAGO ESTA SIENDO PROCESADO
+        Swal.fire({
+          icon: 'warning',
+          title: 'Tu pago esta siendo procesado',
+          text: 'Por favor, espera a que se complete el pago.',
+          showConfirmButton: true,
+          timer: 2000,
+          confirmButtonText: ' Ir a mi perfil'
+        }).then((result) => {
+          if(result.isConfirmed){
+            this.router.navigate(['/profile/me/' + this.usuario.username]);
+          }
+        })
+
+      }
+
+    } catch (error) {
+      console.error('Error al verificar el estado de la orden:', error);
+      //Si aun quedan intentos iterar
+      if(intentos < maxIntentos){
+        setTimeout(() => {
+          this.verificarEstadoOrden(orderID, intentos + 1, maxIntentos);
+        }, 1000);
+      }
+    }
+    
   }
 }
