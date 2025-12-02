@@ -31,7 +31,7 @@ export class CartService {
     }
 
     getEstadoOrden(orderID : string): Observable<any> {
-        return this.ApiService.get('/carrito/estado/' + orderID);
+        return this.ApiService.get('/order/' + orderID);
     }
 
 }

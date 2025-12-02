@@ -158,9 +158,7 @@ export class TotalCarrito {
             timer: 2000
           });
         } else if (result.paymentIntent.status === 'succeeded' ) {
-
-          this.verificarEstadoOrden(res.data.order.carritoId);
-
+          this.verificarEstadoOrden(res.data.order.id);
         }
       },
       error: (err) => {
@@ -183,7 +181,9 @@ export class TotalCarrito {
 
       const status = await this.cartService.getEstadoOrden(orderID).toPromise();
 
-      if(status === 'PAID'){
+      console.log(status);
+
+      if(status.data === 'PAID'){
 
         //SWAL FIRE CORRECTO
         Swal.fire({
@@ -204,7 +204,7 @@ export class TotalCarrito {
           }
         });
 
-      }else if(status === 'PAYMENT_FAILED'){
+      }else if(status.DATA === 'FAIL'){
 
         //SWAL FIRE FALLIDO
         Swal.fire({
