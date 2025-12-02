@@ -1,12 +1,13 @@
 import { inject, Injectable } from "@angular/core";
 import { Router, RouterLinkWithHref } from "@angular/router";
-import { BehaviorSubject, distinctUntilChanged, elementAt, map, Observable, of } from "rxjs";
+import { BehaviorSubject, catchError, distinctUntilChanged, map, Observable, of, switchMap, throwError } from "rxjs";
 import { User } from "../models/user.model";
 import { ApiService } from "./api.service";
 import { JwtService } from "./jwt.service";
 import { UserTypeService } from "./user-type.service";
 import { jwtDecode } from "jwt-decode";
 import { UserAdmin } from "../models/dashboard-admin/UserAdmin.model";
+import Swal from 'sweetalert2';
 
 
 @Injectable ({
@@ -116,7 +117,6 @@ export class UserService {
     }
 
     purgeAuth() {
-
         this.jwtService.destroyAccessToken();
         this.currentUserSubject.next({} as User);
         this.isAuthenticatedSubject.next(false);
@@ -128,32 +128,93 @@ export class UserService {
 
         return this.apiService.post(`/api${route}`, { user: credentials }, true)
             .pipe(
-                map(data => {
+                switchMap(data => {
                     if (data.rol && data.rol === 'admin') {
                         console.log('Intentando autenticación como admin:', data);
-                        this.apiService.post(`/auth/login`, { user: credentials }, true, "dashboard")
-                            .subscribe({
-                                next: (adminData) => {
-                                    console.log('Usuario admin autenticado:', adminData);
+
+                        return this.apiService.post(`/auth/login`, { user: credentials }, true, "dashboard")
+                            .pipe(
+                                map((adminData: any) => {
+                                    console.log('Respuesta del login admin:', adminData);
                                     this.setAuth(adminData.user);
                                     this.userTypeService.setUserType('admin');
-                                }
-                            });
+                                    return adminData.user;
+                                }),
+                                catchError((error) => {
+                                    console.error('Error al autenticar como admin:', error);
+                                    
+                                    let titulo = 'Error de autenticación';
+                                    let mensaje = 'No se pudo autenticar como admin';
+                                    
+                                    if (error.status === 401) {
+                                        titulo = 'Credenciales inválidas';
+                                        mensaje = 'Email o contraseña incorrectos para admin.';
+                                    } else if (error.status === 403) {
+                                        titulo = 'Acceso denegado';
+                                        mensaje = 'No tienes permisos de administrador.';
+                                    } else if (error.status === 404) {
+                                        titulo = 'Usuario no encontrado';
+                                        mensaje = 'No existe un administrador con estas credenciales.';
+                                    } else if (error.status === 0) {
+                                        titulo = 'Error de conexión';
+                                        mensaje = 'No se pudo conectar al servidor de administración.';
+                                    }
+                                    
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: titulo,
+                                        text: mensaje,
+                                    });
+                                    
+                                    return throwError(() => error);
+                                })
+                            );
                     } else if (data.rol && data.rol === 'empresa') {
                         console.log('Intentando autenticación como empresa:', data);
-                        this.apiService.post(`/auth/login`, credentials,  true, "empresa")
-                            .subscribe({
-                                next: (empresaData) => {
+                        
+                        return this.apiService.post(`/auth/login`, credentials, true, "empresa")
+                            .pipe(
+                                map((empresaData: any) => {
                                     console.log('Usuario empresa autenticado:', empresaData);
                                     this.setAuth(empresaData.user);
                                     this.userTypeService.setUserType('empresa');
-                                }
-                            });
+                                    return empresaData.user;
+                                }),
+                                catchError((error) => {
+                                    console.error('Error al autenticar como empresa:', error);
+                                    
+                                    let titulo = 'Error de autenticación';
+                                    let mensaje = 'No se pudo autenticar como empresa';
+                                    
+                                    if (error.status === 401) {
+                                        titulo = 'Credenciales inválidas';
+                                        mensaje = 'Email o contraseña incorrectos para empresa.';
+                                    } else if (error.status === 403) {
+                                        titulo = 'Acceso denegado';
+                                        mensaje = 'No tienes permisos de empresa.';
+                                    } else if (error.status === 404) {
+                                        titulo = 'Empresa no encontrada';
+                                        mensaje = 'No existe una empresa con estas credenciales.';
+                                    } else if (error.status === 0) {
+                                        titulo = 'Error de conexión';
+                                        mensaje = 'No se pudo conectar al servidor de empresa.';
+                                    }
+                                    
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: titulo,
+                                        text: mensaje,
+                                    });
+                                    
+                                    return throwError(() => error);
+                                })
+                            );
                     } else {
+                        // Usuario normal - retornar directamente
                         this.setAuth(data.user);
                         this.userTypeService.setUserType('USER');
+                        return of(data.user);
                     }
-                    return data.user;
                 })
             );
     }

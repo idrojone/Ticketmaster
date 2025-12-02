@@ -87,16 +87,18 @@ export class Auth implements OnInit {
       next: (response: any) => {
         console.log('Respuesta recibida:', response);
         console.log(`${authType} exitoso:`, response);
-        this.enviando = false;
         
-        this.router.navigateByUrl(this.returnUrl);
-        
-        Swal.fire({
-          icon: 'success',
-          title: this.modoLogin ? '¡Login exitoso!' : '¡Registro exitoso!',
-          text: `Bienvenido${this.modoLogin ? '' : ', tu cuenta ha sido creada correctamente.'}`,
-          confirmButtonText: 'Continuar'
-        });
+          this.enviando = false;
+          
+          this.router.navigateByUrl(this.returnUrl);
+          
+          Swal.fire({
+            icon: 'success',
+            title: this.modoLogin ? '¡Login exitoso!' : '¡Registro exitoso!',
+            text: `Bienvenido${this.modoLogin ? '' : ', tu cuenta ha sido creada correctamente.'}`,
+            confirmButtonText: 'Continuar'
+          });
+
 
       }, error: (error: any) => {
         console.error(`Error en ${authType}:`, error);
