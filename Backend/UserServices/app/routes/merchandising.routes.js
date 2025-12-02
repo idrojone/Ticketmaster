@@ -1,4 +1,7 @@
 module.exports = (app) => {
-    const { getMerchandising } = require('../controllers/merchandising.controller');
-    app.get('/merchandising/:id', getMerchandising);
+    const merchandising = require('../controllers/merchandising.controller');
+    const verifyJWT = require("../middleware/verifyJWT.js");
+
+    app.get('/merchandising/:id',merchandising.getMerchandising);
+    // app.get('/api/merchandising', verifyJWT, merchandising.getMerchandisingCarrito);
 }

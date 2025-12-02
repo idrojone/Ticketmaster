@@ -1,4 +1,6 @@
 const Merchandising = require('../models/merchandising.model');
+const Carrito = require('../models/carrito.model');
+const User = require('../models/user.model');
 
 async function getMerchandising(req, res) {
     try {
@@ -15,6 +17,49 @@ async function getMerchandising(req, res) {
     }
 }
 
+async function getMerchandisingCarrito(req, res) {
+    // try {
+        const userId = req.id;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Parámetros inválidos'
+            });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        const carrito  = await Carrito.findOne({ userId: userId, is_active: true, status: 'PENDING' });
+        if (!carrito) {
+            return res.status(404).json({
+                success: false,
+                message: 'Carrito no encontrado'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Carrito encontrado exitosamente',
+            data: carrito.merchandising
+        });
+
+    // } catch (error) {
+    //     return res.status(500).json({
+    //         success: false,
+    //         message: 'Error interno del servidor',
+    //         error: error
+    //     });
+    // }   
+}
+
 module.exports = {
-    getMerchandising
+    getMerchandising,
+    getMerchandisingCarrito
 }
