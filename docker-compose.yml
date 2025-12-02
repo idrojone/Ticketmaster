@@ -50,6 +50,31 @@ services:
         mongosh --host mongodb:27017 --eval 'rs.status()'
     restart: "no"
 
+  user-service:
+    build:
+      context: ./Backend/UserServices
+      dockerfile: Dockerfile
+    image: ticketmaster-user-service:latest
+    container_name: ticketmaster-user-service
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - BIND_HOST=0.0.0.0
+      - MONGO_URI=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - mongo-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "const mongoose=require('mongoose'); mongoose.connect(process.env.MONGO_URI||'mongodb://mongodb:27017/ticketmaster').then(()=>process.exit(0)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
 volumes:
   mongodb_data:
   mongodb_config:

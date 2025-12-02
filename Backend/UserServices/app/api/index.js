@@ -4,7 +4,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3000;
-const BIND_HOST = process.env.BIND_HOST || "127.0.0.1";
+// bind to 0.0.0.0 by default so Docker can access the service
+const BIND_HOST = process.env.BIND_HOST || "0.0.0.0";
 
 //Create express app
 const app = express();
