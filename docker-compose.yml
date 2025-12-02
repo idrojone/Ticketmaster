@@ -76,6 +76,45 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+
+  dashboard-admin:
+    build:
+      context: ./Backend
+      dockerfile: DashboardAdmin/Dockerfile
+    image: ticketmaster-dashboard-admin:latest
+    container_name: ticketmaster-dashboard-admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    env_file:
+      - Backend/DashboardAdmin/.env
+    environment:
+      - DATABASE_URL=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
+      - API_HOST=0.0.0.0
+      - API_PORT=3010
+    ports:
+      - "3010:3010"
+    restart: unless-stopped
+    networks:
+      - mongo-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "const {PrismaClient} = require('@prisma/client'); const p=new PrismaClient(); p.$connect().then(()=>process.exit(0)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  prisma-migrate:
+    image: ticketmaster-dashboard-admin:latest
+    container_name: prisma-migrate
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    env_file:
+      - Backend/DashboardAdmin/.env
+    command: ["sh", "-c", "pnpm prisma db push --schema=../prisma/schema.prisma || true"]
+    restart: 'no'
+    networks:
+      - mongo-network
   # Angular Frontend
   ticketmain-frontend:
     build:
