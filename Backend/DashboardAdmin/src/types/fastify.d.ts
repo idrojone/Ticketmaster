@@ -7,7 +7,9 @@ declare module 'fastify' {
     authenticate(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     authenticateOptional(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     authenticateRole(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-    generateAccessToken(username: string, email: string, reply: FastifyReply): Promise<string>;
+    generateAccessToken(username: string, email: string, reply: FastifyReply): 
+    Promise<string>;
+    authenticateServer(request: FastifyRequest, reply: FastifyReply): Promise<void>;
     // axiosClient: ReturnType<typeof axios.create>;
     axiosClient?: AxiosInstance;
     stripe: Stripe;

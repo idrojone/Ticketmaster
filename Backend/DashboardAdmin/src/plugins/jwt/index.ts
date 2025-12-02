@@ -52,4 +52,15 @@ export default fp(async (server: FastifyInstance) => {
             server.throwError(401, 'Unauthorized');
         }
     });
+
+
+    server.decorate('authenticateServer', async function (request: FastifyRequest) {
+        try {
+            const token = await request.jwtVerify();
+            (request as any).user = token;
+            return;
+        } catch (err) {
+            server.throwError(401, 'Unauthorized');
+        }
+    });
 });

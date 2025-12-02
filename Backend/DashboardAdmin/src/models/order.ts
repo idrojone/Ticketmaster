@@ -28,6 +28,44 @@ class ModelOrder {
             throw new Error('Carrito no encontrado');
         }
 
+        console.log(request.token);
+        const userId = request.token.id;
+        
+        if (!userId) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        if (prisma.carrito.findFirst({ where: { id: cartId, userId: userId, is_active: true, status: 'PENDING' } }) === null) {
+            throw new Error('El carrito no pertenece al usuario autenticado');
+        }
+
+
+        for (const concierto of cart.conciertos) {
+            const conciertoData = await prisma.concierto.findUnique({
+                where: { id: concierto.conciertoId }
+            });
+
+            if (!conciertoData) {
+            throw new Error(`Concierto con id ${concierto.conciertoId} no encontrado`);
+            }
+
+            if (concierto.cantidad > conciertoData.aforo) {
+            throw new Error(`La cantidad de entradas (${concierto.cantidad}) excede el aforo del concierto (${conciertoData.aforo})`);
+            }
+        }
+
+        for (const merch of cart.merchandising) {
+            const merchData = await prisma.merchandising.findUnique({
+                where: { id: merch.merchandisingId }
+            });
+            if (!merchData) {
+                throw new Error(`Merchandising con id ${merch.merchandisingId} no encontrado`);
+            }
+            if (merch.cantidad > merchData.stock) {
+                throw new Error(`La cantidad de merchandising (${merch.cantidad}) excede el stock disponible (${merchData.stock})`);
+            }
+        }
+        
         const paymentIntentIdempotencyKey = `pi-request-${uuidv4()}`;
         const amountInCents = Math.round(cart.precio * 100);
         const currency = 'eur';

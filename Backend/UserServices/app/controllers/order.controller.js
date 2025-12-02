@@ -1,6 +1,7 @@
 const User = require('../models/user.model');
 const Cart = require('../models/carrito.model');
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 
 async function createOrder(req, res) {
 
@@ -25,14 +26,17 @@ async function createOrder(req, res) {
     }
 
     const cartIdString = cart._id.toString();
-    // console.log('Enviando a DashboardAdmin:', { cartId: cartIdString });
 
+    const token = await jwt.sign({ role: 'server' }, process.env.JWT_SECRET, { expiresIn: '4s' });
     try {
+        const authHeader = req.headers['authorization'] || `Bearer ${token}`;
+
         const response = await axios.post('http://localhost:3010/order', {
             cartId: cartIdString
         }, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...(authHeader ? { 'Authorization': authHeader } : {})
             }
         });
 
@@ -43,10 +47,12 @@ async function createOrder(req, res) {
         });
     } catch (error) {
         console.error('Error llamando a DashboardAdmin:', error.response?.data || error.message);
-        return res.status(error.response?.status || 500).json({
+        const statusCode = error.response?.status || 500;
+        const errorData = error.response?.data || { message: error.message };
+        return res.status(statusCode).json({
             success: false,
             message: 'Error creando orden',
-            error: error.response?.data || error.message
+            error: errorData
         });
     }
 }

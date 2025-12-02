@@ -8,20 +8,21 @@ async function ordersRoutes(server: FastifyInstance) {
     server.route({
         method: 'POST',
         url: '/order',
-        // onRequest: [server.authenticate], // Faltaria fer esto
+        onRequest: [server.authenticateServer],
         handler: createOrder
     })
     async function createOrder(request: FastifyRequest, reply: FastifyReply) {
         try {
             console.log('Body recibido:', request.body);
-            const newOrder = await modelOrder(server).createOrder(request.body);
-            return reply.code(201).send(newOrder);
+            const cartId = (request.body as any)?.cartId;
+            const token = (request as any).user; 
+            const newOrder = await modelOrder(server).createOrder({ cartId, token });
+            return reply.code(201).send({ success: true, ...newOrder });
         } catch (error: any) {
             console.error('Error creando orden:', error);
             return reply.code(500).send({
                 success: false,
                 message: error.message || 'Error interno del servidor',
-                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
             });
         }
     }

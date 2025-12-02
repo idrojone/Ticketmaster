@@ -144,6 +144,8 @@ export class TotalCarrito {
           }
         });
 
+        console.log('Resultado del pago:', result);
+
         this.processingPayment = false;
 
         if (result.error) {
@@ -170,7 +172,7 @@ export class TotalCarrito {
             if (result.isConfirmed) {
               this.router.navigate(['/shop']);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              this.router.navigate(['/profile/me/' + this.usuario.email]);
+              this.router.navigate(['/profile/me/' + this.usuario.name]);
             }
           });
         }
@@ -178,11 +180,10 @@ export class TotalCarrito {
       error: (err) => {
         console.error('Error del backend:', err);
         this.processingPayment = false;
-        this.paymentError = 'Error al crear la orden. Intenta de nuevo.';
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Error al crear la orden. Intenta de nuevo.',
+          text: err.error?.message || 'Hubo un error al crear la orden.',
           showConfirmButton: false,
           timer: 2000
         });

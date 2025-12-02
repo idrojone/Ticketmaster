@@ -13,8 +13,13 @@ async function webhookRoutes(server: FastifyInstance) {
     server.post('', webhookHandler);
 
     async function webhookHandler(request: FastifyRequest, reply: FastifyReply) {
-        const sig = request.headers['stripe-signature'] as string;
+        const sig = (request.headers['stripe-signature'] || request.headers['Stripe-Signature']) as string;
         const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+        // Safety check: ensure stripe plugin is available
+        if (!server.stripe) {
+            console.error('Stripe client not configured on server');
+            return reply.status(500).send({ error: 'Server misconfiguration' });
+        }
 
         if (!webhookSecret) {
             console.error('STRIPE_WEBHOOK_SECRET is not defined');
@@ -24,14 +29,37 @@ async function webhookRoutes(server: FastifyInstance) {
         let event;
 
         try {
-            // Use request.body which should be a Buffer due to our content type parser
-            const rawBody = request.body as Buffer;
-            console.log('Body recibido (tipo):', typeof rawBody, 'es Buffer:', Buffer.isBuffer(rawBody));
-            event = server.stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+            // rawBody expected to be Buffer due to custom content-type parser
+            const rawBody = request.body as Buffer | string | undefined;
+            if (!rawBody) {
+                console.error('Webhook: empty body received');
+                return reply.status(400).send({ error: 'Empty body' });
+            }
+            console.log('Webhook: body length:', Buffer.isBuffer(rawBody) ? rawBody.length : String(rawBody).length);
+            // If signature header missing, return 400 (bad request)
+            if (!sig) {
+                console.error('Webhook signature header missing');
+                return reply.status(400).send({ error: 'Missing stripe-signature header' });
+            }
+            try {
+                event = server.stripe.webhooks.constructEvent(rawBody as Buffer, sig, webhookSecret);
+            } catch (err: any) {
+                console.error('Webhook signature verification failed:', err?.message || err);
+                // Log the raw request body for safe debugging (truncate to avoid huge logs)
+                try {
+                    const snippet = (Buffer.isBuffer(rawBody) ? rawBody.toString('utf8') : String(rawBody)).slice(0, 4000);
+                    console.error('Webhook raw body snippet:', snippet);
+                } catch (e) {
+                    console.error('Error while logging raw body snippet', e);
+                }
+                return reply.status(400).send({ error: `Webhook signature verification failed` });
+            }
         } catch (err: any) {
-            console.error('Webhook signature verification failed.', err.message);
-            return reply.status(400).send(`Webhook Error: ${err.message}`);
+            console.error('Webhook handler unexpected error while parsing body:', err?.message || err);
+            return reply.status(500).send({ error: 'Unexpected error' });
         }
+
+        console.log('Webhook event received:', event.type, event.id);
 
         if (event.type === 'payment_intent.succeeded') {
             const pi = event.data.object as any;
@@ -41,6 +69,7 @@ async function webhookRoutes(server: FastifyInstance) {
             console.log(orderId, transactionRef)
 
             try {
+                // Wrap DB processing in a transaction and catch any DB errors
                 await prisma.$transaction(async (tx) => {
                     //Buscar pago existente por transactionRef
                     let payment = await tx.payment.findFirst({
@@ -149,15 +178,15 @@ async function webhookRoutes(server: FastifyInstance) {
                 });
 
                 console.log(`Orden ${orderId} completada correctamente`);
-                return reply.send({ received: true });
+                return reply.code(200).send({ received: true });
 
-            } catch (err) {
-                console.error('Error procesando webhook:', err);
-                return reply.status(500).send(`Error processing webhook: ${err}`);
+            } catch (err: any) {
+                console.error('Error procesando webhook:', err?.message || err);
+                return reply.status(500).send({ error: 'Error processing webhook', details: err?.message || String(err) });
             }
         }
-
-        return reply.send({ received: true });
+        console.log('Webhook: unhandled event type:', event.type);
+        return reply.code(200).send({ received: true, msg: 'Unhandled event type' });
     }
 }
 
