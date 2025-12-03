@@ -61,6 +61,7 @@ class ModelGeneros {
      * @returns {Promise<Genero>} Una promesa que resuelve al género creado.
      */
     async createGenero(NuevoGenero: Genero) {
+        console.log('Creating new genero with data:', NuevoGenero);
         try {
             return await this.prisma.genero.create({
                 data: NuevoGenero,
@@ -187,13 +188,21 @@ class ModelGeneros {
      * @throws {Error} Lanza un error si hay un problema al crear el género.
      */
     async onCreateGenero(request: FastifyRequest<{ Body: Genero }>) {
-        
-        const generoData = request.body;
+        try {
+            const generoData = request.body;
+            this.server.log.info({ message: 'onCreateGenero - request body', body: generoData });
+            // Validación básica
+                if (!generoData || !generoData.name || typeof generoData.name !== 'string' || generoData.name.trim().length === 0) {
+                this.server.throwError(400, 'El nombre del género es obligatorio y debe ser string');
+            }
+                // Normalize name for checks
+                generoData.name = generoData.name.trim();
         /**
          * Generar slug y estado inicial
          */
 
         generoData.slug = this.server.generateSlug(generoData.name);
+        this.server.log.info({ message: 'onCreateGenero - generated slug', slug: generoData.slug });
         if (!generoData.slug) {
             this.server.throwError(500, 'Error generando el slug');
         }
@@ -211,15 +220,55 @@ class ModelGeneros {
          * Generar id_genero único
          */
         generoData.id_genero = this.server.generateSlug(generoData.name);
+        this.server.log.info({ message: 'onCreateGenero - generated id_genero', id_genero: generoData.id_genero });
         if (!generoData.id_genero) {
             this.server.throwError(500, 'Error generando el id del género');
+        }
+
+        // Validaciones previas: nombre, slug e id_genero únicos para evitar errores de constraint de Prisma
+        const existingByName = await this.getGeneroByName(generoData.name);
+        this.server.log.info({ message: 'onCreateGenero - existingByName', exists: !!existingByName, payload: existingByName });
+        if (existingByName) {
+            this.server.throwError(400, 'El nombre del género ya existe');
+        }
+
+        const existingBySlug = await this.checkSlugExists(generoData.slug);
+        this.server.log.info({ message: 'onCreateGenero - existingBySlug', exists: !!existingBySlug, payload: existingBySlug });
+        if (existingBySlug) {
+            this.server.throwError(400, 'El slug generado ya existe');
+        }
+
+        if (generoData.id_genero) {
+            const existingByIdGenero = await this.checkid_generoExists(generoData.id_genero);
+            this.server.log.info({ message: 'onCreateGenero - existingByIdGenero', exists: !!existingByIdGenero, payload: existingByIdGenero });
+            if (existingByIdGenero) {
+                this.server.throwError(400, 'El id_genero ya existe');
+            }
         }
 
         /**
          * Crear el nuevo género
          */
-        const newGenero = await this.createGenero(generoData);
-        return newGenero;
+            const newGenero = await this.createGenero(generoData);
+            this.server.log.info({ message: 'onCreateGenero - newGenero created', genero: newGenero });
+            return newGenero;
+        } catch (err: any) {
+            console.log('Error en onCreateGenero:', err);
+            // Si el error ya trae un statusCode (ej. creado por createGenero), reenviarlo tal cual
+            if (err?.statusCode) {
+                this.server.log.warn({ message: 'Forwarding existing error from createGenero', statusCode: err.statusCode, originalMessage: err.message, details: err.details || err });
+                this.server.throwError(err.statusCode, err.message, err.details || err);
+            }
+            // Si Prisma devuelve P2002 aquí, mapear a respuesta 409
+            if (err?.code === 'P2002') {
+                const target = (err?.meta?.target || '').toString();
+                this.server.log.warn({ message: 'P2002 detected in onCreateGenero', target, error: err });
+                this.server.throwError(409, `Datos únicos ya en uso: ${target || 'unknown'}`, err);
+            }
+            this.server.log.error({ message: 'Error en onCreateGenero', err });
+            // Reenvía el error genérico, con detalles en logs
+            this.server.throwError(500, 'Error creando genero', err);
+        }
     }
 
     /**

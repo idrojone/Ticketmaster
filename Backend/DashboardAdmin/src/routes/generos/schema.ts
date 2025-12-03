@@ -29,7 +29,7 @@ const generoListSchema = S.object()
   .prop('total', S.number().required());
 
 const generoCreateSchema = S.object()
-  .prop('name', S.string())
+  .prop('name', S.string().required())
   .prop('description', S.string());
 
 const generoUpdateSchema = S.object()
@@ -89,6 +89,7 @@ export const onCreateGenero = {
   response: {
     201: generoGetSchema,
     400: S.object().prop('message', S.string().default('Error creando genero')),
+    409: S.object().prop('message', S.string().default('El nombre del género ya existe')),
   },
 };
 
