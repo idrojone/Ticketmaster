@@ -219,8 +219,15 @@ class ModelConciertos {
             this.server.throwError(404, 'Género no encontrado');
         }
 
-        const merchid = await this.server.axiosClient.get('/merch-random');
-        if (!merchid.data) {
+        let merchid;
+        try {
+            const res = await this.server.axiosClient.get('/merch-random');
+            merchid = res.data;
+        } catch (err: any) {
+            console.error('Error fetching merch-random:', err?.message ?? err);
+            this.server.throwError(500, 'Error connecting to merchandising service');
+        }
+        if (!merchid) {
             this.server.throwError(500, 'No hay merchandising disponible');
         }
         conciertoData.merchandisingId = merchid.data

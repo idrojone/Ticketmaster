@@ -5,7 +5,7 @@ services:
   mongodb:
     image: mongo:7.0
     container_name: mongodb
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    command: [ "mongod", "--replSet", "rs0", "--bind_ip_all" ]
     ports:
       - "27018:27017"
     volumes:
@@ -72,7 +72,7 @@ services:
     networks:
       - mongo-network
     healthcheck:
-      test: ["CMD", "node", "-e", "const mongoose=require('mongoose'); mongoose.connect(process.env.MONGO_URI||'mongodb://mongodb:27017/ticketmaster').then(()=>process.exit(0)).catch(()=>process.exit(1))"]
+      test: [ "CMD", "node", "-e", "const mongoose=require('mongoose'); mongoose.connect(process.env.MONGO_URI||'mongodb://mongodb:27017/ticketmaster').then(()=>process.exit(0)).catch(()=>process.exit(1))" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -92,13 +92,14 @@ services:
       - DATABASE_URL=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
       - API_HOST=0.0.0.0
       - API_PORT=3010
+      - GATEWAY_URL=http://dashboard-empresa:3030
     ports:
       - "3010:3010"
     restart: unless-stopped
     networks:
       - mongo-network
     healthcheck:
-      test: ["CMD", "node", "-e", "const {PrismaClient} = require('@prisma/client'); const p=new PrismaClient(); p.$connect().then(()=>process.exit(0)).catch(()=>process.exit(1))"]
+      test: [ "CMD", "node", "-e", "const {PrismaClient} = require('@prisma/client'); const p=new PrismaClient(); p.$connect().then(()=>process.exit(0)).catch(()=>process.exit(1))" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -111,10 +112,41 @@ services:
         condition: service_healthy
     env_file:
       - Backend/DashboardAdmin/.env
-    command: ["sh", "-c", "pnpm prisma db push --schema=../prisma/schema.prisma || true"]
+    command: [ "sh", "-c", "pnpm prisma db push --schema=../prisma/schema.prisma || true" ]
     restart: 'no'
     networks:
       - mongo-network
+  # Dashboard Empresa - NestJS Microservices
+  dashboard-empresa:
+    build:
+      context: ./Backend
+      dockerfile: dashboard-empresa/Dockerfile
+    image: ticketmaster-dashboard-empresa:latest
+    container_name: ticketmaster-dashboard-empresa
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
+      # HTTP ports for microservices (inside container)
+      - PORT=3030
+      - AUTH_PORT=3031
+      - MERCH_PORT=3069
+      - CATEGORIA_PORT=3070
+      # TCP ports for microservices
+      - AUTH_TCP_PORT=3032
+      - CATEGORIA_TCP_PORT=3033
+      - MERCH_TCP_PORT=3034
+    ports:
+      - "3030:3030" # API Gateway (internal 3030)
+      - "3031:3031" # Auth Service (internal 3031)
+      - "3069:3069" # Merch Service (internal 3069)
+      - "3070:3070" # Categoria Service (internal 3070)
+    restart: unless-stopped
+    networks:
+      - mongo-network
+
   # Angular Frontend
   ticketmain-frontend:
     build:
@@ -132,6 +164,7 @@ services:
 volumes:
   mongodb_data:
   mongodb_config:
+
 
 networks:
   mongo-network:

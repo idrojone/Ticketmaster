@@ -22,6 +22,8 @@ COPY prisma ../prisma
 # Generate Prisma Client using the schema located at ../prisma/schema.prisma
 RUN echo '{"name":"prisma-temp-root","private":true,"dependencies":{"@prisma/client":"6.18.0"}}' > /usr/src/app/package.json \
 	&& pnpm install --prod --silent --dir /usr/src/app \
+	# Remove prisma/.env to avoid conflicting DATABASE_URL vars between DashboardAdmin/.env and prisma/.env during build
+	&& rm -f ../prisma/.env || true \
 	&& pnpm run prisma
 
 # Build TypeScript

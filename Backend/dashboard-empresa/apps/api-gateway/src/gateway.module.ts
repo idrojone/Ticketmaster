@@ -9,24 +9,24 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'AUTH_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: '127.0.0.1',
-          port: 3032,
+          host: process.env.AUTH_TCP_HOST || '127.0.0.1',
+          port: parseInt(process.env.AUTH_TCP_PORT || '3032', 10),
         },
       },
       {
         name: 'MERCH_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: '127.0.0.1',
-          port: 3034,
+          host: process.env.MERCH_TCP_HOST || '127.0.0.1',
+          port: parseInt(process.env.MERCH_TCP_PORT || '3034', 10),
         },
       },
       {
         name: 'CATEGORIA_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: '127.0.0.1',
-          port: 3033,
+          host: process.env.CATEGORIA_TCP_HOST || '127.0.0.1',
+          port: parseInt(process.env.CATEGORIA_TCP_PORT || '3033', 10),
         },
       }
     ])
