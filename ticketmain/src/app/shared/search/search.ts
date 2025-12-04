@@ -139,7 +139,13 @@ export class Search implements OnInit, OnDestroy {
   }
 
   public search_event(): void {
-    this.filters.nombre = this.search_value || '';
+
+    if(this.filters.nombre!.length > 0){
+      this.filters.nombre = "ia,"+this.filters.nombre;
+    }else{
+      this.filters.nombre = "";
+    }
+
     this.resetPagination();
     this.searchEvent.emit(this.filters);
     this.Router.navigate(['/shop/' + btoa(JSON.stringify(this.filters))]);

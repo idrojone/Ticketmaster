@@ -129,6 +129,8 @@ export class ListConciertos implements OnInit {
         }
         // console.log("filters recibidos en list conciertos: " , filters);
 
+        
+
         this.conciertosService.get_all_conciertos(filters).subscribe(
             (data: any) => {
                 this.conciertos = data.conciertos as Concierto[];
