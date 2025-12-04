@@ -99,10 +99,12 @@ services:
     networks:
       - mongo-network
     healthcheck:
-      test: [ "CMD", "node", "-e", "const {PrismaClient} = require('@prisma/client'); const p=new PrismaClient(); p.$connect().then(()=>process.exit(0)).catch(()=>process.exit(1))" ]
+      # HTTP healthcheck against internal debug route to verify the server responds
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3010/debug/ping').then(r=>{if(r.ok)process.exit(0);else process.exit(1)}).catch(()=>process.exit(1))\""]
       interval: 10s
-      timeout: 10s
-      retries: 5
+      timeout: 5s
+      retries: 12
+      start_period: 45s
 
   prisma-migrate:
     image: ticketmaster-dashboard-admin:latest
@@ -116,6 +118,23 @@ services:
     restart: 'no'
     networks:
       - mongo-network
+  # stripe-listener:
+  #   image: stripe/stripe-cli:latest
+  #   container_name: stripe-listener
+  #   depends_on:
+  #     dashboard-admin:
+  #       condition: service_healthy
+  #   env_file:
+  #     - Backend/DashboardAdmin/.env
+  #   # Use the STRIPE_SECRET_KEY variable from env_file and pass it to the stripe command
+  #   # Escape the $ to avoid docker-compose interpolating the variable on the host
+  #   entrypoint: ["sh", "-lc"]
+  #   command: "stripe listen --forward-to http://localhost:3010/api/webhook --skip-verify --api-key $$STRIPE_SECRET_KEY"
+  #   environment:
+  #     - STRIPE_SECRET_KEY
+  #   restart: unless-stopped
+  #   networks:
+  #     - mongo-network
   # Dashboard Empresa - NestJS Microservices
   dashboard-empresa:
     build:

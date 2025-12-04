@@ -1,0 +1,69 @@
+[{
+  "_id": {
+    "$oid": "6930761c06e94485b040a3de"
+  },
+  "nombre": "Camiseta Blue Banana",
+  "descripcion": "Blue Banana",
+  "precio": 25,
+  "stock": {
+    "$numberLong": "100000"
+  },
+  "imagen": "https://www.bluebananabrand.com/cdn/shop/files/2_WHITECLASSICTEE_33W00_1.webp?v=1761839584&width=1100",
+  "categoriaId": {
+    "$oid": "693075a19fa7d9e2d3876615"
+  },
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:40:44.212Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:40:44.212Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6930767506e94485b040a3df"
+  },
+  "nombre": "TREKKING GREEN",
+  "descripcion": "GREEN NATURE",
+  "precio": 30,
+  "stock": {
+    "$numberLong": "100000"
+  },
+  "imagen": "https://www.bluebananabrand.com/cdn/shop/files/TREKKINGGREENNATURETEE_AW25UG011NATGR14_10.webp?v=1756198153&width=1100",
+  "categoriaId": {
+    "$oid": "693075a19fa7d9e2d3876615"
+  },
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:42:13.858Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:42:29.757Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6930773d06e94485b040a3e0"
+  },
+  "nombre": "INDICODE",
+  "descripcion": "INDICODE JEANS",
+  "precio": 50,
+  "stock": {
+    "$numberLong": "1000000"
+  },
+  "imagen": "https://img01.ztat.net/article/spp-media-p1/3d345fd9efab434c9d1073ff7f6f8068/29e7fd5c19eb4be18dd045751453fdaa.jpg?imwidth=1800",
+  "categoriaId": {
+    "$oid": "693075829fa7d9e2d3876614"
+  },
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:45:33.397Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:45:33.397Z"
+  }
+}]

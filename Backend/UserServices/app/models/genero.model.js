@@ -8,7 +8,7 @@ const genero_schema = mongoose.Schema({
         lowercase: true,
         unique: true
     },
-    nombre: {
+    name: {
         type: String,
         required: true,
         unique: true
