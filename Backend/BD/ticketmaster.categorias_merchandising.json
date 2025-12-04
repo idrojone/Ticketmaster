@@ -1,0 +1,32 @@
+[{
+  "_id": {
+    "$oid": "693075829fa7d9e2d3876614"
+  },
+  "nombre": "Pantalones",
+  "descripcion": "pantalones ",
+  "imagen": "",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:38:10.183Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:38:10.183Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "693075a19fa7d9e2d3876615"
+  },
+  "nombre": "Camisetas",
+  "descripcion": "camisetas",
+  "imagen": "",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:38:41.856Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:38:41.856Z"
+  }
+}]

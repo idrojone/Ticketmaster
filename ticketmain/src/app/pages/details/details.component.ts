@@ -239,6 +239,7 @@ export class DetailsComponent {
     }
 
     async dialogMerch() {
+        console.log(this.merchandisingId);
         this.merchService.get_all_merch(this.merchandisingId!).subscribe({
             next: (producto: any) => {
                 const productoHTML = `

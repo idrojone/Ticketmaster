@@ -222,6 +222,7 @@ class ModelConciertos {
         let merchid;
         try {
             const res = await this.server.axiosClient.get('/merch-random');
+            console.log(res.data);
             merchid = res.data;
         } catch (err: any) {
             console.error('Error fetching merch-random:', err?.message ?? err);
@@ -230,8 +231,10 @@ class ModelConciertos {
         if (!merchid) {
             this.server.throwError(500, 'No hay merchandising disponible');
         }
-        conciertoData.merchandisingId = merchid.data
+        conciertoData.merchandisingId = (merchid && typeof merchid === 'string') ? merchid : (merchid?.data || (merchid?.merchandisingId || '')) as any;
 
+        console.log('Merchandising ID:', conciertoData.merchandisingId);
+        console.log('Concierto Data before creation:', conciertoData);
         /**
          * Crear concierto
          */
