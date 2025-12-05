@@ -394,6 +394,7 @@ const unlikeConcierto = asyncHandler(async (req, res) => {
 });
 
 const buscadorIA = asyncHandler(async (req, res) => {
+    console.log("ENTRA BUsCADOR IA ");
     const query = req.body;
 
     if(query.length < 1){
@@ -432,7 +433,7 @@ const buscadorIA = asyncHandler(async (req, res) => {
 
         const mensajeIA = response.choices[0].message;
 
-        console.log(mensajeIA);
+        console.log("MENSAJE IA ",mensajeIA);
 
     }catch(error){
         console.log("ERROR AI",error);

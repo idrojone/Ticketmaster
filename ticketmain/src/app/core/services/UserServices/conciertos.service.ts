@@ -58,7 +58,7 @@ export class ConciertosService {
     //     );
     // }
 
-    buscadorIA(query: string): Observable<any> {
+    buscadorIA(query: any): Observable<any> {
         return this.apiService.post(`/api/conciertosIA`, { query }).pipe(
             tap((data) => console.log('Conciertos encontrados:', data)),
             map((response: any) => response)

@@ -110,41 +110,61 @@ export class ListConciertos implements OnInit {
     }
 
     getConciertos(filters?: Filters) {
-        if (filters === undefined) {
+
+        if(this.filters.nombre?.startsWith("ia")){
+            console.log("ENTRA IA");
+
             filters = new Filters();
             filters.limit = this.limit;
-            filters.offset = this.offset;   
-        } else {
-            // Actualizar los filtros locales con los recibidos
-            this.filters = new Filters(
-                filters.limit,
-                filters.offset,
-                filters.genero,
-                filters.genero_nombre,
-                filters.fecha_inicio,
-                filters.fecha_fin,
-                filters.nombre,
-                filters.ciudad
+            filters.offset = this.offset;
+            filters.nombre = this.filters.nombre!.substring(3);
+
+            this.conciertosService.buscadorIA(filters).subscribe(
+                (data: any) => {
+                    return data as Concierto[];
+                },
+                (error: any) => {
+                    return console.error('Error fetching conciertos by genero:', error);
+                }
+            );
+        }else{
+            if (filters === undefined) {
+                filters = new Filters();
+                filters.limit = this.limit;
+                filters.offset = this.offset;   
+            } else {
+                // Actualizar los filtros locales con los recibidos
+                this.filters = new Filters(
+                    filters.limit,
+                    filters.offset,
+                    filters.genero,
+                    filters.genero_nombre,
+                    filters.fecha_inicio,
+                    filters.fecha_fin,
+                    filters.nombre,
+                    filters.ciudad
+                );
+            }
+            // console.log("filters recibidos en list conciertos: " , filters);
+
+            
+
+            this.conciertosService.get_all_conciertos(filters).subscribe(
+                (data: any) => {
+                    this.conciertos = data.conciertos as Concierto[];
+                    this.numeroConciertos = data.concierto_count/this.limit;
+                    if (this.numeroConciertos < 1 && this.numeroConciertos > 0) {
+                        this.numeroConciertos = 1;
+                    }
+                    // console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
+                    // console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
+                },
+                (error) => {
+                    console.error('Error fetching conciertos:', error);
+                }
             );
         }
-        // console.log("filters recibidos en list conciertos: " , filters);
 
-        
-
-        this.conciertosService.get_all_conciertos(filters).subscribe(
-            (data: any) => {
-                this.conciertos = data.conciertos as Concierto[];
-                this.numeroConciertos = data.concierto_count/this.limit;
-                if (this.numeroConciertos < 1 && this.numeroConciertos > 0) {
-                    this.numeroConciertos = 1;
-                }
-                // console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
-                // console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
-            },
-            (error) => {
-                console.error('Error fetching conciertos:', error);
-            }
-        );
     }
     
     setPageTo(pageNum: number): void {
