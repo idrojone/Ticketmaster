@@ -12,6 +12,7 @@ import { Search } from '../search/search';
 import { Filters } from '../../core/models/filters.model';
 import { ZardPaginationModule } from '@shared/components/pagination/pagination.module';
 import { FormsModule } from '@angular/forms';
+import { filter } from 'rxjs';
 
 
 
@@ -109,25 +110,36 @@ export class ListConciertos implements OnInit {
         );
     }
 
-    getConciertos(filters?: Filters) {
+    async getConciertos(filters?: Filters) {
+
+        console.log("FILTROS PARA LA BUSQUE DA "+ JSON.stringify(filters));
 
         if(this.filters.nombre?.startsWith("ia")){
             console.log("ENTRA IA");
 
-            filters = new Filters();
-            filters.limit = this.limit;
-            filters.offset = this.offset;
-            filters.nombre = this.filters.nombre!.substring(3);
+            // Extraer el mensaje quitando el prefijo "ia"
+            const mensajeIA = await this.filters.nombre!.substring(3);
+            console.log("IA búsqueda: " + mensajeIA);
 
-            this.conciertosService.buscadorIA(filters).subscribe(
-                (data: any) => {
-                    return data as Concierto[];
+            this.conciertosService.buscadorIA({"message": mensajeIA}).subscribe(
+                (conciertos: Concierto[]) => {
+                    console.log('Conciertos recibidos de IA:', conciertos);
+
+                    this.filters.nombre = this.filters.nombre!.substring(3);
+                    this.conciertos = conciertos;
+                    this.numeroConciertos = Math.ceil(conciertos.length / this.limit);
+                    if (this.numeroConciertos < 1 && conciertos.length > 0) {
+                        this.numeroConciertos = 1;
+                    }
                 },
                 (error: any) => {
-                    return console.error('Error fetching conciertos by genero:', error);
+                    console.error('Error en búsqueda IA:', error);
+                    this.conciertos = [];
+                    this.numeroConciertos = 0;
                 }
             );
         }else{
+            
             if (filters === undefined) {
                 filters = new Filters();
                 filters.limit = this.limit;

@@ -58,7 +58,10 @@ export class ApiService {
             return this.http.post(`${environment.dashboard_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
         } else if (server==="empresa"){
             return this.http.post(`${environment.gateway_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
-        } else{
+        } else if(server=== "ia"){
+            return this.http.post(`${environment.ia_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        }
+        else{
             return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
         }
     }

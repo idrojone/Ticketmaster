@@ -55,6 +55,15 @@
         "tsConfigPath": "apps/categoria-service/tsconfig.app.json"
       }
     },
+    "ia-service": {
+      "type": "application",
+      "root": "apps/ia-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/ia-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ia-service/tsconfig.app.json"
+      }
+    },
     "common": {
       "type": "library",
       "root": "libs/common",

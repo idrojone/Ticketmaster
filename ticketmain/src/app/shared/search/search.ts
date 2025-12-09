@@ -92,6 +92,7 @@ export class Search implements OnInit, OnDestroy {
       this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
       if (this.routeFilters !== null) {
         const parsedFilters = JSON.parse(atob(this.routeFilters));
+
         this.filters = new Filters(
           parsedFilters.limit,
           parsedFilters.offset,
@@ -108,7 +109,17 @@ export class Search implements OnInit, OnDestroy {
     
     this.search = weittingValue;
     this.filters.nombre = this.search;
+      
+    if(this.filters.nombre?.startsWith("ia")){
+      console.log("borrar para que no entre a la ia ");
+      this.filters.nombre = this.filters.nombre!.substring(3);
+    }
     
+    if(this.search.startsWith("ia")){
+      console.log("borrar para que no entre a la ia");
+      this.filters.nombre = this.filters.nombre!.substring(3);
+    }
+
     this.resetPagination();
 
     setTimeout(() => {

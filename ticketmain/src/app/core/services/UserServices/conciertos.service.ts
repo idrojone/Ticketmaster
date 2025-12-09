@@ -55,13 +55,34 @@ export class ConciertosService {
     //     return this.apiService.get(`/api/conciertos/likes/${slug}`).pipe(
     //         tap((data) => console.log('Likes del concierto:', data)),
     //         map((response: any) => response as { slug: string, likes: number, hasLiked: boolean })
-    //     );
+    //     );W
     // }
 
-    buscadorIA(query: any): Observable<any> {
-        return this.apiService.post(`/api/conciertosIA`, { query }).pipe(
-            tap((data) => console.log('Conciertos encontrados:', data)),
-            map((response: any) => response)
+    buscadorIA(query: any): Observable<Concierto[]> {
+
+        return this.apiService.post(`/ia/chat`, query , true, "ia" ).pipe(
+            tap((data) => console.log('Respuesta IA completa:', data)),
+            map((response: any) => {
+                let parsedData;
+                
+                if(response.response.mensaje === "No se encontraron conciertos fuera de España"){
+                    return [];
+                }
+
+                if (typeof response.response === 'string') {
+                    try {
+                        parsedData = JSON.parse(response.response);
+                    } catch (error) {
+                        console.error('Error parseando:', error);
+                        return [];
+                    }
+                } else {
+                    parsedData = response.response;
+                }
+                
+                console.log('Datos parseados:', parsedData);
+                return (parsedData.conciertos || []) as Concierto[];
+            })
         );
     }
 
