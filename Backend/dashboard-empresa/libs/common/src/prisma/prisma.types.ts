@@ -1,18 +1,2 @@
-// Export enum types directly defined here to avoid build-time import issues
-export enum Status {
-  PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED',
-}
-
-export enum OrderStatus {
-  PENDING = 'PENDING',
-  PAID = 'PAID',
-  FAILED = 'FAILED',
-}
-
-export enum PaymentStatus {
-  PENDING = 'PENDING',
-  COMPLETED = 'COMPLETED',
-}
+// Re-export enum types from Prisma client to ensure type compatibility
+export { Status, OrderStatus, PaymentStatus } from '@prisma/client';

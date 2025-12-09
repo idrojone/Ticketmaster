@@ -39,7 +39,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   const port = process.env.CATEGORIA_PORT || 3070;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
   console.log(`Categoria Service HTTP running on port ${port}`);
   console.log(`Categoria Service TCP running on port 3035`);

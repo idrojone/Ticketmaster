@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'libs/common/src/prisma';
+import { PrismaService, Status } from 'libs/common/src/prisma';
 
 import {
   CreateMerchandisingDto,
@@ -9,7 +9,7 @@ import {
 
 @Injectable()
 export class MerchServiceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findAll(): Promise<MerchandisingResponseDto[]> {
     const merchandisings = await this.prisma.merchandising.findMany();
@@ -28,7 +28,7 @@ export class MerchServiceService {
     }
     return merchandising;
   }
-  
+
   async create(
     createDto: CreateMerchandisingDto,
   ): Promise<MerchandisingResponseDto> {
@@ -57,8 +57,8 @@ export class MerchServiceService {
         ...(updateDto.precio !== undefined && { precio: updateDto.precio }),
         ...(updateDto.stock !== undefined && { stock: updateDto.stock }),
         ...(updateDto.imagen !== undefined && { imagen: updateDto.imagen }),
-        ...(updateDto.categoriaId !== undefined && { categoriaId: updateDto.categoriaId }),
-        ...(updateDto.status !== undefined && { status: updateDto.status }),
+        ...(updateDto.categoriaId !== undefined && { categoria: { connect: { id: updateDto.categoriaId } } }),
+        ...(updateDto.status !== undefined && { status: updateDto.status as Status }),
         ...(updateDto.is_active !== undefined && { is_active: updateDto.is_active }),
         updatedAt: new Date(),
       },

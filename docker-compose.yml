@@ -55,7 +55,7 @@ services:
   dashboard-admin:
     build: ./Backend/DashboardAdmin
     container_name: ticketmaster-dashboard-admin
-    ports: 
+    ports:
       - "3010:3010"
     restart: on-failure
     depends_on:
@@ -63,66 +63,60 @@ services:
     networks:
       - mongo-network
     volumes:
-     - ./Backend/DashboardAdmin/.env:/app/.env
+      - ./Backend/DashboardAdmin/.env:/app/.env
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3010/debug/ping').then(r=>{if(r.ok)process.exit(0);else process.exit(1)}).catch(()=>process.exit(1))\""]
+      test: [ "CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3010/debug/ping').then(r=>{if(r.ok)process.exit(0);else process.exit(1)}).catch(()=>process.exit(1))\"" ]
       interval: 10s
       timeout: 5s
       retries: 12
       start_period: 45s
 
-  # Dashboard Empres
+  # Dashboard Empresa Service (NestJS Microservices)
   dashboard-empresa:
     build:
       context: ./Backend/dashboard-empresa
       dockerfile: Dockerfile
+    image: ticketmaster-dashboard-empresa:latest
     container_name: ticketmaster-dashboard-empresa
-    ports:
-      - "3030:3030" # API Gateway (HTTP)
-      - "3031:3031" # Auth Service (HTTP)
-      - "3069:3069" # Merch Service (HTTP)
-      - "3070:3070" # Categoria Service (HTTP)
-      - "3032:3032" # Auth Service (TCP)
-      - "3033:3033" # Categoria Service (TCP)
-      - "3034:3034" # Merch Service (TCP)
-    restart: on-failure
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
+      # API Gateway
+      - PORT=3030
+      # Auth Service
+      - AUTH_PORT=3031
+      - AUTH_TCP_HOST=0.0.0.0
+      - AUTH_TCP_PORT=3032
+      # Merch Service
+      - MERCH_PORT=3069
+      - MERCH_TCP_HOST=0.0.0.0
+      - MERCH_TCP_PORT=3034
+      # Categoria Service
+      - CATEGORIA_PORT=3070
+      - CATEGORIA_TCP_HOST=0.0.0.0
+      - CATEGORIA_TCP_PORT=3033
+    ports:
+      - "3030:3030" # API Gateway
+      - "3031:3031" # Auth HTTP
+      - "3032:3032" # Auth TCP
+      - "3033:3033" # Categoria TCP
+      - "3034:3034" # Merch TCP
+      - "3069:3069" # Merch HTTP
+      - "3070:3070" # Categoria HTTP
+    restart: on-failure
     networks:
       - mongo-network
     volumes:
-     - ./Backend/dashboard-empresa/.env:/app/.env
-
-  # Dashboard Empresa (API Gateway + Microservices)
-  # dashboard-empresa:
-  #   build:
-  #     context: ./Backend
-  #     dockerfile: dashboard-empresa/Dockerfile
-  #   image: ticketmaster-dashboard-empresa:latest
-  #   container_name: ticketmaster-dashboard-empresa
-  #   depends_on:
-  #     mongodb:
-  #       condition: service_healthy
-  #   environment:
-  #     - NODE_ENV=production
-  #     - DATABASE_URL=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
-  #     # HTTP ports for microservices (inside container)
-  #     - PORT=3030
-  #     - AUTH_PORT=3031
-  #     - MERCH_PORT=3069
-  #     - CATEGORIA_PORT=3070
-  #     # TCP ports for microservices
-  #     - AUTH_TCP_PORT=3032
-  #     - CATEGORIA_TCP_PORT=3033
-  #     - MERCH_TCP_PORT=3034
-  #   ports:
-  #     - "3030:3030" # API Gateway (internal 3030)
-  #     - "3031:3031" # Auth Service (internal 3031)
-  #     - "3069:3069" # Merch Service (internal 3069)
-  #     - "3070:3070" # Categoria Service (internal 3070)
-  #   restart: on-failure
-  #   networks:
-  #     - mongo-network
+      - ./Backend/dashboard-empresa/.env:/app/.env
+    healthcheck:
+      test: [ "CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3030').then(r=>{process.exit(0)}).catch(()=>process.exit(1))\"" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   user-service:
     build:

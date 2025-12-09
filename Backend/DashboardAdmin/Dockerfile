@@ -33,6 +33,6 @@ COPY --from=builder /app/node_modules ./node_modules
 RUN chmod +x init.sh
 RUN chmod +x wait-for-it.sh
 
-EXPOSE 3001
+EXPOSE 3010
 
 CMD ["sh", "-c", "/app/init.sh"]

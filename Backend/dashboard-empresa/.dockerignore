@@ -1,13 +1,40 @@
+# Dependencies - reinstalled in Docker
 node_modules
+.pnpm-store
+
+# Build outputs - rebuilt in Docker
 dist
-.git
+
+# Development files
 *.log
-tmp
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
 .DS_Store
-.cache
-.parcel-cache
-build
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+docs
+README.md
+*.md
+
+# Tests
+test
+*.spec.ts
 coverage
-.env
-.env.local
-.env.*.local

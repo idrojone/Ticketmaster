@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "build:all": "nest build api-gateway && nest build auth-service && nest build merch-service && nest build categoria-service",
+    "build:all": "nest build api-gateway && nest build auth-service && nest build merch-service && nest build categoria-service && nest build common",
     "start:gateway": "nest start api-gateway",
     "start:auth": "nest start auth-service",
     "start:merchandise": "nest start merchandise-service",

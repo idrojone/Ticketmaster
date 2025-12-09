@@ -39,7 +39,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   const port = process.env.MERCH_PORT || 3069;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
   console.log(`Merch Service HTTP running on port ${port}`);
   console.log(`Merch Service TCP running on port 3034`);
