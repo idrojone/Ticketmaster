@@ -5,6 +5,8 @@ const asyncHandler = require('express-async-handler');
 const GeneroModel = require('../models/genero.model.js');
 const User = require('../models/user.model.js');
 
+const { openai } = require('../api/index.js');
+
 async function findAllConciertos(req, res) {
     console.log(req.query, "query");
     let query = {};
@@ -43,6 +45,7 @@ async function findAllConciertos(req, res) {
 
     let nombreReg = new RegExp(nombre, 'i'); // 'i' para case-insensitive
 
+    
     query = {
         nombre: { $regex: nombreReg }
     };
@@ -390,6 +393,54 @@ const unlikeConcierto = asyncHandler(async (req, res) => {
     return res.status(200).json({ message: "Like eliminado" });
 });
 
+const buscadorIA = asyncHandler(async (req, res) => {
+    console.log("ENTRA BUsCADOR IA ");
+    const query = req.body;
+
+    if(query.length < 1){
+        return res.status(400).json({ message: "La query debe tener al menos 10 caracteres" });
+    }
+
+    try{
+        const response = await openai.chat.completions.create({
+            model: "Qwen/Qwen2.5-3B-Instruct",
+            messages: [
+                { role: "system", content: "Eres un asistente experto de busqueda de conciertos que recibe un objeto JSON con los filtros de busqueda." },
+                { role: "user", content: JSON.stringify(query) || "Busca conciertos" }
+            ],
+            tools: [
+                {
+                    type: "function",
+                    function: {
+                        name: "findConciertos",
+                        description: "Encuentra conciertos en la base de datos",
+                        parameters: {
+                            type: "object",
+                            properties: {
+                                query: {
+                                    type: "object",
+                                    description: "Query para buscar conciertos"
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            tool_choice: "auto"
+        });
+
+        console.log("AI ", response);
+
+        const mensajeIA = response.choices[0].message;
+
+        console.log("MENSAJE IA ",mensajeIA);
+
+    }catch(error){
+        console.log("ERROR AI",error);
+    }
+
+})
+
 
 const concierto_controller = {
     findAllConciertos: findAllConciertos,
@@ -404,6 +455,7 @@ const concierto_controller = {
     likeConcierto: likeConcierto,
     unlikeConcierto: unlikeConcierto,
     // findAllQuery: findAllQuery
+    buscadorIA: buscadorIA
 };
 
 module.exports = concierto_controller;

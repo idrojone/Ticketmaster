@@ -7,6 +7,17 @@ const PORT = process.env.PORT || 3000;
 // bind to 0.0.0.0 by default so Docker can access the service
 const BIND_HOST = process.env.BIND_HOST || "0.0.0.0";
 
+// import OpenAI from 'openai';
+const OpenAI = require('openai');
+
+//IA
+const openai = new OpenAI({
+    baseURL: 'http://localhost:1234/v1',
+    apiKey: "lm-studio",
+});
+
+module.exports.openai = openai;
+
 //Create express app
 const app = express();
 dotenv.config();

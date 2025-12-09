@@ -75,7 +75,9 @@ export class Search implements OnInit, OnDestroy {
         this.filters.nombre = undefined;
         console.log('Campo de búsqueda limpiado por filtros aplicados');
       } else {
-        this.search_value = this.filters.nombre || '';
+        // Eliminar el prefijo "ia," si existe para que no se muestre en el input
+        const nombreValue = this.filters.nombre || '';
+        this.search_value = nombreValue.startsWith('ia,') ? nombreValue.substring(3) : nombreValue;
       }
       
       this.searchEvent.emit(this.filters);
@@ -139,7 +141,15 @@ export class Search implements OnInit, OnDestroy {
   }
 
   public search_event(): void {
-    this.filters.nombre = this.search_value || '';
+
+    if(this.filters.nombre!.length > 0){
+      if(!this.filters.nombre!.startsWith("ia,")){
+        this.filters.nombre = "ia,"+this.filters.nombre;
+      }
+    }else{
+      this.filters.nombre = "";
+    }
+
     this.resetPagination();
     this.searchEvent.emit(this.filters);
     this.Router.navigate(['/shop/' + btoa(JSON.stringify(this.filters))]);
