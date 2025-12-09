@@ -79,7 +79,12 @@ RUN pnpm install --frozen-lockfile
 COPY dashboard-empresa .
 COPY prisma ../prisma
 
-RUN pnpm run prisma
+# Create a minimal root package.json to install prisma + @prisma/client so `prisma generate`
+# can find the CLI and client; prevents auto-install errors during generation
+RUN echo '{"name":"prisma-root-temp","private":true,"dependencies":{"@prisma/client":"6.19.0"},"devDependencies":{"prisma":"6.19.0"}}' > /usr/src/app/package.json \
+	&& pnpm install --no-frozen-lockfile --silent --dir /usr/src/app || true \
+	&& rm -f ../prisma/.env || true \
+	&& pnpm run prisma
 
 RUN pnpm exec nest build api-gateway && \
 	pnpm exec nest build auth-service && \

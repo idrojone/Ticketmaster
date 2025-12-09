@@ -18,8 +18,14 @@ const main = async () => {
         });
         await server.register(startServer, configuracion);
 
-        const port = (server as any).optionsEnv.API_PORT;
-        const host = (server as any).optionsEnv.API_HOST;
+        // Prefer fastify Env options loaded via plugin, fallback to process.env
+        const serverOptionsEnv = (server as any).optionsEnv ?? process.env;
+        if (!(server as any).optionsEnv) {
+            // fastify-env plugin did not populate optionsEnv; log a warning and use process.env fallback
+            console.warn('[WARN] fastify-env plugin did not load, falling back to process.env for configuration.');
+        }
+        const port = Number(serverOptionsEnv.API_PORT ?? process.env.API_PORT ?? 3010);
+        const host = serverOptionsEnv.API_HOST ?? process.env.API_HOST ?? '0.0.0.0';
 
         //Log de la dirección del servidor
         await server.listen({ port, host });
