@@ -1,44 +1,38 @@
-FROM node:20-slim AS builder
+FROM node:22-alpine AS builder
 
-WORKDIR /usr/src/app
+RUN apk add --no-cache bash
+RUN apk add --no-cache pnpm
 
-RUN apt-get update && \
-	apt-get install -y python3 build-essential openssl --no-install-recommends && \
-	rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+COPY . .
+# COPY DashboardAdmin/.env ./
 
-COPY prisma ./prisma
-COPY DashboardAdmin/package.json DashboardAdmin/pnpm-lock.yaml ./DashboardAdmin/
+RUN pnpm install \
+	&& npx prisma generate fastify \
+	&& mkdir -p node_modules/@prisma/client/.prisma \
+	&& cp -r node_modules/.prisma/client node_modules/@prisma/client/.prisma/ || true
+RUN pnpm run build
 
-RUN echo '{"private": true}' > package.json
+FROM node:22-alpine AS runner
 
-WORKDIR /usr/src/app/DashboardAdmin
-RUN pnpm install --no-frozen-lockfile
+RUN apk add --no-cache bash
+RUN apk add --no-cache pnpm
 
-COPY DashboardAdmin .
+WORKDIR /app
 
-RUN pnpm run prisma && ls node_modules/.prisma/client/*.d.ts && pnpm run build 2>&1 | grep "has no exported member" | head -5
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/package.json .
+COPY --from=builder /app/pnpm-lock.yaml .
+COPY --from=builder /app/prisma /app/prisma
+COPY --from=builder /app/prisma.config.ts .
+COPY --from=builder /app/wait-for-it.sh .
+COPY --from=builder /app/init.sh .
+COPY --from=builder /app/node_modules ./node_modules
 
-# Runtime
-FROM node:20-slim
+RUN chmod +x init.sh
+RUN chmod +x wait-for-it.sh
 
-WORKDIR /usr/src/app/DashboardAdmin
+EXPOSE 3001
 
-RUN apt-get update && \
-	apt-get install -y openssl bash --no-install-recommends && \
-	rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder /usr/src/app/DashboardAdmin/dist ./dist
-COPY --from=builder /usr/src/app/DashboardAdmin/node_modules ./node_modules
-
-COPY DashboardAdmin/wait-for-it.sh /usr/local/bin/wait-for-it.sh
-RUN chmod +x /usr/local/bin/wait-for-it.sh
-
-ENV NODE_ENV=production
-ENV API_PORT=3010
-
-EXPOSE 3010
-
-CMD ["/usr/local/bin/wait-for-it.sh", "mongodb:27017", "--timeout=60", "--strict", "--", \
-	"node", "dist/index.js"]
+CMD ["sh", "-c", "/app/init.sh"]
