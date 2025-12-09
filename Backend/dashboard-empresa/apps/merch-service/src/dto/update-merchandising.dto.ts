@@ -1,6 +1,5 @@
 import { IsString, IsNumber, IsOptional, IsPositive, Min, IsBoolean, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Status } from '@prisma/client';
 
 export class UpdateMerchandisingDto {
   @ApiProperty({ example: 'Camiseta Oficial', description: 'Nombre del merchandising' })
@@ -35,9 +34,10 @@ export class UpdateMerchandisingDto {
   @IsString()
   categoriaId?: string;
 
-  @ApiProperty({ example: "active", description: 'Estado del merchandising' })
+  @ApiProperty({ example: "PENDING|ACCEPTED|REJECTED|CANCELLED", description: 'Estado del merchandising' })
   @IsOptional()
-  status?: Status;
+  @IsString()
+  status?: string;
   
   @ApiProperty({ example: true, description: 'Indica si el merchandising está activo' })
   @IsOptional()

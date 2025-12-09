@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # MongoDB Database
   mongodb:
@@ -72,6 +70,28 @@ services:
       timeout: 5s
       retries: 12
       start_period: 45s
+
+  # Dashboard Empres
+  dashboard-empresa:
+    build:
+      context: ./Backend/dashboard-empresa
+      dockerfile: Dockerfile
+    container_name: ticketmaster-dashboard-empresa
+    ports:
+      - "3030:3030" # API Gateway (HTTP)
+      - "3031:3031" # Auth Service (HTTP)
+      - "3069:3069" # Merch Service (HTTP)
+      - "3070:3070" # Categoria Service (HTTP)
+      - "3032:3032" # Auth Service (TCP)
+      - "3033:3033" # Categoria Service (TCP)
+      - "3034:3034" # Merch Service (TCP)
+    restart: on-failure
+    depends_on:
+      - mongodb
+    networks:
+      - mongo-network
+    volumes:
+     - ./Backend/dashboard-empresa/.env:/app/.env
 
   # Dashboard Empresa (API Gateway + Microservices)
   # dashboard-empresa:
