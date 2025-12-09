@@ -6,6 +6,7 @@ services:
     image: mongo:7.0
     container_name: mongodb
     command: [ "mongod", "--replSet", "rs0", "--bind_ip_all" ]
+    restart: always
     ports:
       - "27018:27017"
     volumes:
@@ -52,31 +53,21 @@ services:
         mongosh --host mongodb:27017 --eval 'rs.status()'
     restart: "no"
 
-  user-service:
-    build:
-      context: ./Backend/UserServices
-      dockerfile: Dockerfile
-    image: ticketmaster-user-service:latest
-    container_name: ticketmaster-user-service
+  # Prisma Migrate
+  prisma-migrate:
+    image: ticketmaster-dashboard-admin:latest
+    container_name: prisma-migrate
     depends_on:
       mongodb:
         condition: service_healthy
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - BIND_HOST=0.0.0.0
-      - MONGO_URI=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
+    env_file:
+      - Backend/DashboardAdmin/.env
+    command: [ "sh", "-c", "pnpm prisma db push --schema=../prisma/schema.prisma || true" ]
+    restart: 'no'
     networks:
       - mongo-network
-    healthcheck:
-      test: [ "CMD", "node", "-e", "const mongoose=require('mongoose'); mongoose.connect(process.env.MONGO_URI||'mongodb://mongodb:27017/ticketmaster').then(()=>process.exit(0)).catch(()=>process.exit(1))" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
 
+  # Dashboard Admin Service
   dashboard-admin:
     build:
       context: ./Backend
@@ -95,7 +86,7 @@ services:
       - GATEWAY_URL=http://dashboard-empresa:3030
     ports:
       - "3010:3010"
-    restart: unless-stopped
+    restart: on-failure
     networks:
       - mongo-network
     healthcheck:
@@ -106,36 +97,7 @@ services:
       retries: 12
       start_period: 45s
 
-  prisma-migrate:
-    image: ticketmaster-dashboard-admin:latest
-    container_name: prisma-migrate
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    env_file:
-      - Backend/DashboardAdmin/.env
-    command: [ "sh", "-c", "pnpm prisma db push --schema=../prisma/schema.prisma || true" ]
-    restart: 'no'
-    networks:
-      - mongo-network
-  # stripe-listener:
-  #   image: stripe/stripe-cli:latest
-  #   container_name: stripe-listener
-  #   depends_on:
-  #     dashboard-admin:
-  #       condition: service_healthy
-  #   env_file:
-  #     - Backend/DashboardAdmin/.env
-  #   # Use the STRIPE_SECRET_KEY variable from env_file and pass it to the stripe command
-  #   # Escape the $ to avoid docker-compose interpolating the variable on the host
-  #   entrypoint: ["sh", "-lc"]
-  #   command: "stripe listen --forward-to http://localhost:3010/api/webhook --skip-verify --api-key $$STRIPE_SECRET_KEY"
-  #   environment:
-  #     - STRIPE_SECRET_KEY
-  #   restart: unless-stopped
-  #   networks:
-  #     - mongo-network
-  # Dashboard Empresa - NestJS Microservices
+  # Dashboard Empresa (API Gateway + Microservices)
   dashboard-empresa:
     build:
       context: ./Backend
@@ -162,7 +124,55 @@ services:
       - "3031:3031" # Auth Service (internal 3031)
       - "3069:3069" # Merch Service (internal 3069)
       - "3070:3070" # Categoria Service (internal 3070)
+    restart: on-failure
+    networks:
+      - mongo-network
+
+  user-service:
+    build:
+      context: ./Backend/UserServices
+      dockerfile: Dockerfile
+    image: ticketmaster-user-service:latest
+    container_name: ticketmaster-user-service
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      dashboard-admin:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - BIND_HOST=0.0.0.0
+      - MONGO_URI=mongodb://mongodb:27017/ticketmaster?replicaSet=rs0
+      - DASHBOARD_ADMIN_URL=http://dashboard-admin:3010
+    ports:
+      - "3000:3000"
     restart: unless-stopped
+    networks:
+      - mongo-network
+    healthcheck:
+      test: [ "CMD", "node", "-e", "const mongoose=require('mongoose'); mongoose.connect(process.env.MONGO_URI||'mongodb://mongodb:27017/ticketmaster').then(()=>process.exit(0)).catch(()=>process.exit(1))" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # Stripe CLI Listener
+  stripe-listener:
+    image: stripe/stripe-cli:latest
+    container_name: stripe-listener
+    depends_on:
+      dashboard-admin:
+        condition: service_healthy
+    command:
+      - listen
+      - --forward-to
+      - http://dashboard-admin:3010/api/webhook
+      - --skip-verify
+      - --api-key
+      - ${STRIPE_SECRET_KEY}
+    environment:
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+    restart: on-failure
     networks:
       - mongo-network
 

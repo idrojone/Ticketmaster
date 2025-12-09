@@ -32,7 +32,8 @@ async function createOrder(req, res) {
     try {
         const authHeader = req.headers['authorization'] || `Bearer ${token}`;
 
-        const response = await axios.post('http://localhost:3010/order', {
+        const dashboardUrl = process.env.DASHBOARD_ADMIN_URL || 'http://localhost:3010';
+        const response = await axios.post(`${dashboardUrl}/order`, {
             cartId: cartIdString
         }, {
             headers: {

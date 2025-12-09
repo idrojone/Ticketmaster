@@ -2,44 +2,43 @@ FROM node:20-slim AS builder
 
 WORKDIR /usr/src/app
 
-# Install build dependencies
-RUN apt-get update && apt-get install -y python3 build-essential openssl ca-certificates --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+	apt-get install -y python3 build-essential openssl --no-install-recommends && \
+	rm -rf /var/lib/apt/lists/*
 
-# Use corepack/pnpm for deterministic installs
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 
-# Copy only the package files first for faster install
+COPY prisma ./prisma
 COPY DashboardAdmin/package.json DashboardAdmin/pnpm-lock.yaml ./DashboardAdmin/
-WORKDIR /usr/src/app/DashboardAdmin
-RUN pnpm install --no-frozen-lockfile --no-optional
 
-# Copy source files
+RUN echo '{"private": true}' > package.json
+
+WORKDIR /usr/src/app/DashboardAdmin
+RUN pnpm install --no-frozen-lockfile
+
 COPY DashboardAdmin .
 
-# Copy prisma schema from the Backend context
-COPY prisma ../prisma
+RUN pnpm run prisma && ls node_modules/.prisma/client/*.d.ts && pnpm run build 2>&1 | grep "has no exported member" | head -5
 
-# Generate Prisma Client using the schema located at ../prisma/schema.prisma
-RUN echo '{"name":"prisma-temp-root","private":true,"dependencies":{"@prisma/client":"6.18.0"}}' > /usr/src/app/package.json \
-	&& pnpm install --prod --silent --dir /usr/src/app \
-	# Remove prisma/.env to avoid conflicting DATABASE_URL vars between DashboardAdmin/.env and prisma/.env during build
-	&& rm -f ../prisma/.env || true \
-	&& pnpm run prisma
+# Runtime
+FROM node:20-slim
 
-# Build TypeScript
-RUN pnpm run build
-
-FROM node:20-slim AS runner
 WORKDIR /usr/src/app/DashboardAdmin
-RUN apt-get update && apt-get install -y openssl ca-certificates --no-install-recommends && rm -rf /var/lib/apt/lists/* \
-	&& corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy compiled app and node_modules from builder
+RUN apt-get update && \
+	apt-get install -y openssl bash --no-install-recommends && \
+	rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /usr/src/app/DashboardAdmin/dist ./dist
 COPY --from=builder /usr/src/app/DashboardAdmin/node_modules ./node_modules
 
+COPY DashboardAdmin/wait-for-it.sh /usr/local/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
 ENV NODE_ENV=production
 ENV API_PORT=3010
+
 EXPOSE 3010
 
-CMD ["node", "dist/index.js"]
+CMD ["/usr/local/bin/wait-for-it.sh", "mongodb:27017", "--timeout=60", "--strict", "--", \
+	"node", "dist/index.js"]
