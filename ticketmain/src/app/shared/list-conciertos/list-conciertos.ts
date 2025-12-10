@@ -37,6 +37,8 @@ export class ListConciertos implements OnInit {
     @Input() page !: string;
     // @Input () numeroConciertosShop !: number;
 
+    loading = true;
+
     limit=8;
     offset=0;
     slug_category!: string | null ;
@@ -125,6 +127,10 @@ export class ListConciertos implements OnInit {
                 (conciertos: Concierto[]) => {
                     console.log('Conciertos recibidos de IA:', conciertos);
 
+                    if(conciertos.length > 0){
+                        this.loading = false;
+                    }
+
                     this.filters.nombre = this.filters.nombre!.substring(3);
                     this.conciertos = conciertos;
                     this.numeroConciertos = Math.ceil(conciertos.length / this.limit);
@@ -168,6 +174,11 @@ export class ListConciertos implements OnInit {
                     if (this.numeroConciertos < 1 && this.numeroConciertos > 0) {
                         this.numeroConciertos = 1;
                     }
+
+                    if(this.conciertos.length > 0){
+                        this.loading = false;
+                    }
+
                     // console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
                     // console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
                 },

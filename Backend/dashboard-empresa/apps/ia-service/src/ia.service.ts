@@ -32,11 +32,13 @@ export class IaService {
       console.log(`Nueva pregunta recibida: "${userMessage}"`);
 
       console.log('Buscando contexto relevante...');
-      const context = await this.ragService.getRelevantContext(userMessage);
+
+      //Cambiar si queremos el contexto mas relevante
+      const context = await this.ragService.getRelevantContext(userMessage, 100);
       
       // Verificar si fue cancelado
       if (currentController.signal.aborted) {
-        console.log('❌ Petición cancelada durante búsqueda de contexto');
+        console.log('Petición cancelada durante búsqueda de contexto');
         throw new Error('Request cancelled: nueva petición recibida');
       }
       
@@ -55,11 +57,11 @@ export class IaService {
       
       // Verificar si fue cancelado
       if (currentController.signal.aborted) {
-        console.log('❌ Petición cancelada durante generación IA');
+        console.log('Petición cancelada durante generación IA');
         throw new Error('Request cancelled: nueva petición recibida');
       }
 
-      console.log('✅ Respuesta generada exitosamente');
+      console.log('Respuesta generada exitosamente');
 
       // Parsear la respuesta JSON si es un string
       let parsedResponse;
@@ -79,7 +81,7 @@ export class IaService {
     } catch (error) {
       // Si fue cancelado, no loguear como error
       if (error.message?.includes('Request cancelled') || error.name === 'AbortError' || error.name === 'CanceledError') {
-        console.log('🔄 Petición anterior cancelada correctamente');
+        console.log('Petición anterior cancelada correctamente');
         throw new BadRequestException('Petición cancelada por nueva solicitud');
       }
 
@@ -107,49 +109,117 @@ export class IaService {
     
     const contextSection = context && context.trim() !== ''
       ? `Conciertos disponibles:\n${context}`
-      : 'No se encontraron conciertos que coincidan con la búsqueda.';
+      : 'No se encontraron conciertos que coincidan con la busqueda.';
 
     return `
-    Eres un asistente inteligente especializado en búsqueda de conciertos usando lenguaje natural.
+    Eres un asistente especializado en busqueda de conciertos. Tu objetivo es interpretar correctamente las solicitudes del usuario y devolver EXACTAMENTE lo que pide.
 
     ${contextSection}
 
     Consulta del usuario:
     ${message}
 
-    Instrucciones importantes:
-    - Analiza la consulta del usuario para entender qué concierto está buscando (artista, género, ciudad, fecha, precio, etc.)
-    - Si hay conciertos relevantes arriba, responde ÚNICAMENTE con un JSON válido que contenga un array de conciertos
-    - Si no hay información relevante, responde con un JSON vacío: {"conciertos": [], "mensaje": "No se encontraron conciertos"}
-    - Cada concierto debe tener EXACTAMENTE esta estructura:
-      {
-        "slug": "string",
-        "nombre": "string",
-        "fecha": "ISO date string",
-        "artista": "string",
-        "lugar": "string",
-        "ciudad": "string",
-        "descripcion": "string",
-        "precio": number,
-        "aforo": number,
-        "duracion": number,
-        "imagenArtista": "string (URL)",
-        "id_genero": "string",
-        "latitud": number,
-        "longitud": number,
-        "imagenesShow": []
-      }
-    - NO añadas texto explicativo, SOLO el JSON
-    - Si el usuario pregunta por información general (ej: "¿qué conciertos hay?"), devuelve todos los conciertos disponibles
-    - Ordena los resultados por relevancia según la consulta del usuario
+    INSTRUCCIONES CRITICAS - DEBES SEGUIRLAS ESTRICTAMENTE:
 
-    Formato de respuesta (JSON válido):
-    {
-      "conciertos": [...array de conciertos...],
-      "mensaje": "Descripción breve de los resultados"
-    }
+    1. INTERPRETACION DE LA CONSULTA (FILTROS Y ORDENAMIENTO):
+    
+       PRECIO:
+       - "mas barato/economico/barata/economica" = Ordena por precio ASCENDENTE, devuelve el/los primero(s)
+       - "mas caro/costoso/cara/costosa" = Ordena por precio DESCENDENTE, devuelve el/los primero(s)
+       - "precio menor a X" / "menos de X euros" = Filtra solo conciertos con precio < X
+       - "precio mayor a X" / "mas de X euros" = Filtra solo conciertos con precio > X
+       
+       FECHA:
+       - "proximo/proximos/cercano/mas cercano" = Ordena por fecha mas CERCANA a hoy
+       - "lejano/mas lejano/futuro" = Ordena por fecha mas LEJANA
+       - "en enero/febrero/etc" = Filtra por mes especifico
+       - "en 2026" = Filtra por año especifico
+       
+       CIUDAD:
+       - "en Madrid/Barcelona/Sevilla/Malaga" = Filtra SOLO conciertos en esa ciudad
+       - "cerca de Madrid" = Prioriza Madrid pero puede incluir otras ciudades cercanas
+       - "fuera de Madrid" = Excluye Madrid
+       
+       GENERO:
+       - "de rock/pop/hip-hop/electronic" = Filtra SOLO conciertos de ese genero
+       - "que no sea rock" = Excluye ese genero
+       
+       ARTISTA:
+       - "de Metallica/Taylor Swift/etc" = Filtra SOLO conciertos de ese artista
+       - "parecido a Metallica" = Busca artistas del mismo genero
+       
+       AFORO/CAPACIDAD:
+       - "mayor aforo/mas grande/mas capacidad" = Ordena por aforo DESCENDENTE
+       - "menor aforo/mas intimo/mas pequeño" = Ordena por aforo ASCENDENTE
+       - "con mas de X personas" = Filtra por aforo > X
+       
+       LUGAR/ESTADIO:
+       - "en el Wanda/Bernabeu/Camp Nou/etc" = Filtra por lugar especifico
+       - "en estadio/arena/pabellon" = Filtra por tipo de recinto
 
-    Respuesta (SOLO JSON):`;
+    2. ORDENAMIENTO Y CANTIDAD:
+       - Singular ("LA mas barata", "EL mas caro") = Devuelve SOLO 1 concierto
+       - Plural ("LAS mas baratas", "LOS 3 mas caros") = Devuelve 2-3 conciertos (o el numero especificado)
+       - "todos" / "que conciertos hay" = Devuelve TODOS los disponibles
+       - SIEMPRE ordena segun el criterio especifico del usuario ANTES de limitar cantidad
+
+    3. COMBINACION DE FILTROS:
+       Cuando el usuario combine multiples criterios, aplicalos TODOS:
+       - "el concierto mas barato de rock" = Filtra por rock, luego ordena por precio, devuelve 1
+       - "conciertos en Madrid ordenados por precio" = Filtra por Madrid, ordena por precio
+       - "los 2 proximos conciertos de pop" = Filtra por pop, ordena por fecha, devuelve 2
+
+    4. FORMATO DE RESPUESTA:
+       Devuelve UNICAMENTE un JSON valido con esta estructura:
+       {
+         "conciertos": [
+           {
+             "slug": "string",
+             "nombre": "string",
+             "fecha": "ISO date string",
+             "artista": "string",
+             "lugar": "string",
+             "ciudad": "string",
+             "descripcion": "string",
+             "precio": number,
+             "aforo": number,
+             "duracion": number,
+             "imagenArtista": "string (URL)",
+             "id_genero": "string",
+             "latitud": number,
+             "longitud": number,
+             "imagenesShow": []
+           }
+         ],
+         "mensaje": "Explicacion breve y clara de que criterios aplicaste y por que"
+       }
+
+    5. REGLAS ESTRICTAS:
+       - NO inventes datos que no esten en los conciertos disponibles arriba
+       - NO añadas texto explicativo fuera del JSON
+       - NO devuelvas conciertos que no cumplan TODOS los filtros del usuario
+       - SI el usuario especifica un orden, RESPETALO SIEMPRE
+       - El campo "mensaje" debe ser descriptivo y mencionar los criterios aplicados
+       - Si no hay conciertos que cumplan los criterios: {"conciertos": [], "mensaje": "No se encontraron conciertos con esos criterios"}
+
+    EJEMPLOS CORRECTOS:
+    
+    Usuario: "dame la entrada mas barata"
+    Respuesta: {"conciertos": [<Calvin Harris 65 euros>], "mensaje": "Entrada mas economica encontrada: 65 euros - Calvin Harris"}
+
+    Usuario: "conciertos de rock en Madrid"
+    Respuesta: {"conciertos": [<Metallica y AC/DC>], "mensaje": "2 conciertos de rock en Madrid"}
+
+    Usuario: "el concierto mas cercano"
+    Respuesta: {"conciertos": [<el de fecha mas proxima>], "mensaje": "Proximo concierto: [fecha]"}
+
+    Usuario: "los 3 conciertos mas caros"
+    Respuesta: {"conciertos": [<Taylor 120, Drake 110, Kendrick 90>], "mensaje": "Top 3 conciertos ordenados por precio"}
+
+    Usuario: "conciertos en Barcelona mas baratos"
+    Respuesta: {"conciertos": [<conciertos de Barcelona ordenados por precio>], "mensaje": "Conciertos en Barcelona ordenados por precio"}
+
+    Ahora responde a la consulta del usuario con SOLO el JSON (sin markdown ni explicaciones adicionales):`;
   }
 
   async checkLmStudioConnection(): Promise<boolean> {
@@ -170,8 +240,8 @@ export class IaService {
         timestamp: new Date().toISOString(),
         lmStudio: lmStudioStatus ? 'connected' : 'disconnected',
         message: lmStudioStatus
-          ? '✅ Servicio funcionando correctamente'
-          : '⚠️ Servicio activo pero LM Studio no está disponible',
+          ? 'Servicio funcionando correctamente'
+          : 'Servicio activo pero LM Studio no está disponible',
       };
     } catch (error) {
       return {

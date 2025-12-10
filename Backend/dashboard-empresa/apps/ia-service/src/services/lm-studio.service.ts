@@ -62,14 +62,14 @@ export class LmStudioService {
       const models = response.data.data || [];
       
       if (models.length === 0) {
-        console.log('LM Studio está corriendo pero no hay modelos cargados');
+        console.log('LM Studio esta corriendo pero no hay modelos cargados');
         return false;
       }
 
       console.log(`LM Studio disponible con ${models.length} modelo(s)`);
       return true;
     } catch (error) {
-      console.log('❌ LM Studio no está disponible');
+      console.log('LM Studio no esta disponible');
       return false;
     }
   }

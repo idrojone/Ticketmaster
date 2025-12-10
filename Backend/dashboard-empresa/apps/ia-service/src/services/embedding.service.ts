@@ -1,14 +1,86 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { createHash } from 'crypto';
 
 @Injectable()
 export class EmbeddingService {
   private readonly baseUrl = 'http://localhost:1234/v1';
   private readonly modelName = 'text-embedding-all-minilm-l6-v2-embedding';
-  private readonly VECTOR_DIMENSION = 384; // Dimensión de all-MiniLM-L6-v2
+  private readonly VECTOR_DIMENSION = 384;
+  
+  // Almacena embeddings ya generados para evitar reprocesamiento
+  private embeddingCache = new Map<string, number[]>();
+
+  // Genera embeddings para múltiples textos en una sola llamada HTTP
+  async textToVectorBatch(texts: string[]): Promise<number[][]> {
+    try {
+      const uncachedIndices: number[] = [];
+      const results: number[][] = new Array(texts.length);
+      
+      // Verificar cuáles textos ya están en caché
+      texts.forEach((text, i) => {
+        const hash = createHash('md5').update(text).digest('hex');
+        if (this.embeddingCache.has(hash)) {
+          results[i] = this.embeddingCache.get(hash)!;
+        } else {
+          uncachedIndices.push(i);
+        }
+      });
+      
+      if (uncachedIndices.length === 0) {
+        console.log(`Todos los embeddings (${texts.length}) recuperados desde cache`);
+        return results;
+      }
+      
+      console.log(`Generando ${uncachedIndices.length} embeddings en lote (${texts.length - uncachedIndices.length} desde cache)`);
+      
+      const uncachedTexts = uncachedIndices.map(i => texts[i]);
+      
+      const response = await axios.post(
+        `${this.baseUrl}/embeddings`,
+        {
+          model: this.modelName,
+          input: uncachedTexts,
+        },
+        {
+          timeout: 30000,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      const embeddings = response.data.data.map((item: any) => item.embedding);
+      
+      // Guardar en caché y en resultados
+      embeddings.forEach((embedding: number[], batchIndex: number) => {
+        const originalIndex = uncachedIndices[batchIndex];
+        const text = texts[originalIndex];
+        const hash = createHash('md5').update(text).digest('hex');
+        
+        this.embeddingCache.set(hash, embedding);
+        results[originalIndex] = embedding;
+      });
+      
+      console.log(`Lote de ${uncachedIndices.length} embeddings generado correctamente`);
+
+      return results;
+    } catch (error) {
+      console.warn('El procesamiento en lote fallo, procesando individualmente...', error.message);
+      
+      return Promise.all(texts.map(text => this.textToVector(text)));
+    }
+  }
 
   async textToVector(text: string): Promise<number[]> {
     try {
+      const hash = createHash('md5').update(text).digest('hex');
+      
+      if (this.embeddingCache.has(hash)) {
+        console.log(`Embedding recuperado desde cache (${text.substring(0, 30)}...)`);
+        return this.embeddingCache.get(hash)!;
+      }
+
       console.log(`Generando embedding para: "${text.substring(0, 50)}..."`);
 
       const response = await axios.post(
@@ -27,16 +99,18 @@ export class EmbeddingService {
 
       const embedding = response.data.data[0].embedding;
       
-      console.log(`✅ Embedding generado (dimensión: ${embedding.length})`);
+      this.embeddingCache.set(hash, embedding);
+      
+      console.log(`Embedding generado correctamente (dimension: ${embedding.length})`);
 
       return embedding;
     } catch (error) {
-      console.error('❌ Error generando embedding:', error.message);
+      console.error('Error generando embedding:', error.message);
       
       if (axios.isAxiosError(error) && error.code === 'ECONNREFUSED') {
         throw new Error(
           'No se puede conectar con LM Studio para embeddings. ' +
-          'Asegúrate de que el modelo text-embedding-all-minilm-l6-v2 esté cargado.'
+          'Asegurate de que el modelo text-embedding-all-minilm-l6-v2 este cargado.'
         );
       }
       
@@ -62,7 +136,6 @@ export class EmbeddingService {
       normB += vecB[i] * vecB[i];
     }
 
-    // Evita división por cero
     if (normA === 0 || normB === 0) {
       return 0;
     }
@@ -77,6 +150,8 @@ export class EmbeddingService {
       vectorDimension: this.VECTOR_DIMENSION,
       endpoint: `${this.baseUrl}/embeddings`,
       algorithm: 'all-MiniLM-L6-v2 via LM Studio',
+      cacheSize: this.embeddingCache.size,
+      cachingEnabled: true,
     };
   }
 }
