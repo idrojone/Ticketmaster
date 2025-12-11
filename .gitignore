@@ -198,4 +198,6 @@ prisma-client/
 
 .vscode
 
+.github/agents
+
 # End of https://www.toptal.com/developers/gitignore/api/node,angular,visualstudiocode
