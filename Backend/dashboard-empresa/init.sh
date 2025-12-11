@@ -21,4 +21,5 @@ pnpm exec concurrently --names "gateway,auth,merch,categoria" --prefix-colors "b
   "node dist/apps/api-gateway/main.js" \
   "node dist/apps/auth-service/main.js" \
   "node dist/apps/merch-service/main.js" \
+  "node dist/apps/ia-service/main.js" \
   "node dist/apps/categoria-service/main.js"

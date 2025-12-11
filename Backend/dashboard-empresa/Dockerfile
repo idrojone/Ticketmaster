@@ -28,6 +28,7 @@ RUN pnpm exec nest build api-gateway \
     && pnpm exec nest build auth-service \
     && pnpm exec nest build merch-service \
     && pnpm exec nest build categoria-service \
+    && pnpm exec nest build ia-service \
     && pnpm exec nest build common
 
 # ===================================
