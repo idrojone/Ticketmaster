@@ -14,7 +14,7 @@ const ConciertoSchema = new mongoose.Schema({
         required: true 
     },
     fecha: { 
-        type: String, 
+        type: Date, 
         required: true 
     },
     artista: { 
@@ -61,18 +61,51 @@ const ConciertoSchema = new mongoose.Schema({
         type: [String], 
         default: [] 
     },
+    // relación con Genero: guardamos ref al documento Genero (ObjectId)
+    genero: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Genero',
+        required: false,
+        default: null
+    },
+    // campo legacy/id externo si lo necesitas (opcional)
     id_genero: {
         type: String,
-        // required: true
+        required: false,
+        default: null
     },
     likes: {
         type: Number,
         default: 0
     },
+    // usuarios que han dado like (many-to-many)
+    likedBy: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    // entradas relacionadas
+    entradas: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Entrada'
+        }
+    ],
+    
+    status: {
+        type: String,
+        enum: ['ACCEPTED', 'PENDING', 'REJECTED'],
+        default: 'ACCEPTED'
+    },
+    is_active: {
+        type: Boolean,
+        default: true
+    },
     comentarios: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comentario'
-    }]
+    }],
 }, { timestamps: true });
 
 ConciertoSchema.plugin(uniqueValidator, { message: 'ya esta en uso' });
@@ -101,6 +134,7 @@ ConciertoSchema.methods.toConciertoResponse = async function () {
         duracion: this.duracion,
         imagenArtista: this.imagenArtista,
         id_genero: this.id_genero,
+        genero: this.genero, // puede estar poblado o ser ObjectId
         descripcion: this.descripcion,
         latitud: this.latitud,
         longitud: this.longitud,
@@ -145,3 +179,13 @@ ConciertoSchema.methods.updateLikes = async function() {
 
 
 module.exports = mongoose.model('Concierto', ConciertoSchema);
+
+// Transformación JSON: mapear _id -> id y ocultar __v
+ConciertoSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+    }
+});

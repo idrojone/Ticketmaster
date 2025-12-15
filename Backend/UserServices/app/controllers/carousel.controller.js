@@ -4,7 +4,9 @@ const asyncHandler = require('express-async-handler');
 const SpotifyAPI = require('../utils/SpotifyAPI.js');
 
 const findAllGenerosCarousel = asyncHandler(async (req, res) => {
-    const generos = await Genero.find();
+    const generos = await Genero.find(
+        { is_active: true, status: 'ACCEPTED' }
+    );
 
     if (!generos) {
         return res.status(404).json({
@@ -14,7 +16,8 @@ const findAllGenerosCarousel = asyncHandler(async (req, res) => {
     }
     return res.status(200).json({
         generos: await Promise.all(generos.map(async generos => {
-            return await generos.toGeneroCarouselResponse()
+            return await generos;
+            
         }))
     });
 });

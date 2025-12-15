@@ -3,7 +3,7 @@
   <div class="filter-item">
     <button z-button zType="outline" z-dropdown [zDropdownMenu]="menu" class="filter-button">
       @if (selectedGenero()) {
-        {{ selectedGenero()!.nombre }}
+        {{ selectedGenero()!.name }}
       } @else {
         Géneros
       }
@@ -15,7 +15,7 @@
           [class.selected-genre]="isGeneroSelected(item)"
         >
           <div class="flex items-center justify-between w-full">
-            <span>{{ item.nombre }}</span>
+            <span>{{ item.slug }}</span>
             @if (isGeneroSelected(item)) {
               <span class="text-black font-bold">✓</span>
             }

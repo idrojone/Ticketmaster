@@ -17,26 +17,92 @@ export class ApiService {
         return throwError(() => normalized);
     }
 
-    get(path: string, params: HttpParams = new HttpParams()): Observable<any>{
-        return this.http.get(`${environment.api_url}${path}`, { params })
+    get(path: string, params: HttpParams = new HttpParams(), credentialsRequired: boolean = false, server?: string): Observable<any>{
+        if(server==="dashboard"){
+            console.log(' llamando a dashboard API:', `${environment.dashboard_url}${path}`);
+            return this.http.get(`${environment.dashboard_url}${path}`, { params, withCredentials: credentialsRequired })
             .pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            console.log(' llamando a empresa API Gateway:', `${environment.gateway_url}${path}`);
+            return this.http.get(`${environment.gateway_url}${path}`, { params, withCredentials: credentialsRequired })
+            .pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.get(`${environment.api_url}${path}`, { params, withCredentials: credentialsRequired })
+            .pipe(catchError(this.formatErrors));
+        }
     }       
 
-    put(path: string, body: Object = {}): Observable<any> {
-        return this.http.put(
-            `${environment.api_url}${path}`,
-            JSON.stringify(body)
-        ).pipe(catchError(this.formatErrors));
+    put(path: string, body: Object = {}, server?: string): Observable<any> {
+        if(server==="dashboard"){
+            return this.http.put(
+                `${environment.dashboard_url}${path}`,
+                JSON.stringify(body)
+            ).pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            return this.http.put(
+                `${environment.gateway_url}${path}`,
+                JSON.stringify(body)
+            ).pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.put(
+                `${environment.api_url}${path}`,
+                JSON.stringify(body)
+            ).pipe(catchError(this.formatErrors));
+        }
     }
 
-    post(path: string, body: any = {}, credentialsRequired: boolean = false): Observable<any> {
+    post(path: string, body: any = {}, credentialsRequired: boolean = false, server?: string): Observable<any> {
         console.log(body);
-        return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        console.log(server);    
+        if(server==="dashboard"){
+            return this.http.post(`${environment.dashboard_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        } else if (server==="empresa"){
+            return this.http.post(`${environment.gateway_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        } else if(server=== "ia"){
+            return this.http.post(`${environment.ia_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        }
+        else{
+            return this.http.post(`${environment.api_url}${path}`, body, { withCredentials: credentialsRequired }).pipe(catchError(this.formatErrors));
+        }
     }
 
-    delete(path: any): Observable<any> {
-        return this.http.delete(
-            `${environment.api_url}${path}`
-        ).pipe(catchError(this.formatErrors));  
+    delete(path: any, server?: string): Observable<any> {
+        if(server==="dashboard"){
+            return this.http.delete(
+                `${environment.dashboard_url}${path}`
+            ).pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            return this.http.delete(
+                `${environment.gateway_url}${path}`
+            ).pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.delete(
+                `${environment.api_url}${path}`
+            ).pipe(catchError(this.formatErrors));
+        }
+    }
+
+    patch(path: string, body: Object = {}, credentialsRequired: boolean = false, server?: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        
+        if(server==="dashboard"){
+            return this.http.patch(
+                `${environment.dashboard_url}${path}`,
+                body,
+                { headers, withCredentials: credentialsRequired }
+            ).pipe(catchError(this.formatErrors));
+        }else if(server==="empresa"){
+            return this.http.patch(
+                `${environment.gateway_url}${path}`,
+                body,
+                { headers, withCredentials: credentialsRequired }
+            ).pipe(catchError(this.formatErrors));
+        }else{
+            return this.http.patch(
+                `${environment.api_url}${path}`,
+                body,
+                { headers, withCredentials: credentialsRequired }
+            ).pipe(catchError(this.formatErrors));
+        }
     }
 }

@@ -3,50 +3,122 @@ const uniqueValidator = require('mongoose-unique-validator');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { json } = require('body-parser');
+const { PassThrough } = require('stream');
+const { type } = require('os');
+
+const STATUS = ['ACCEPTED', 'PENDING', 'REJECTED'];
+
 
 const userSchema = new mongoose.Schema({
-    public_id: {
+    status: {
         type: String,
-        unique: true,
+        enum: STATUS,
+        default: "ACCEPTED",
     },
-    username:{
+
+    is_active: {
+        type: Boolean,
+        default: true,
+    },
+
+    role: {
+        type: String,
+        default: "USER",
+    },
+
+    username: {
         type: String,
         required: true,
         unique: true,
         lowercase: true,
+        index: true,
     },
-    password:{
-        type: String,
-        required: true,
-    },email:{
+
+    email: {
         type: String,
         required: true,
         unique: true,
-        match: [/\S+@\S+\.\S+/, 'is invalid'],
-        index: true
+        lowercase: true,
+        match: [/\S+@\S+\.\S+/, "is invalid"],
+        index: true,
     },
+
+    password: {
+        type: String,
+        required: true,
+    },
+
     bio: {
         type: String,
-        default: ''
+        default: "",
     },
+
     image: {
-        type:String,
-        default:''
+        type: String,
+        default: "",
     },
-    favouriteConciertos:[
+
+    // Relación uno-a-uno con RefreshTokenStore (almacena un ObjectId)
+    refreshTokenStore: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "RefreshTokenStore",
+        unique: true,
+        sparse: true,
+    },
+
+    // Relación muchos-a-muchos con BlackListToken
+    BlackListToken: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            // type: String,
-            ref: 'Concierto'
-        }
+            ref: "BlackListToken",
+        },
     ],
-    followingUsers:[
+
+    // Relaciones de follow (slef-relation many-to-many)
+    followedBy: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ]
-},{timestamps:true});
+            ref: "User",
+        },
+    ],
+
+    follows: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+
+    // Relacion de Likes
+    likedConciertos: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Concierto",
+        },
+    ],
+
+    // Entradas y Comentarios (relaciones one-to-many)
+
+    entradas: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Entrada",
+        },
+    ],
+
+    comentarios: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comentario",
+        },
+    ],
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },   
+});
+
+userSchema.plugin(uniqueValidator, { message: "Ya está en uso." });
 
 userSchema.pre('save', function(next){
     // Generar public_id automáticamente si no existe
@@ -68,7 +140,8 @@ userSchema.methods.generateAccessToken = function() {
             id: this._id,
             public_id: this.public_id,
             email: this.email,
-            username: this.username
+            username: this.username,
+            role: "user"
         },
         process.env.JWT_SECRET,
         {expiresIn: '1d'}
@@ -77,29 +150,23 @@ userSchema.methods.generateAccessToken = function() {
 };
 
 userSchema.methods.toUserResponse = async function(accessToken) {
-    console.log('User Model - toUserResponse called');
-    const favSlugs = await this.getFavouriteSlugs();
-
-    const followingUsernames = await this.getFollowingUsernames();
-
-
     return {
-        _id: this._id,
+        // _id: this._id,
         public_id: this.public_id,
         username: this.username,
         email: this.email,
         bio: this.bio,
         image: this.image,
-        favouriteConciertos: favSlugs,
-        followingUsers: followingUsernames,
+        likedConciertos: this.likedConciertos,
+        followedBy: this.followedBy,
+        follows: this.follows,
         accessToken: accessToken
-        // accessToken: this.generateAccessToken(),
     };
 };
 
 userSchema.methods.toUserDetails = async function() {
-    const favSlugs = await this.getFavouriteSlugs();
-    const followingUsernames = await this.getFollowingUsernames();
+    // const favSlugs = await this.getFavouriteSlugs();
+    // const followingUsernames = await this.getFollowingUsernames();
 
     return {
         _id: this._id,
@@ -108,8 +175,12 @@ userSchema.methods.toUserDetails = async function() {
         email: this.email,
         bio: this.bio,
         image: this.image,
-        favouriteConciertos: favSlugs,
-        followingUsers: followingUsernames,
+        likedConciertos: this.likedConciertos,
+        followedBy: this.followedBy,
+        follows: this.follows,
+        // accessToken: accessToken
+        // favouriteConciertos: favSlugs,
+        // followingUsers: followingUsernames,
     };
 };
 
@@ -200,5 +271,4 @@ userSchema.methods.getFavouriteSlugs = async function() {
         return id && slugMap.has(id) ? slugMap.get(id) : null;
     }).filter(Boolean);
 };
-
 module.exports = mongoose.model('User', userSchema);

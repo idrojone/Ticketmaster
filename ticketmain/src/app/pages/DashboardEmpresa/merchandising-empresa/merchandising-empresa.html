@@ -1,0 +1,87 @@
+<div class="merchandising-container">
+  <header class="page-header">
+    <h1>Gestión de Merchandising</h1>
+    <button class="btn-add" (click)="openAddDialog()">+ Añadir Producto</button>
+  </header>
+
+  @if(errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if(isLoading()) {
+    <div class="loading">
+      Cargando productos...
+    </div>
+  }
+
+  @if(!isLoading() && merchandising().length === 0) {
+    <div class="empty-state">
+      No hay productos disponibles
+    </div>
+  }
+
+  @if(!isLoading() && merchandising().length > 0) {
+    <div class="merchandising-grid">
+      @for(producto of merchandising(); track producto.id) {
+        <div class="producto-card">
+          <div class="card-image">
+            @if(producto.imagen) {
+              <img [src]="producto.imagen" [alt]="producto.nombre">
+            } @else {
+              <div class="no-image">
+                <span>Sin imagen</span>
+              </div>
+            }
+            <div class="card-badges">
+              <span class="badge" 
+                [class.badge-active]="producto.status === 'ACCEPTED'" 
+                [class.badge-inactive]="producto.status === 'REJECTED'"
+                [class.badge-pending]="producto.status === 'PENDING'">
+                {{ producto.status }}
+              </span>
+              <span class="badge" [class.badge-enabled]="producto.is_active" [class.badge-disabled]="!producto.is_active">
+                {{ producto.is_active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="card-content">
+            <h3>{{ producto.nombre }}</h3>
+            <p class="producto-description">{{ producto.descripcion }}</p>
+            
+            <div class="producto-details">
+              <div class="detail-item">
+                <span class="detail-label">Precio:</span>
+                <span class="detail-value price">{{ producto.precio | currency:'EUR':'symbol':'1.2-2' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Stock:</span>
+                <span class="detail-value" [class.stock-low]="producto.stock < 10" [class.stock-ok]="producto.stock >= 10">
+                  {{ producto.stock }} unidades
+                </span>
+              </div>
+            </div>
+
+            <div class="producto-meta">
+              <small>Creado: {{ producto.createdAt | date:'short' }}</small>
+              <small>Actualizado: {{ producto.updatedAt | date:'short' }}</small>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-edit" (click)="openEditDialog(producto)">Editar</button>
+              <button class="btn-toggle" (click)="toggleStatus(producto.id, producto.status)">
+                Cambiar Estado
+              </button>
+              <button class="btn-activate" (click)="toggleActivate(producto.id, producto.is_active)">
+                {{ producto.is_active ? 'Deshabilitar' : 'Habilitar' }}
+              </button>
+              <button class="btn-delete" (click)="deleteMerchandising(producto.id)">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

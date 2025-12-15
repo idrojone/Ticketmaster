@@ -1,19 +1,18 @@
 import { Component, OnInit, AfterViewInit, importProvidersFrom, inject, signal, computed } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
-import { catchError } from "rxjs/operators";
-import { throwError } from "rxjs";
 import { Carousel } from "@shared/carousel/carousel";
 import { Concierto } from "src/app/core/models/conciertos.model";
-import { ConciertosService } from "src/app/core/services/conciertos.service";
+import { ConciertosService } from "src/app/core/services/UserServices/conciertos.service";
 import { ZardCalendarComponent } from "@shared/components/calendar/calendar.component";
 import * as L from 'leaflet';
 import { Comment } from "src/app/core/models/comment.model";
 import { ArticleComments } from "@shared/article-comments/article-comments";
 import { UserService } from "src/app/core/services/user.service";
-import { ProfileService } from "src/app/core/services/profile.service";
 import Swal from 'sweetalert2';
-
+import { CartService } from "src/app/core/services/cart.service";
+import { MerchService } from "src/app/core/services/UserServices/merch.service";
+import { UserTypeService } from "src/app/core/services/user-type.service";
 
 @Component({
     selector: 'app-details',
@@ -40,15 +39,20 @@ export class DetailsComponent {
     public isFavorite = signal(false);
         
     slug: string | null = null;
+    merchandisingId: string | null = null;
     private map?: L.Map;
 
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private conciertoService = inject(ConciertosService);
     private userService = inject(UserService);
+    private cartService = inject(CartService);
+    private merchService = inject(MerchService);
+    private userTypeService = inject(UserTypeService);
 
     constructor() {
         this.slug = this.route.snapshot.paramMap.get('slug');
+
         this._loadConcierto();
     }
 
@@ -56,6 +60,7 @@ export class DetailsComponent {
         this.isLoading.set(true);
         this.conciertoService.getConcierto(this.slug!).subscribe({
             next: (concierto) => {
+                this.merchandisingId = concierto.merchandisingId;
                 this.concierto.set(concierto);
                 this.isLoading.set(false);
                 this._loadMap(concierto);
@@ -177,6 +182,144 @@ export class DetailsComponent {
             showConfirmButton: false,
             timer: 2000
         });
+    }
+
+    async anadirCarrito(): Promise<void> {
+        console.log("Añadiendo al carrito");
+        this.cartService.carritoMaster(
+            [
+                {
+                    "slug": this.slug!,
+                    "cantidad": 1
+                }
+            ]
+        ).subscribe({
+            next: (res) => {
+                console.log(res);
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Concierto añadido al carrito!',
+                    text: '¿Quieres seguir comprando o ir al carrito?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ir al carrito',
+                    cancelButtonText: 'Seguir comprando'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.router.navigate(['/cart']);
+                    } else {
+                        this.router.navigate(['/shop']);
+                    }
+                });
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        })
+    }
+
+    async anadirMerch(id: string) {
+        console.log("Añadiendo al carrito");
+        this.cartService.carritoMaster(
+            [
+
+            ],
+            [
+                { merchandisingId: id, cantidad: 1 },
+            ]
+        ).subscribe({
+            next: (res) => {
+                console.log(res);
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        })
+    }
+
+    async dialogMerch() {
+        const UserType = this.userTypeService.getUserType();
+
+        if(UserType !== 'USER') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Debes iniciar sesión',
+                text: 'Para añadir conciertos a tu carrito, primero debes iniciar sesión',
+                confirmButtonText: 'Ir a login',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const returnUrl = this.router.url;
+                    this.router.navigate(['/auth/login'], { 
+                        queryParams: { returnUrl: returnUrl } 
+                    });
+                }
+            });
+            return;
+        }else{
+            console.log(this.merchandisingId);
+            this.merchService.get_all_merch(this.merchandisingId!).subscribe({
+                next: (producto: any) => {
+                    const productoHTML = `
+                    <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px;">
+                        <img src="${producto.imagen}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;" />
+                        <div style="flex: 1; text-align: left;">
+                            <h4 style="margin: 0; color: #333;">${producto.nombre}</h4>
+                            <p style="margin: 5px 0; color: #666; font-size: 14px;">${producto.descripcion}</p>
+                            <p style="margin: 0; color: #4CAF50; font-weight: bold;">${producto.precio}€</p>
+                            <button id="${producto._id}" style="margin-top: 10px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;" ">Añadir al carrito</button>
+                        </div>
+                    </div>`;
+
+                    const button = document.getElementById(producto._id);
+
+                    if (button) {
+                        button.addEventListener('click', () => {
+                            this.anadirMerch(producto._id);
+                        });
+                    }
+
+                    Swal.fire({
+                        title: '¿Quieres añadir merchandising?',
+                        html: `
+                            <div style="text-align: left;">
+                                <p style="color: #666; margin-bottom: 20px;">Un bonito recuerdo del concierto</p>
+                                ${productoHTML}
+                            </div>
+                        `,
+                        width: 600,
+                        showCancelButton: true,
+                        confirmButtonText: 'Añadir al carrito',
+                        cancelButtonText: 'No, gracias',
+                        confirmButtonColor: '#4CAF50',
+                        cancelButtonColor: '#d33',
+                        didOpen: () => {
+                            const button = document.getElementById(producto._id);
+                            if (button && button.textContent === 'Añadir al carrito') {
+                                button.addEventListener('click', () => {
+                                    this.anadirMerch(producto._id);
+                                    button.textContent = 'Añadido al carrito';
+                                    button.hidden = true;
+                                });
+                            }
+                        }
+
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.anadirCarrito();
+                        }
+                    });
+                },
+                error: (err) => {
+                    console.log(err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo cargar el merchandising'
+                    });
+                }
+            });
+        }
     }
 
 }

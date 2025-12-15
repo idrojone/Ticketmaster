@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, inject, Input, OnInit } from '@angular/core';
-import { CarouselService } from 'src/app/core/services/carousel.service';
+import { CarouselService } from 'src/app/core/services/UserServices/carousel.service';
 import { GeneroCarrousel, ConciertoCarrousel, ConciertoCarrouselDetails, GeneroCarrouselSecundario, Imagenes } from 'src/app/core/models/carousel.model';
 import { ItemsCarousel } from 'src/app/shared/items-carousel/items-carousel';
 
@@ -85,6 +85,7 @@ export class Carousel implements OnInit {
 			(data) => {
 				// this.item_generos = data as GeneroCarrousel[];
 				this.item_generos_secundario = data as GeneroCarrouselSecundario[];
+				console.log("Carousel Géneros Secundario: ", this.item_generos_secundario);
 			},
 			(error) => {
 				console.error('Error fetching carousel data:', error);

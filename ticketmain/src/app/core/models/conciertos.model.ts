@@ -13,4 +13,16 @@ export interface Concierto {
     duracion?: number; 
     imagenArtista?: string;
     imagenesShow?: string[];
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+    is_active: boolean;
+    merchandisingId: string;
+}
+
+export interface ConciertoCarrito {
+    slug:String;
+    nombre:String;
+    precio:number;
+    cantidad:number;
+    fecha:String;
+    imagenArtista:String;
 }

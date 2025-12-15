@@ -4,7 +4,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3000;
-const BIND_HOST = process.env.BIND_HOST || "127.0.0.1";
+// bind to 0.0.0.0 by default so Docker can access the service
+const BIND_HOST = process.env.BIND_HOST || "0.0.0.0";
 
 //Create express app
 const app = express();
@@ -13,8 +14,8 @@ dotenv.config();
 //Habilita CORS para todas las rutas
 const corsOptions = {
     origin: ['http://localhost:3000', 'http://localhost:4200'],
-    credentials:true,
-    optionsSuccessStatus:200
+    credentials: true,
+    optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
@@ -47,8 +48,12 @@ require('../routes/carousel.routes.js')(app);
 require('../routes/auth.routes.js')(app);
 require('../routes/comentarios.routes.js')(app);
 require('../routes/profile.routes.js')(app);
+require('../routes/carrito.routes.js')(app);
+require('../routes/order.routes.js')(app);
+require('../routes/merchandising.routes.js')(app);
+require('../routes/entradas.routes.js')(app);
 ////////////////////////
 
 app.listen(PORT, BIND_HOST, () => {
-     console.log(`Servidor Express escuchando en http://${BIND_HOST}:${PORT}`);
+    console.log(`Servidor Express escuchando en http://${BIND_HOST}:${PORT}`);
 });

@@ -13,16 +13,27 @@ const verifyJWTOpcional = (req, res, next) => {
 
     jwt.verify(
         token,
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'winteriscoming',
+        { ignoreExpiration: true },  
         (err, decoded) => {
-            if (err) {
-                return res.status(403).json({ message: "Token no valido" });
+            if (err && err.name !== 'TokenExpiredError') {
+                return res.status(401).json({ message: "Token expirado" });
             }
+
+            // Verificación adicional de expiración manual
+            const isExpired = decoded && (Date.now() >= decoded.exp * 1000);
+            if (isExpired) {
+                console.warn('Token expirado detectado en verifyJWTOpcional');
+                return res.status(401).json({ message: "Token expirado" });
+            }
+
+            // Token válido y no expirado
             req.loggedIn = true;
             req.id = decoded.id;
             req.public_id = decoded.public_id;
             req.email = decoded.email;
             req.username = decoded.username;
+            req.rol = decoded.role;
 
             next();
         }

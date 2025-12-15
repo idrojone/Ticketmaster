@@ -108,7 +108,7 @@
                             </div>
                             <div class="stat-divider"></div>
                             <div class="stat-item">
-                                <span class="stat-value">0</span>
+                                <span class="stat-value">{{ ticketsUsuario()?.length || 0 }}</span>
                                 <span class="stat-label">Tickets</span>
                             </div>
                         </div>
@@ -154,7 +154,6 @@
                         <p>No hay favoritos disponibles.</p>
                     } @else {
                         @for (item of likesUsuario(); track $index) {
-                            <!-- <p>Hola</p> -->
                             <div class="comment-card p-4 border rounded bg-white mb-4">
                                 <div class="flex items-start">
                                     <img [src]="item.imagenArtista || 'https://static.productionready.io/images/smiley-cyrus.jpg'" alt="Imagen del concierto" class="w-16 h-16 rounded-full mr-4">
@@ -170,13 +169,93 @@
             }
             
             @if (activeTab() === 'history') {
-                <div class="content-placeholder">
-                    <i class="fas fa-ticket-alt content-placeholder-icon"></i>
-                    <h3 class="content-placeholder-title">Historial de Compras</h3>
-                    <p class="content-placeholder-text">
-                        Aquí verás el historial de tus tickets comprados. Esta funcionalidad estará disponible pronto.
-                    </p>
-                </div>
+                @if(ticketsUsuario() == null || ticketsUsuario().length === 0 ){
+                    <div class="content-placeholder">
+                        <i class="fas fa-ticket-alt content-placeholder-icon"></i>
+                        <h3 class="content-placeholder-title">Historial de Compras</h3>
+                        <p class="content-placeholder-text">
+                            Aquí verás el historial de tus tickets comprados. Esta funcionalidad estará disponible pronto.
+                        </p>
+                    </div>
+                } @else {
+                    @for(item of ticketsUsuario(); track $index){
+                        <div class="ticket-card-premium">
+                            <!-- Header del ticket con gradiente -->
+                            <div class="ticket-header-premium" [ngClass]="'ticket-type-' + item.tipo.toLowerCase()">
+                                <div class="ticket-type-icon">
+                                    <i class="fas fa-ticket-alt"></i>
+                                </div>
+                                <div class="ticket-type-info">
+                                    <span class="ticket-type-label">{{ item.tipo }}</span>
+                                    <span class="ticket-quantity">{{ item.cantidad }} {{ item.cantidad === 1 ? 'Ticket' : 'Tickets' }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Cuerpo del ticket -->
+                            <div class="ticket-body-premium">
+                                <!-- Nombre del concierto - Elemento principal -->
+                                <h3 class="concert-name-premium">
+                                    <i class="fas fa-guitar concert-icon"></i>
+                                    {{ item.concierto?.nombre || 'Concierto #' + item.conciertoId }}
+                                </h3>
+
+                                <!-- Información del evento -->
+                                <div class="event-info-premium">
+                                    @if(item.concierto?.fecha) {
+                                        <div class="event-detail-premium event-date">
+                                            <div class="event-icon-wrapper">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </div>
+                                            <div class="event-text">
+                                                <span class="event-label">Fecha del evento</span>
+                                                <span class="event-value">{{ item.concierto!.fecha | date:'EEEE, dd MMMM yyyy' }}</span>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if(item.concierto?.lugar) {
+                                        <div class="event-detail-premium event-location">
+                                            <div class="event-icon-wrapper">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="event-text">
+                                                <span class="event-label">Ubicación</span>
+                                                <span class="event-value">{{ item.concierto!.lugar }}</span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- Separador decorativo -->
+                                <div class="ticket-divider">
+                                    <div class="divider-dot"></div>
+                                    <div class="divider-line"></div>
+                                    <div class="divider-dot"></div>
+                                </div>
+
+                                <!-- Footer con fecha de compra -->
+                                <div class="ticket-footer-premium">
+                                    <div class="purchase-info">
+                                        <i class="fas fa-receipt"></i>
+                                        <span>Comprado el {{ item.fecha_compra | date:'dd/MM/yyyy' }} a las {{ item.fecha_compra | date:'HH:mm' }}</span>
+                                    </div>
+                                    <div class="ticket-id-small">
+                                        #{{ item._id?.slice(-8) || 'N/A' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Perforaciones decorativas -->
+                            <div class="ticket-perforations">
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
+                                <div class="perforation"></div>
+                            </div>
+                        </div>
+                    }
+                }
             }
             
             @if (activeTab() === 'reviews') {

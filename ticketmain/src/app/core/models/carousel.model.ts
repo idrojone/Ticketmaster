@@ -1,12 +1,12 @@
 export interface GeneroCarrousel {
     slug: string;
-    nombre: string;
+    name: string;
     img: string;
 }
 
 export interface GeneroCarrouselSecundario {
     slug: string;
-    nombre: string;
+    name: string;
     img: string;
 }
 
@@ -17,7 +17,7 @@ export interface ConciertoCarrouselDetails {
 
 export interface ConciertoCarrousel {
     slug: string;
-    nombre: string;
+    name: string;
     imagenArtista: string;
 }
 

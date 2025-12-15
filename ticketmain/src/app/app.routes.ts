@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { UserTypeGuard } from '../app/core/guards/user-type.guard.service';
 
 export const routes: Routes = [
     {
@@ -29,6 +30,21 @@ export const routes: Routes = [
     {
         path: 'settings',
         loadComponent: () => import('./shared/settings/settings').then(m => m.Settings)
+    },
+    {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/DashboardAdmin/dashboard').then(m => m.Dashboard),
+        loadChildren: () => import('./pages/DashboardAdmin/dashboard.routes').then(m => m.dashboardRoutes),
+        canActivate: [ UserTypeGuard ]
+    },
+    {
+        path: 'dashboard-empresa',
+        loadComponent: () => import('./pages/DashboardEmpresa/dashboard-empresa').then(m => m.DashboardEmpresa),
+        loadChildren: () => import('./pages/DashboardEmpresa/dashboard-empresa.routes').then(m => m.dashboardEmpresaRoutes),
+        canActivate: [ UserTypeGuard ]
+    },
+    {
+        path: 'cart',
+        loadComponent: () => import('./pages/cart/cart').then(m => m.Cart)
     }
-  
 ];

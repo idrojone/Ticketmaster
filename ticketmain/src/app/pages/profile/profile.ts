@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { User } from 'src/app/core/models/user.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -8,19 +9,25 @@ import { ZardButtonComponent } from '@shared/components/button/button.component'
 import { } from 'src/app/core/models/profile.model';
 import { ProfileService } from 'src/app/core/services/profile.service';
 import Swal from 'sweetalert2';
+import { Ticket } from 'src/app/core/models/tickets.model';
+import { TicketsService } from 'src/app/core/services/tickets.service';
 
 // Tipo para las tabs disponibles
 type TabType = 'favorites' | 'history' | 'reviews';
 
 @Component({
     selector: 'app-profile',
-    imports: [ZardButtonComponent, AuthRoutingModule, RouterLink],
+    imports: [CommonModule, ZardButtonComponent, AuthRoutingModule, RouterLink],
     templateUrl: './profile.html',
     styleUrls: ['./profile.css'],
     standalone: true,
 })
 export class Profile implements OnInit, OnDestroy {
-    // Usario llenado
+    //Tickets del usuario
+
+    // Usario llenado    
+    public ticketsUsuario = signal<Array<Ticket>>([]);
+
     public usuario = signal<User | null>(null);
 
     //Usuario de la ruta
@@ -43,6 +50,7 @@ export class Profile implements OnInit, OnDestroy {
     private activatedRoute = inject(ActivatedRoute);
     private profileService = inject(ProfileService);
     private router = inject(Router);
+    private ticketsService = inject(TicketsService);
 
     //pendiente ver el destroy
     private destroy$ = new Subject<void>();
@@ -88,16 +96,16 @@ export class Profile implements OnInit, OnDestroy {
             this.usuario.set(user);
                 
                 this.isLoading.set(false);
-                this._checkFollowingStatus();
-                this.followersCount.set(user.followingUsers?.length || 0);
+                // this._checkFollowingStatus();
+                // this.followersCount.set(user.followingUsers?.length || 0);
               
-                this.countComentarios()
-                    .then((count) => {
-                        this.commentsCount.set(count);
-                    })
-                    .catch((err) => {
-                        this.commentsCount.set(0);
-                    });
+                // this.countComentarios()
+                //     .then((count) => {
+                //         this.commentsCount.set(count);
+                //     })
+                //     .catch((err) => {
+                //         this.commentsCount.set(0);
+                //     });
             },
             error: (error) => {
                 console.error('❌ Error al cargar el perfil:', error);
@@ -183,12 +191,25 @@ export class Profile implements OnInit, OnDestroy {
     changeTab(tab: TabType): void {
         this.loadLikesUsuario();
         this.activeTab.set(tab);
-        // console.log(`📑 Tab changed to: ${tab}`);
         if (tab === 'reviews') {
             this.loadComentariosUsuario();
         } else if (tab === 'favorites') {
             this.loadLikesUsuario();
+        } else if (tab === 'history') {
+            this.loadEntradasUsuario();
         }
+    }
+
+    loadEntradasUsuario(): void {
+        this.ticketsService.getTicketsUsuario( ).subscribe({
+            next: (tickets) => {
+                console.log(tickets);
+                this.ticketsUsuario.set(tickets.entrada);
+            },
+            error: (error) => {
+                
+            },
+        });
     }
 
     toggleFollowUser(): void {

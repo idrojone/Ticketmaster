@@ -3,7 +3,7 @@ import { Component, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild }
 import { ActivatedRoute, Router } from '@angular/router';
 import { Concierto } from 'src/app/core/models/conciertos.model';
 import { Filters } from 'src/app/core/models/filters.model';
-import { ConciertosService } from 'src/app/core/services/conciertos.service';
+import { ConciertosService } from 'src/app/core/services/UserServices/conciertos.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -75,7 +75,9 @@ export class Search implements OnInit, OnDestroy {
         this.filters.nombre = undefined;
         console.log('Campo de búsqueda limpiado por filtros aplicados');
       } else {
-        this.search_value = this.filters.nombre || '';
+        // Eliminar el prefijo "ia," si existe para que no se muestre en el input
+        const nombreValue = this.filters.nombre || '';
+        this.search_value = nombreValue.startsWith('ia,') ? nombreValue.substring(3) : nombreValue;
       }
       
       this.searchEvent.emit(this.filters);
@@ -90,6 +92,7 @@ export class Search implements OnInit, OnDestroy {
       this.routeFilters = this.ActivatedRoute.snapshot.paramMap.get('filters');
       if (this.routeFilters !== null) {
         const parsedFilters = JSON.parse(atob(this.routeFilters));
+
         this.filters = new Filters(
           parsedFilters.limit,
           parsedFilters.offset,
@@ -106,7 +109,17 @@ export class Search implements OnInit, OnDestroy {
     
     this.search = weittingValue;
     this.filters.nombre = this.search;
+      
+    if(this.filters.nombre?.startsWith("ia")){
+      console.log("borrar para que no entre a la ia ");
+      this.filters.nombre = this.filters.nombre!.substring(3);
+    }
     
+    if(this.search.startsWith("ia")){
+      console.log("borrar para que no entre a la ia");
+      this.filters.nombre = this.filters.nombre!.substring(3);
+    }
+
     this.resetPagination();
 
     setTimeout(() => {
@@ -139,7 +152,15 @@ export class Search implements OnInit, OnDestroy {
   }
 
   public search_event(): void {
-    this.filters.nombre = this.search_value || '';
+
+    if(this.filters.nombre!.length > 0){
+      if(!this.filters.nombre!.startsWith("ia,")){
+        this.filters.nombre = "ia,"+this.filters.nombre;
+      }
+    }else{
+      this.filters.nombre = "";
+    }
+
     this.resetPagination();
     this.searchEvent.emit(this.filters);
     this.Router.navigate(['/shop/' + btoa(JSON.stringify(this.filters))]);

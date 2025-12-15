@@ -1,0 +1,14 @@
+{
+  "name": "@app/messaging",
+  "version": "0.0.1",
+  "description": "Messaging library - Event patterns and RabbitMQ config",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "nest build messaging"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+.git
+*.log
+tmp
+.DS_Store
+pnpm-lock.yaml
+**/node_modules
+**/npm-debug.log
+*.tsbuildinfo

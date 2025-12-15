@@ -6,10 +6,10 @@
                     <div class="genre-card">
                         <img 
                         [src]="item.img" 
-                        [alt]="item.nombre"
+                        [alt]="item.name"
                         class="genre-image"
                         />
-                        <h3 class="genre-name text-center font-bold text-xl">{{ item.nombre }}</h3>
+                        <h3 class="genre-name text-center font-bold text-xl">{{ item.name }}</h3>
                     </div>
                 </div>
             }
@@ -28,7 +28,7 @@
             <div class="embla__slide embla__slide-conciertos" [routerLink]="['/shop/generos', item.slug]">
                 <div class="concert-card">
                 <img [src]="item.img" [alt]="item.slug" class="concert-image" />
-                <h3 class="concert-name">{{ item.nombre }}</h3>
+                <h3 class="concert-name">{{ item.name }}</h3>
                 </div>
             </div>
             }
@@ -66,7 +66,7 @@
                             [alt]="item.slug"
                             class="concert-image"
                             />
-                        <h3 class="concert-name">{{ item.nombre }}</h3>
+                        <h3 class="concert-name">{{ item.name }}</h3>
                     </div>
                 </div>
             }

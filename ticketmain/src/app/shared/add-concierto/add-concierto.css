@@ -1,0 +1,11 @@
+input , textarea {
+  border: 1px solid #333333 !important;
+  border-radius: 0.5rem;
+}
+
+input[z-input]:focus,
+textarea[z-input]:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  outline: none;
+}

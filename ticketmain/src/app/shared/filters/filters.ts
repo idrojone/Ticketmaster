@@ -6,10 +6,10 @@ import { ZardButtonComponent } from '@shared/components/button/button.component'
 import { ZardPopoverComponent, ZardPopoverDirective } from '@shared/components/popover/popover.component';
 import { ZardDatePickerComponent } from '@shared/components/date-picker/date-picker.component';
 import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
-import { GenerosService } from 'src/app/core/services/generos.service';
+import { GenerosService } from 'src/app/core/services/UserServices/generos.service';
 import { Genero } from 'src/app/core/models/generos.model';
 import { Filters } from '../../core/models/filters.model';
-import { ConciertosService } from 'src/app/core/services/conciertos.service';
+import { ConciertosService } from 'src/app/core/services/UserServices/conciertos.service';
 
 @Component({
   selector: 'app-filters',
@@ -76,7 +76,7 @@ export class FiltersComponent implements OnInit {
   fillFiltros(){
     this.generosService.get_all_generos().subscribe(
       (data) => {
-          // console.log(data);
+          console.log(data);
           this.generos = data as Genero[];
       },
       (error) => {
@@ -98,7 +98,7 @@ export class FiltersComponent implements OnInit {
     // Destacar género seleccionado si existe (solo si no hay búsqueda de texto)
     if(routeFilters.genero && routeFilters.genero_nombre && !routeFilters.nombre){
       this.selectedGenero.set({
-        nombre: routeFilters.genero_nombre, 
+        name: routeFilters.genero_nombre, 
         slug: routeFilters.genero, 
         img: '', 
         descripcion: ''
@@ -151,7 +151,7 @@ export class FiltersComponent implements OnInit {
 
     if(this.selectedGenero()){
       this.filters.genero=this.selectedGenero()?.slug;
-      this.filters.genero_nombre=this.selectedGenero()?.nombre
+      this.filters.genero_nombre=this.selectedGenero()?.name
       // console.log(this.filters);
     }
 

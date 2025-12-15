@@ -1,2 +1,0 @@
-COMANDO
-docker compose up -d 

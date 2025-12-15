@@ -1,6 +1,6 @@
 export interface Genero {
     slug: string;
-    nombre: string;
+    name: string;
     img: string;
     descripcion: string;
 

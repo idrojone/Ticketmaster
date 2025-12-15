@@ -1,313 +1,288 @@
 [{
   "_id": {
-    "$oid": "68dfd19f7d8d8c84995f67f7"
+    "$oid": "6930682e3efaba1f0f2e8969"
   },
-  "nombre": "Rock",
+  "slug": "pop",
+  "name": "Pop",
+  "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXUPnDwr3HCGC-8Gm-34Gp3JRtRzmhrTwSEw&s",
+  "description": "Música popular contemporánea con melodías pegadizas y comerciales",
+  "id_genero": "pop",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T16:41:18.119Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T16:41:18.119Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "693068653efaba1f0f2e896a"
+  },
+  "slug": "rock",
+  "name": "Rock",
   "img": "assets/img/rock.jpg",
-  "descripcion": "Género musical caracterizado por el uso de guitarras eléctricas, bajo y batería.",
-  "id_genero": "GEN001",
-  "conciertos": [
-    {
-      "$oid": "68dfd940d6645741a8f5addd"
-    },
-    {
-      "$oid": "68dfdaaed6645741a8f5ae20"
-    },
-    {
-      "$oid": "68dfe4a5175796983cd1aefc"
-    }
-  ],
-  "slug": "rock-y8i913",
-  "__v": 7
+  "description": "Género musical caracterizado por el uso de guitarras eléctricas, bajo y batería.",
+  "id_genero": "rock",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T16:42:13.819Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T16:42:13.819Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9d1d6645741a8f5ade7"
+    "$oid": "69306944b220be0f13121f27"
   },
-  "nombre": "Pop",
-  "img": "assets/img/pop.jpg",
-  "descripcion": "Música popular contemporánea con melodías pegadizas y comerciales",
-  "id_genero": "GEN002",
-  "conciertos": [
-    {
-      "$oid": "68dfdab4d6645741a8f5ae26"
-    },
-    {
-      "$oid": "68dfdab9d6645741a8f5ae2c"
-    }
-  ],
-  "slug": "pop-gppnz4",
-  "__v": 3
-},
-{
-  "_id": {
-    "$oid": "68dfd9d7d6645741a8f5adec"
-  },
-  "nombre": "Hip Hop",
+  "slug": "hip-hop",
+  "name": "Hip Hop",
   "img": "assets/img/hiphop.jpg",
-  "descripcion": "Música urbana con rap, beats y cultura hip hop",
-  "id_genero": "GEN003",
-  "conciertos": [
-    {
-      "$oid": "68dfdabfd6645741a8f5ae32"
-    },
-    {
-      "$oid": "68dfdac5d6645741a8f5ae38"
-    }
-  ],
-  "slug": "hip-hop-z22v1j",
-  "__v": 2
+  "description": "Música urbana con rap, beats y cultura hip hop",
+  "id_genero": "hip-hop",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T16:45:56.370Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T16:45:56.370Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9dcd6645741a8f5adf1"
+    "$oid": "693072c7561a4ce84ba52f3c"
   },
-  "nombre": "Electronic",
+  "slug": "electronic",
+  "name": "Electronic",
   "img": "assets/img/electronic.jpg",
-  "descripcion": "Música electrónica, EDM y sonidos sintetizados",
-  "id_genero": "GEN004",
-  "conciertos": [
-    {
-      "$oid": "68dfdacad6645741a8f5ae3e"
-    },
-    {
-      "$oid": "68dfdacfd6645741a8f5ae44"
-    }
-  ],
-  "slug": "electronic-hd3wqa",
-  "__v": 2
+  "description": "Música electrónica, EDM y sonidos sintetizados",
+  "id_genero": "electronic",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:26:31.551Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:26:31.551Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9e0d6645741a8f5adf6"
+    "$oid": "693072e1561a4ce84ba52f3d"
   },
-  "nombre": "Reggaeton",
+  "slug": "reggaeton",
+  "name": "Reggaeton",
   "img": "assets/img/reggaeton.jpg",
-  "descripcion": "Música urbana latina con ritmos caribeños",
-  "id_genero": "GEN005",
-  "conciertos": [
-    {
-      "$oid": "68dfdad4d6645741a8f5ae4a"
-    },
-    {
-      "$oid": "68dfdadad6645741a8f5ae50"
-    },
-    {
-      "$oid": "68dfdaedd6645741a8f5ae56"
-    }
-  ],
-  "slug": "reggaeton-tow0w0",
-  "__v": 3
+  "description": "Música urbana latina con ritmos caribeños",
+  "id_genero": "reggaeton",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:26:57.359Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:26:57.359Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9e5d6645741a8f5adfb"
+    "$oid": "69307306561a4ce84ba52f3e"
   },
-  "nombre": "Jazz",
+  "slug": "jazz",
+  "name": "Jazz",
   "img": "assets/img/jazz.jpg",
-  "descripcion": "Jazz clásico y contemporáneo con improvisación",
-  "id_genero": "GEN006",
-  "conciertos": [
-    {
-      "$oid": "68dfdb11d6645741a8f5ae5c"
-    },
-    {
-      "$oid": "68dfdb17d6645741a8f5ae62"
-    },
-    {
-      "$oid": "68dfdb24d6645741a8f5ae68"
-    }
-  ],
-  "slug": "jazz-g4d3i6",
-  "__v": 3
+  "description": "Jazz clásico y contemporáneo con improvisación",
+  "id_genero": "jazz",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:27:34.927Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:27:34.927Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9e9d6645741a8f5ae00"
+    "$oid": "69307320561a4ce84ba52f3f"
   },
-  "nombre": "Blues",
+  "slug": "blues",
+  "name": "Blues",
   "img": "assets/img/blues.jpg",
-  "descripcion": "Blues tradicional con guitarra y armónica",
-  "id_genero": "GEN007",
-  "conciertos": [
-    {
-      "$oid": "68dfdb2bd6645741a8f5ae6e"
-    },
-    {
-      "$oid": "68dfdb34d6645741a8f5ae74"
-    }
-  ],
-  "slug": "blues-54yovc",
-  "__v": 2
+  "description": "Blues tradicional con guitarra y armónica",
+  "id_genero": "blues",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:28:00.894Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:28:00.894Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9f0d6645741a8f5ae05"
+    "$oid": "6930733f561a4ce84ba52f40"
   },
-  "nombre": "Country",
+  "slug": "country",
+  "name": "Country",
   "img": "assets/img/country.jpg",
-  "descripcion": "Música country americana y folk",
-  "id_genero": "GEN008",
-  "conciertos": [
-    {
-      "$oid": "68dfdb3dd6645741a8f5ae7a"
-    },
-    {
-      "$oid": "68dfdb43d6645741a8f5ae80"
-    }
-  ],
-  "slug": "country-fws32v",
-  "__v": 2
+  "description": "Música country americana y folk",
+  "id_genero": "country",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:28:31.528Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:28:31.528Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9f6d6645741a8f5ae0a"
+    "$oid": "6930735a561a4ce84ba52f41"
   },
-  "nombre": "Classical",
+  "slug": "classical",
+  "name": "Classical",
   "img": "assets/img/classical.jpg",
-  "descripcion": "Música clásica, orquestal y de cámara",
-  "id_genero": "GEN009",
-  "conciertos": [
-    {
-      "$oid": "68dfdb49d6645741a8f5ae86"
-    },
-    {
-      "$oid": "68dfdb4ed6645741a8f5ae8c"
-    }
-  ],
-  "slug": "classical-hku59n",
-  "__v": 2
+  "description": "Música clásica, orquestal y de cámara",
+  "id_genero": "classical",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:28:58.433Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:28:58.433Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfd9fad6645741a8f5ae0f"
+    "$oid": "6930737f561a4ce84ba52f42"
   },
-  "nombre": "Reggae",
+  "slug": "reggae",
+  "name": "Reggae",
   "img": "assets/img/reggae.jpg",
-  "descripcion": "Reggae jamaicano con ritmos relajados",
-  "id_genero": "GEN010",
-  "conciertos": [
-    {
-      "$oid": "68dfdb55d6645741a8f5ae92"
-    },
-    {
-      "$oid": "68dfdb5ad6645741a8f5ae98"
-    }
-  ],
-  "slug": "reggae-esqje9",
-  "__v": 2
+  "description": "Reggae jamaicano con ritmos relajados",
+  "id_genero": "reggae",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:29:35.181Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:29:35.181Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfe65e175796983cd1af17"
+    "$oid": "69307393561a4ce84ba52f43"
   },
-  "nombre": "Alternativa",
+  "slug": "alternativa",
+  "name": "Alternativa",
   "img": "assets/img/alternative.jpg",
-  "descripcion": "Rock alternativo e indie con sonidos experimentales y letras introspectivas",
-  "id_genero": "GEN011",
-  "conciertos": [
-    {
-      "$oid": "68dfe777175796983cd1af3a"
-    },
-    {
-      "$oid": "68dfe7c6175796983cd1af40"
-    }
-  ],
-  "slug": "alternativa-qlz551",
-  "__v": 2
+  "description": "Rock alternativo e indie con sonidos experimentales y letras introspectivas",
+  "id_genero": "alternativa",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:29:55.803Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:29:55.803Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfe688175796983cd1af1c"
+    "$oid": "693073ae561a4ce84ba52f44"
   },
-  "nombre": "Flamenco",
+  "slug": "flamenco",
+  "name": "Flamenco",
   "img": "assets/img/flamenco.jpg",
-  "descripcion": "Arte flamenco andaluz con guitarra, cante y baile tradicional español",
-  "id_genero": "GEN012",
-  "conciertos": [
-    {
-      "$oid": "68dfe7dd175796983cd1af46"
-    },
-    {
-      "$oid": "68dfe7ee175796983cd1af4c"
-    }
-  ],
-  "slug": "flamenco-ixo0hq",
-  "__v": 2
+  "description": "Arte flamenco andaluz con guitarra, cante y baile tradicional español",
+  "id_genero": "flamenco",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:30:22.247Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:30:22.247Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfe6a4175796983cd1af21"
+    "$oid": "693073c9561a4ce84ba52f45"
   },
-  "nombre": "Folk",
+  "slug": "folk",
+  "name": "Folk",
   "img": "assets/img/folk.jpg",
-  "descripcion": "Música folk y tradicional con instrumentos acústicos y narrativas populares",
-  "id_genero": "GEN014",
-  "conciertos": [
-    {
-      "$oid": "68dfe7f8175796983cd1af52"
-    },
-    {
-      "$oid": "68dfe800175796983cd1af58"
-    }
-  ],
-  "slug": "folk-i3lf01",
-  "__v": 2
+  "description": "Música folk y tradicional con instrumentos acústicos y narrativas populares",
+  "id_genero": "folk",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:30:49.616Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:30:49.616Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfe6aa175796983cd1af26"
+    "$oid": "693073ee561a4ce84ba52f46"
   },
-  "nombre": "R&B",
+  "slug": "ryb",
+  "name": "R&B",
   "img": "assets/img/rnb.jpg",
-  "descripcion": "Rhythm and Blues con voces melódicas, grooves suaves y producción moderna",
-  "id_genero": "GEN015",
-  "conciertos": [
-    {
-      "$oid": "68dfe808175796983cd1af5e"
-    },
-    {
-      "$oid": "68dfe80f175796983cd1af64"
-    }
-  ],
-  "slug": "randb-uuw877",
-  "__v": 2
+  "description": "Rhythm and Blues con voces melódicas, grooves suaves y producción moderna",
+  "id_genero": "ryb",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:31:26.703Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:31:26.703Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfe6ae175796983cd1af2b"
+    "$oid": "69307410561a4ce84ba52f47"
   },
-  "nombre": "Soul",
+  "slug": "soul",
+  "name": "Soul",
   "img": "assets/img/soul.jpg",
-  "descripcion": "Soul clásico y neo-soul con voces poderosas y arreglos emotivos",
-  "id_genero": "GEN016",
-  "conciertos": [
-    {
-      "$oid": "68dfe818175796983cd1af6a"
-    },
-    {
-      "$oid": "68dfe821175796983cd1af70"
-    }
-  ],
-  "slug": "soul-jz74fs",
-  "__v": 2
+  "description": "Soul clásico y neo-soul con voces poderosas y arreglos emotivos",
+  "id_genero": "soul",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:32:00.138Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:32:00.138Z"
+  }
 },
 {
   "_id": {
-    "$oid": "68dfe6b3175796983cd1af30"
+    "$oid": "69307429561a4ce84ba52f48"
   },
-  "nombre": "Trap",
+  "slug": "trap",
+  "name": "Trap",
   "img": "assets/img/trap.jpg",
-  "descripcion": "Trap urbano y hip-hop con beats pesados y letras de la calle",
-  "id_genero": "GEN017",
-  "conciertos": [
-    {
-      "$oid": "68dfe829175796983cd1af76"
-    },
-    {
-      "$oid": "68dfe831175796983cd1af7c"
-    }
-  ],
-  "slug": "trap-9jamf6",
-  "__v": 2
+  "description": "Trap urbano y hip-hop con beats pesados y letras de la calle",
+  "id_genero": "trap",
+  "status": "ACCEPTED",
+  "is_active": true,
+  "createdAt": {
+    "$date": "2025-12-03T17:32:25.493Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T17:32:25.493Z"
+  }
 }]

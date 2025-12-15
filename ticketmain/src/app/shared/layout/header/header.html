@@ -9,7 +9,7 @@
         </div>
 
         <!-- Navigation -->
-        <nav class="main-nav flex items-center justify-center mx-auto px-4 py-4 space-x-24 text-center translate-x-20">
+        <nav class="main-nav flex items-center justify-center mx-auto px-4 py-4 space-x-24 text-center translate-x-30">
             <ul class="flex items-center space-x-4">
                 <li><a href="/shop" class="text-black font-medium hover:underline">CONCIERTOS</a></li>
             </ul>
@@ -26,6 +26,15 @@
         </nav>
 
         @if(loggedIn) {
+            @if(user_type_signal() === 'USER') {
+                <div class="items-center">
+                    <!-- Aqui va la entrada del carret -->
+                    <button class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2" [routerLink]="['/cart']">
+                        <i class="fas fa-shopping-cart"></i>
+                        Carrito
+                    </button>
+                </div>
+            }
             <div class="items-center">
                 <button z-dropdown [zDropdownMenu]="menu" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2">
                     Bienvenido {{ currentUser?.username }}
@@ -39,6 +48,19 @@
                     <z-dropdown-menu-item (click)="logout()">
                         <i class="fas fa-sign-out-alt"></i> Log out
                     </z-dropdown-menu-item>
+                    @if(user_type_signal() !== 'USER'){
+                        <z-dropdown-menu-label>Dashboard</z-dropdown-menu-label>
+                        @if(user_type_signal() === 'admin'){
+                            <z-dropdown-menu-item [routerLink]="['/dashboard']">
+                                <i class="fas fa-crown"></i>Dashboard Admin
+                            </z-dropdown-menu-item>
+                        }
+                        @if(user_type_signal() === 'empresa'){
+                            <z-dropdown-menu-item [routerLink]="['/dashboard-empresa']">
+                                <i class="fas fa-briefcase"></i>Dashboard Empresa
+                            </z-dropdown-menu-item>
+                        }
+                    }
                 </z-dropdown-menu-content>
             </div>
         } @else {
@@ -47,12 +69,12 @@
                 <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2"
                     [routerLink]="'/auth/register'">
                     <i class="fas fa-user-plus w-4 h-4"></i>
-                    Sign Up
+                    Registrarse
                 </a>
                 <a href="#" class="btn-pill px-4 py-2 border rounded-full text-black hover:bg-gray-100 flex items-center gap-2"
                     [routerLink]="'/auth/login'">
                     <i class="fas fa-sign-in-alt w-4 h-4"></i>
-                    Sign In
+                    Iniciar sesión
                 </a>
             </div>
             <!-- </div> -->

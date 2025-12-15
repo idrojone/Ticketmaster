@@ -1,0 +1,66 @@
+<div class="categorias-container">
+  <header class="page-header">
+    <h1>Gestión de Categorías de Merchandising</h1>
+    <button class="btn-add" (click)="openAddDialog()">+ Añadir Categoría</button>
+  </header>
+
+  @if(errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if(isLoading()) {
+    <div class="loading">
+      Cargando categorías...
+    </div>
+  }
+
+  @if(!isLoading() && categorias().length === 0) {
+    <div class="empty-state">
+      No hay categorías disponibles
+    </div>
+  }
+
+  @if(!isLoading() && categorias().length > 0) {
+    <div class="categorias-grid">
+      @for(categoria of categorias(); track categoria.id) {
+        <div class="categoria-card">
+          <div class="card-header">
+            <h3>{{ categoria.nombre }}</h3>
+            <div class="card-badges">
+              <span class="badge" 
+                [class.badge-active]="categoria.status === 'ACCEPTED'" 
+                [class.badge-inactive]="categoria.status === 'REJECTED'"
+                [class.badge-pending]="categoria.status === 'PENDING'">
+                {{ categoria.status }}
+              </span>
+              <span class="badge" [class.badge-enabled]="categoria.is_active" [class.badge-disabled]="!categoria.is_active">
+                {{ categoria.is_active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <p class="categoria-description">{{ categoria.descripcion }}</p>
+            <div class="categoria-meta">
+              <small>Creado: {{ categoria.createdAt | date:'short' }}</small>
+              <small>Actualizado: {{ categoria.updatedAt | date:'short' }}</small>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn-edit" (click)="openEditDialog(categoria)">Editar</button>
+            <button class="btn-toggle" (click)="toggleStatus(categoria.id, categoria.status)">
+              Cambiar Estado
+            </button>
+            <button class="btn-activate" (click)="toggleActivate(categoria.id, categoria.is_active)">
+              {{ categoria.is_active ? 'Deshabilitar' : 'Habilitar' }}
+            </button>
+            <button class="btn-delete" (click)="deleteCategoria(categoria.id)">Eliminar</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

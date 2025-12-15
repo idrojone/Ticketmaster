@@ -1,0 +1,87 @@
+{
+  "info": {
+    "name": "Dashboard Empresa - Microservicios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "API Gateway",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3030"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Hello World",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3031/auth"
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3031/auth/register",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"user@test.com\",\"password\":\"123456\",\"name\":\"Test User\"}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3031/auth/login",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"user@test.com\",\"password\":\"123456\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Merchandise Service",
+      "item": [
+        {
+          "name": "List Merchandise",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3032/merchandise"
+          }
+        },
+        {
+          "name": "Create Merchandise",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3032/merchandise",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"T-Shirt\",\"description\":\"Cool t-shirt\",\"categoryId\":1,\"price\":19.99}"
+            }
+          }
+        },
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3032/categories"
+          }
+        }
+      ]
+    }
+  ]
+}

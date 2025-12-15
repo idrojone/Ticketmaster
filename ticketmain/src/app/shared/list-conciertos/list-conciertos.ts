@@ -2,7 +2,7 @@ import { Component, inject, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { Concierto } from '../../core/models/conciertos.model';
 import { ZardSkeletonComponent } from '../components/skeleton/skeleton.component';
-import { ConciertosService } from 'src/app/core/services/conciertos.service';
+import { ConciertosService } from 'src/app/core/services/UserServices/conciertos.service';
 import { CardConciertos } from '../card-conciertos/card-conciertos';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FiltersComponent } from '../filters/filters';
@@ -12,6 +12,7 @@ import { Search } from '../search/search';
 import { Filters } from '../../core/models/filters.model';
 import { ZardPaginationModule } from '@shared/components/pagination/pagination.module';
 import { FormsModule } from '@angular/forms';
+import { filter } from 'rxjs';
 
 
 
@@ -35,6 +36,8 @@ import { FormsModule } from '@angular/forms';
 export class ListConciertos implements OnInit {
     @Input() page !: string;
     // @Input () numeroConciertosShop !: number;
+
+    loading = true;
 
     limit=8;
     offset=0;
@@ -95,7 +98,9 @@ export class ListConciertos implements OnInit {
         }else{
             this.filters = new Filters();
         }
-    }    get_conciertos_by_genero() {
+    }
+       
+    get_conciertos_by_genero() {
         this.conciertosService.get_conciertos_by_genero(this.slug_genero!).subscribe(
             (data: any) => {
                 console.log(data.conciertos);
@@ -107,40 +112,82 @@ export class ListConciertos implements OnInit {
         );
     }
 
-    getConciertos(filters?: Filters) {
-        if (filters === undefined) {
-            filters = new Filters();
-            filters.limit = this.limit;
-            filters.offset = this.offset;   
-        } else {
-            // Actualizar los filtros locales con los recibidos
-            this.filters = new Filters(
-                filters.limit,
-                filters.offset,
-                filters.genero,
-                filters.genero_nombre,
-                filters.fecha_inicio,
-                filters.fecha_fin,
-                filters.nombre,
-                filters.ciudad
+    async getConciertos(filters?: Filters) {
+
+        console.log("FILTROS PARA LA BUSQUE DA "+ JSON.stringify(filters));
+
+        if(this.filters.nombre?.startsWith("ia")){
+            console.log("ENTRA IA");
+
+            // Extraer el mensaje quitando el prefijo "ia"
+            const mensajeIA = await this.filters.nombre!.substring(3);
+            console.log("IA búsqueda: " + mensajeIA);
+
+            this.conciertosService.buscadorIA({"message": mensajeIA}).subscribe(
+                (conciertos: Concierto[]) => {
+                    console.log('Conciertos recibidos de IA:', conciertos);
+
+                    if(conciertos.length > 0){
+                        this.loading = false;
+                    }
+
+                    this.filters.nombre = this.filters.nombre!.substring(3);
+                    this.conciertos = conciertos;
+                    this.numeroConciertos = Math.ceil(conciertos.length / this.limit);
+                    if (this.numeroConciertos < 1 && conciertos.length > 0) {
+                        this.numeroConciertos = 1;
+                    }
+                },
+                (error: any) => {
+                    console.error('Error en búsqueda IA:', error);
+                    this.conciertos = [];
+                    this.numeroConciertos = 0;
+                }
+            );
+        }else{
+            
+            if (filters === undefined) {
+                filters = new Filters();
+                filters.limit = this.limit;
+                filters.offset = this.offset;   
+            } else {
+                // Actualizar los filtros locales con los recibidos
+                this.filters = new Filters(
+                    filters.limit,
+                    filters.offset,
+                    filters.genero,
+                    filters.genero_nombre,
+                    filters.fecha_inicio,
+                    filters.fecha_fin,
+                    filters.nombre,
+                    filters.ciudad
+                );
+            }
+            // console.log("filters recibidos en list conciertos: " , filters);
+
+            
+
+            this.conciertosService.get_all_conciertos(filters).subscribe(
+                (data: any) => {
+                    this.conciertos = data.conciertos as Concierto[];
+                    this.numeroConciertos = data.concierto_count/this.limit;
+                    if (this.numeroConciertos < 1 && this.numeroConciertos > 0) {
+                        this.numeroConciertos = 1;
+                    }
+
+                    if(this.conciertos.length > 0){
+                        this.loading = false;
+                    }
+
+                    // console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
+                    // console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
+                },
+                (error) => {
+                    console.error('Error fetching conciertos:', error);
+                }
             );
         }
-        // console.log("filters recibidos en list conciertos: " , filters);
 
-        this.conciertosService.get_all_conciertos(filters).subscribe(
-            (data: any) => {
-                this.conciertos = data.conciertos as Concierto[];
-                this.numeroConciertos = data.concierto_count/this.limit;
-                if (this.numeroConciertos < 1 && this.numeroConciertos > 0) {
-                    this.numeroConciertos = 1;
-                }
-                // console.log("NÚMERO CONCIERTOS: " + this.numeroConciertos);
-                // console.log("DATOS CONCIERTOS: " + JSON.stringify(this.conciertos));
-            },
-            (error) => {
-                console.error('Error fetching conciertos:', error);
-            }
-        );
     }
     
     setPageTo(pageNum: number): void {

@@ -9,7 +9,7 @@ module.exports = (app) => {
     app.post('/api/login',auth.loginUser);
 
     //Refresh Token
-    // app.post('/api/refresh', auth.verifyRefreshToken);
+    app.post('/api/refresh', auth.verifyRefreshToken);
 
     //Logout
     app.post('/api/logout', auth.logoutUser);
