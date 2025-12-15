@@ -60,6 +60,9 @@ services:
     restart: on-failure
     depends_on:
       - mongodb
+      - dashboard-empresa
+    environment:
+      - GATEWAY_URL=http://dashboard-empresa:3030
     networks:
       - mongo-network
     volumes:
@@ -141,6 +144,8 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    volumes:
+      - ./Backend/UserServices/.env:/usr/src/app/.env
     networks:
       - mongo-network
     healthcheck:

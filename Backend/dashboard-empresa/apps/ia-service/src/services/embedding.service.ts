@@ -4,7 +4,7 @@ import { createHash } from 'crypto';
 
 @Injectable()
 export class EmbeddingService {
-  private readonly baseUrl = 'http://localhost:1234/v1';
+  private readonly baseUrl = 'http://169.254.83.107:1234/v1'; 
   private readonly modelName = 'text-embedding-all-minilm-l6-v2-embedding';
   private readonly VECTOR_DIMENSION = 384;
   

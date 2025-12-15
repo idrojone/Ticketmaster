@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios';
 @Injectable()
 export class LmStudioService {
   // private readonly baseUrl = 'http://localhost:1234/v1';
-  private readonly baseUrl = 'http://100.71.60.102:1234/v1';
+  private readonly baseUrl = 'http://169.254.83.107:1234/v1';
   private readonly timeout = 60000; // 60 segundos
 
   async generateResponse(prompt: string, abortSignal?: AbortSignal): Promise<string> {

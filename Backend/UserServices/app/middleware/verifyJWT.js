@@ -21,7 +21,7 @@ const verifyJWT = async (req, res, next) => {
     // Verificamos el token
     jwt.verify(
         accessToken,
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'winteriscoming',
         { ignoreExpiration: true }, // Permite verificar tokens expirados
         async (err, decoded) => {
             // Si hay error de firma/formato (no expiración)
